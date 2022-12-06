@@ -1,2 +1,2 @@
 # eventmania
-## Database semester project.
+## Database semester project
