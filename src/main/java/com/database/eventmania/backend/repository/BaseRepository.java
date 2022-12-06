@@ -1,6 +1,8 @@
 package com.database.eventmania.backend.repository;
 
+import com.database.eventmania.backend.entity.Admin;
 import com.database.eventmania.backend.entity.Gender;
+import com.database.eventmania.backend.entity.Organization;
 import com.database.eventmania.backend.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -56,14 +58,36 @@ public abstract class BaseRepository {
         }
 
         return new User(
-                rs.getLong("accountId"),
+                rs.getLong("account_id"),
                 rs.getString("email"),
                 rs.getString("password"),
-                rs.getString("firstName"),
-                rs.getString("lastName"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
                 gender,
-                rs.getString("phoneNumber"),
+                rs.getString("phone_number"),
                 rs.getDate("dob").toLocalDate()
+        );
+    }
+
+    public Admin convertQueryResultToAdmin(ResultSet rs) throws SQLException {
+        // accountId, email, password
+        return new Admin(
+                rs.getLong("account_id"),
+                rs.getString("email"),
+                rs.getString("password")
+        );
+    }
+
+    public Organization convertQueryResultToOrganization(ResultSet rs) throws SQLException {
+        // Long accountId, String email, String password,
+        // String organizationName, String description, String phoneNumber
+        return new Organization(
+                rs.getLong("account_id"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("organization_name"),
+                rs.getString("description"),
+                rs.getString("phone_number")
         );
     }
 }
