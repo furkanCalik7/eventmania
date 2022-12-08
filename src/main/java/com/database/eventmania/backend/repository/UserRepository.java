@@ -3,7 +3,10 @@ package com.database.eventmania.backend.repository;
 import com.database.eventmania.backend.entity.User;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Repository
 public class UserRepository extends BaseRepository {
@@ -26,6 +29,11 @@ public class UserRepository extends BaseRepository {
                 return convertQueryResultToUser(rs);
             }
         }
+        return null;
+    }
+
+    public User getUserByEmailAndPassword(String email, String password) {
+        // TODO: IMPLEMENT
         return null;
     }
 }
