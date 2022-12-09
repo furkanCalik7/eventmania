@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -18,5 +19,6 @@ public class Report {
     private String reportType;
     private ReportState reportState;
     private LocalDateTime reportDate;
+    private ArrayList<String> screenshotUrls;
 }
 

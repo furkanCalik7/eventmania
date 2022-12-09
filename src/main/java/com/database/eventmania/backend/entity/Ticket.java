@@ -1,5 +1,6 @@
 package com.database.eventmania.backend.entity;
 
+import com.database.eventmania.backend.entity.enums.SalesChannel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
