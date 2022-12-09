@@ -1,6 +1,6 @@
 package com.database.eventmania.backend.controller;
 
-import com.database.eventmania.backend.entity.User;
+import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping(path = "getUser/{userId}")
-    public User getUserById(@PathVariable("userId") Long userId) throws SQLException {
+    public BasicUser getUserById(@PathVariable("userId") Long userId) throws SQLException {
         return userService.getUserById(userId);
     }
 

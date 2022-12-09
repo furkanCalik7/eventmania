@@ -1,9 +1,6 @@
 package com.database.eventmania.backend.repository;
 
-import com.database.eventmania.backend.entity.Admin;
-import com.database.eventmania.backend.entity.Gender;
-import com.database.eventmania.backend.entity.Organization;
-import com.database.eventmania.backend.entity.User;
+import com.database.eventmania.backend.entity.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Connection;
@@ -40,7 +37,7 @@ public abstract class BaseRepository {
     }
 
     // TODO: should we check if gender is null? (consider adding Gender.null)
-    public User convertQueryResultToUser(ResultSet rs) throws SQLException {
+    public BasicUser convertQueryResultToUser(ResultSet rs) throws SQLException {
         // accountId, email, password, firstName, lastName, gender, phoneNumber, dob
 
         Gender gender;
@@ -57,10 +54,10 @@ public abstract class BaseRepository {
             gender = Gender.OTHER;
         }
 
-        return new User(
-                rs.getLong("account_id"),
+        return new BasicUser(
+                rs.getLong("user_id"),
                 rs.getString("email"),
-                rs.getString("password"),
+                rs.getString("hash_password"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 gender,
@@ -82,9 +79,9 @@ public abstract class BaseRepository {
         // Long accountId, String email, String password,
         // String organizationName, String description, String phoneNumber
         return new Organization(
-                rs.getLong("account_id"),
+                rs.getLong("organization_id"),
                 rs.getString("email"),
-                rs.getString("password"),
+                rs.getString("hash_password"),
                 rs.getString("organization_name"),
                 rs.getString("description"),
                 rs.getString("phone_number")

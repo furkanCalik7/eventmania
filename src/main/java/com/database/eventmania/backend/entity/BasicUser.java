@@ -9,7 +9,10 @@ import java.time.Period;
 
 @Getter
 @Setter
-public class User extends Account {
+public class BasicUser {
+    private Long userId;
+    private String email;
+    private String hashPassword;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -18,10 +21,12 @@ public class User extends Account {
     private Integer age;
     private LocalDate dob;
 
-    public User(Long accountId, String email, String password,
+    public BasicUser(Long userId, String email, String hashPassword,
                 String firstName, String lastName, Gender gender,
                 String phoneNumber, LocalDate dob) {
-        super(accountId, email, password);
+        this.userId = userId;
+        this.email = email;
+        this.hashPassword = hashPassword;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

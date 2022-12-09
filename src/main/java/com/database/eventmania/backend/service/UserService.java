@@ -1,6 +1,6 @@
 package com.database.eventmania.backend.service;
 
-import com.database.eventmania.backend.entity.User;
+import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(Long userId) throws SQLException {
+    public BasicUser getUserById(Long userId) throws SQLException {
         return userRepository.getUserById(userId);
     }
-    public User getUserByEmailAndPassword(String email, String password) throws SQLException {
+    public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
         return userRepository.getUserByEmailAndPassword(email, password);
     }
 }

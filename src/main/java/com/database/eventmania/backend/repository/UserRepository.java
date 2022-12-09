@@ -1,6 +1,6 @@
 package com.database.eventmania.backend.repository;
 
-import com.database.eventmania.backend.entity.User;
+import com.database.eventmania.backend.entity.BasicUser;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -15,10 +15,10 @@ public class UserRepository extends BaseRepository {
     }
 
     // TODO: connect to database and test the code
-    public User getUserById(Long userId) throws SQLException {
+    public BasicUser getUserById(Long userId) throws SQLException {
         Connection conn = super.getConnection();
         if (conn != null) {
-            String query = "SELECT * FROM User WHERE user_id = ?";
+            String query = "SELECT * FROM Basic_User WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setLong(1, userId);
@@ -32,10 +32,10 @@ public class UserRepository extends BaseRepository {
         return null;
     }
 
-    public User getUserByEmailAndPassword(String email, String password) throws SQLException {
+    public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
         Connection conn = super.getConnection();
         if (conn != null) {
-            String query = "SELECT * FROM User WHERE email = ? AND password = ?";
+            String query = "SELECT * FROM BasicUser WHERE email = ? AND hash_password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setString(1, email);
