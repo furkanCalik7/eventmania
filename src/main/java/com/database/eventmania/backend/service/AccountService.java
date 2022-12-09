@@ -2,6 +2,7 @@ package com.database.eventmania.backend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.database.eventmania.backend.entity.Admin;
 import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.entity.Organization;
 import com.database.eventmania.backend.repository.AdminRepository;
@@ -34,7 +35,6 @@ public class AccountService {
         Algorithm algorithm = Algorithm.HMAC256(authenticationService.getKey());
         Map<String, String> returnMap = new HashMap<>();
 
-        // TODO: THIS IS REQUIRED
         BasicUser user = userRepository.getUserByEmailAndPassword(email, hashedPassword);
         if (user != null) {
             String token = JWT.create()
@@ -44,11 +44,37 @@ public class AccountService {
                     .sign(algorithm);
             returnMap.put("token", token);
             returnMap.put("type", "BasicUser");
+
+            return returnMap;
         }
 
-        // TODO: same logic for organization and admin
         Organization organization = organizationRepository.getOrganizationByEmailAndPassword(email, hashedPassword);
+        if (organization != null) {
+            String token = JWT.create()
+                    .withIssuer("eventmania")
+                    .withClaim("roleID", "Organization")
+                    .withClaim("userID", organization.getAccountId())
+                    .sign(algorithm);
+            returnMap.put("token", token);
+            returnMap.put("type", "Organization");
 
-        return returnMap;
+            return returnMap;
+        }
+
+        Admin admin = adminRepository.getAdminByEmailAndPassword(email, hashedPassword);
+        if (admin != null) {
+            String token = JWT.create()
+                    .withIssuer("eventmania")
+                    .withClaim("roleID", "Admin")
+                    .withClaim("userID", admin.getAccountId())
+                    .sign(algorithm);
+            returnMap.put("token", token);
+            returnMap.put("type", "Admin");
+
+            return returnMap;
+        }
+
+        return null;
+
     }
 }

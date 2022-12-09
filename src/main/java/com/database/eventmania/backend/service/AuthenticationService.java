@@ -62,6 +62,8 @@ public class AuthenticationService {
    public Map<String, Object> authenticateAccount(String email, String password) throws SQLException {
         String hashedPassword = PasswordService.encrypt(password);
         // TODO: THIS IS REQUIRED
+
+       /*
         Account user = userRepository.getUserByEmailAndPassword(email, hashedPassword);
         Map<String, Object> returnMap = new HashMap<>();
         if (userOptional.isPresent()) {
@@ -128,5 +130,7 @@ public class AuthenticationService {
         }
         returnMap.put("token", null);
         return returnMap;
+
+        */
     }
 }

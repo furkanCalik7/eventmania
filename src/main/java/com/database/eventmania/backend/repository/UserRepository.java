@@ -34,7 +34,7 @@ public class UserRepository extends BaseRepository {
         throw new SQLException("Connection to the database failed");
     }
 
-    public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
+    public BasicUser getUserByEmailAndPassword(String email, String hashedPassword) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn != null) {
@@ -42,7 +42,7 @@ public class UserRepository extends BaseRepository {
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setString(1, email);
-            stmt.setString(2, password);
+            stmt.setString(2, hashedPassword);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next())

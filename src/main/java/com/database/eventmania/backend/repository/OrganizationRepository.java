@@ -30,4 +30,23 @@ public class OrganizationRepository extends BaseRepository {
         }
         return null;
     }
+
+    public Organization getOrganizationByEmailAndPassword(String email, String hashedPassword) throws SQLException {
+        Connection conn = super.getConnection();
+
+        if (conn != null) {
+            String query = "SELECT * FROM Organization WHERE email = ? AND hash_password = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, email);
+            stmt.setString(2, hashedPassword);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next())
+                return convertQueryResultToOrganization(rs);
+            return null;
+        }
+
+        throw new SQLException("Connection to the database failed");
+    }
 }
