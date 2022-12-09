@@ -1,4 +1,4 @@
-package com.database.eventmania.backend.entity;
+package com.database.eventmania.backend.entity.enums;
 
 public enum EventState {
     UPCOMING,

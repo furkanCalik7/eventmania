@@ -1,5 +1,8 @@
 package com.database.eventmania.backend.entity;
 
+import com.database.eventmania.backend.entity.enums.EventState;
+import com.database.eventmania.backend.entity.enums.SalesChannel;
+import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;

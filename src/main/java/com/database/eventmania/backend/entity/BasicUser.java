@@ -1,5 +1,6 @@
 package com.database.eventmania.backend.entity;
 
+import com.database.eventmania.backend.entity.enums.Gender;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;

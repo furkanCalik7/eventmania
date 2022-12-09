@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.repository;
 
 import com.database.eventmania.backend.entity.*;
+import com.database.eventmania.backend.entity.enums.Gender;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Connection;
