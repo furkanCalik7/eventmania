@@ -5,19 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Organization {
-    private Long organizationId;
-    private String email;
-    private String hashPassword;
+public class Organization extends Account {
     private String organizationName;
     private String description;
     private String phoneNumber;
 
     public Organization(Long organizationId, String email, String hashPassword,
                         String organizationName, String description, String phoneNumber) {
-        this.organizationId = organizationId;
-        this.email = email;
-        this.hashPassword = hashPassword;
+        super(organizationId, email, hashPassword);
         this.organizationName = organizationName;
         this.description = description;
         this.phoneNumber = phoneNumber;

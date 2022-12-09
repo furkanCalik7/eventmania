@@ -1,7 +1,12 @@
 package com.database.eventmania.backend.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class Event {
     private Long eventId;
     private Long adminId;
