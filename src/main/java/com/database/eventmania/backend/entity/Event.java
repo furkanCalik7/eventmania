@@ -3,7 +3,7 @@ package com.database.eventmania.backend.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -11,20 +11,20 @@ public class Event {
     private Long eventId;
     private Long adminId;
     private String feedback;
-    private LocalDate verificationDate;
+    private LocalDateTime verificationDate;
     private VerificationStatus verificationStatus;
     private String eventName;
     private String eventDescription;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Boolean isOnline;
     private String imageUrl;
     private Integer minimumAge;
     private EventState currentState;
 
-    public Event(Long eventId, Long adminId, String feedback, LocalDate verificationDate,
+    public Event(Long eventId, Long adminId, String feedback, LocalDateTime verificationDate,
             VerificationStatus verificationStatus, String eventName, String eventDescription,
-            LocalDate startDate, LocalDate endDate, Boolean isOnline, String imageUrl, Integer minimumAge,
+            LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl, Integer minimumAge,
             EventState currentState) {
         this.eventId = eventId;
         this.adminId = adminId;
