@@ -17,23 +17,26 @@ public class UserRepository extends BaseRepository {
     // TODO: connect to database and test the code
     public BasicUser getUserById(Long userId) throws SQLException {
         Connection conn = super.getConnection();
+
         if (conn != null) {
-            String query = "SELECT * FROM Basic_User WHERE user_id = ?";
+            String query = "SELECT * FROM BasicUser WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setLong(1, userId);
 
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next())
                 return convertQueryResultToUser(rs);
-            }
+            return null;
         }
-        return null;
+
+        throw new SQLException("Connection to the database failed");
     }
 
     public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
         Connection conn = super.getConnection();
+
         if (conn != null) {
             String query = "SELECT * FROM BasicUser WHERE email = ? AND hash_password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -42,10 +45,11 @@ public class UserRepository extends BaseRepository {
             stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            if (rs.next())
                 return convertQueryResultToUser(rs);
-            }
+            return null;
         }
-        return null;
+
+        throw new SQLException("Connection to the database failed");
     }
 }
