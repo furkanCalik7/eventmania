@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.entity;
 
 import com.database.eventmania.backend.entity.enums.EventState;
+import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import jakarta.persistence.Transient;
@@ -12,18 +13,21 @@ import java.time.LocalDateTime;
 @Setter
 public class TicketedEvent extends Event {
     private SalesChannel salesChannel;
+    private LocalDateTime saleStartTime;
     private LocalDateTime saleEndTime;
 
     @Transient
     private Integer capacity;
 
-    public TicketedEvent(Long eventId, Long adminId, String feedback, LocalDate verificationDate,
+    public TicketedEvent(Long eventId, Long adminId, String feedback, LocalDateTime verificationDate,
                          VerificationStatus verificationStatus, String eventName, String eventDescription,
-                         LocalDate startDate, LocalDate endDate, Boolean isOnline, String imageUrl,
-                         Integer minimumAge, EventState currentState, SalesChannel salesChannel, LocalDateTime saleEndTime) {
+                         LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
+                         Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                         LocalDateTime saleStartTime, LocalDateTime saleEndTime) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
-                endDate, isOnline, imageUrl, minimumAge, currentState);
+                endDate, isOnline, imageUrl, minimumAge, currentState, eventType);
         this.salesChannel = salesChannel;
+        this.saleStartTime = saleStartTime;
         this.saleEndTime = saleEndTime;
     }
 

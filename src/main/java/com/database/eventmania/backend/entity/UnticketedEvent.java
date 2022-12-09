@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.entity;
 
 import com.database.eventmania.backend.entity.enums.EventState;
+import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,9 @@ public class UnticketedEvent extends Event {
     public UnticketedEvent(Long eventId, Long adminId, String feedback, LocalDateTime verificationDate,
                            VerificationStatus verificationStatus, String eventName, String eventDescription,
                            LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                           Integer minimumAge, EventState currentState, Long userId, Integer capacity) {
+                           Integer minimumAge, EventState currentState, EventType eventType, Long userId, Integer capacity) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
-                endDate, isOnline, imageUrl, minimumAge, currentState);
+                endDate, isOnline, imageUrl, minimumAge, currentState, eventType);
         this.userId = userId;
         this.capacity = capacity;
     }
