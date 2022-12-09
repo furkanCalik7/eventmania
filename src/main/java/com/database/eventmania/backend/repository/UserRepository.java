@@ -32,8 +32,20 @@ public class UserRepository extends BaseRepository {
         return null;
     }
 
-    public User getUserByEmailAndPassword(String email, String password) {
-        // TODO: IMPLEMENT
+    public User getUserByEmailAndPassword(String email, String password) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn != null) {
+            String query = "SELECT * FROM User WHERE email = ? AND password = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return convertQueryResultToUser(rs);
+            }
+        }
         return null;
     }
 }

@@ -18,4 +18,7 @@ public class UserService {
     public User getUserById(Long userId) throws SQLException {
         return userRepository.getUserById(userId);
     }
+    public User getUserByEmailAndPassword(String email, String password) throws SQLException {
+        return userRepository.getUserByEmailAndPassword(email, password);
+    }
 }
