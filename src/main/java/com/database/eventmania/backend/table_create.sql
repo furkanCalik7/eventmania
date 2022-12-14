@@ -187,9 +187,79 @@ CREATE TABLE IF NOT EXISTS org_ticketed(
    PRIMARY KEY (event_id, organization_id),
    FOREIGN KEY (event_id) REFERENCES Event(event_id)
        ON DELETE CASCADE,
-   FOREIGN KEY (organization_id) REFERENCES Account(account_id)
+   FOREIGN KEY (organization_id) REFERENCES Organization(organization_id)
        ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS org_unticketed (
+    event_id INT NOT NULL,
+    organization_id INT NOT NULL,
+    request_date TIMESTAMPTZ NOT NULL,
+    PRIMARY KEY (event_id, organization_id),
+    FOREIGN KEY (event_id) REFERENCES Event(event_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (organization_id) REFERENCES Organization(organization_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS friends (
+    user_id INT NOT NULL,
+    friend_id INT NOT NULL CHECK (user_id != friend_id),
+    PRIMARY KEY (user_id, friend_id),
+    FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (friend_id) REFERENCES BasicUser(user_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS follow_org (
+    user_id INT NOT NULL,
+    organization_id INT NOT NULL,
+    PRIMARY KEY (user_id, organization_id),
+    FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (organization_id) REFERENCES Organization(organization_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS join_event(
+    event_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (event_id, user_id),
+    FOREIGN KEY (event_id) REFERENCES Event(event_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS follow_event(
+    event_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (event_id, user_id),
+    FOREIGN KEY (event_id) REFERENCES Event(event_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS event_sponsor (
+    sponsor_id INT NOT NULL,
+    event_id INT NOT NULL,
+    PRIMARY KEY (sponsor_id, event_id),
+    FOREIGN KEY (sponsor_id) REFERENCES Sponsor(sponsor_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES Event(event_id)
+        ON DELETE CASCADE
+);
+
+
+
+
+
+
+
+
+
 
 
 

@@ -20,5 +20,4 @@ public class Location {
     private String street;
 
 
-
 }
