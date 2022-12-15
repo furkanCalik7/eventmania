@@ -10,12 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class BaseRepository {
-    @Value("${spring.datasource.url}")
-    private String SERVER_URL;
-    @Value("${spring.datasource.username}")
-    private String USERNAME;
-    @Value("${spring.datasource.password}")
-    private String PASSWORD;
+
+    private String SERVER_URL = "jdbc:postgresql://db-postgresql-fra1-49552-do-user-8422201-0.b.db.ondigitalocean.com:25060/defaultdb";
+    private String USERNAME = "postgres_user";
+
+    private String PASSWORD = "AVNS_ZSFGuA-Go8U6TkjL8fk";
 
     private Connection connection;
 
@@ -38,20 +37,19 @@ public abstract class BaseRepository {
     }
 
     // TODO: should we check if gender is null? (consider adding Gender.null)
+    // TODO: Fix here
     public BasicUser convertQueryResultToUser(ResultSet rs) throws SQLException {
         // accountId, email, password, firstName, lastName, gender, phoneNumber, dob
 
         Gender gender;
 
-        String databaseGender = rs.getString("gender").toLowerCase();
-
-        if(databaseGender.equals("male")) {
+//        String databaseGender = rs.getString("gender").toLowerCase();
+        String databaseGender = "male";
+        if (databaseGender.equals("male")) {
             gender = Gender.MALE;
-        }
-        else if(databaseGender.equals("female")) {
+        } else if (databaseGender.equals("female")) {
             gender = Gender.FEMALE;
-        }
-        else {
+        } else {
             gender = Gender.OTHER;
         }
 
@@ -62,8 +60,8 @@ public abstract class BaseRepository {
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 gender,
-                rs.getString("phone_number"),
-                rs.getDate("dob").toLocalDate()
+                rs.getString("phone_number"), 12
+//                rs.getDate("dob").toLocalDate()
         );
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -20,8 +21,8 @@ public class BasicUser extends Account {
     private LocalDate dob;
 
     public BasicUser(Long userId, String email, String hashPassword,
-                String firstName, String lastName, Gender gender,
-                String phoneNumber, LocalDate dob) {
+                     String firstName, String lastName, Gender gender,
+                     String phoneNumber, LocalDate dob) {
         super(userId, email, hashPassword);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +31,14 @@ public class BasicUser extends Account {
         this.dob = dob;
     }
 
+    public BasicUser(Long accountId, String email, String hashPassword, String firstName, String lastName, Gender gender, String phoneNumber, Integer age) {
+        super(accountId, email, hashPassword);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.age = age;
+    }
 
     public Integer getAge() {
         return Period.between(this.dob, LocalDate.now()).getYears();

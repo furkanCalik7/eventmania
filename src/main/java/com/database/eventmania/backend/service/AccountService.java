@@ -20,61 +20,12 @@ public class AccountService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final OrganizationRepository organizationRepository;
-    private final AuthenticationService authenticationService;
+
     @Autowired
     public AccountService(UserRepository userRepository, AdminRepository adminRepository,
-                          OrganizationRepository organizationRepository, AuthenticationService authenticationService) {
+                          OrganizationRepository organizationRepository) {
         this.userRepository = userRepository;
         this.adminRepository = adminRepository;
         this.organizationRepository = organizationRepository;
-        this.authenticationService = authenticationService;
-    }
-
-    public Map<String, String> findAccountByEmailAndPassword(String email, String password) throws SQLException {
-        String hashedPassword = PasswordService.encrypt(password);
-        Algorithm algorithm = Algorithm.HMAC256(authenticationService.getKey());
-        Map<String, String> returnMap = new HashMap<>();
-
-        BasicUser user = userRepository.getUserByEmailAndPassword(email, hashedPassword);
-        if (user != null) {
-            String token = JWT.create()
-                    .withIssuer("eventmania")
-                    .withClaim("roleID", "BasicUser")
-                    .withClaim("userID", user.getAccountId())
-                    .sign(algorithm);
-            returnMap.put("token", token);
-            returnMap.put("type", "BasicUser");
-
-            return returnMap;
-        }
-
-        Organization organization = organizationRepository.getOrganizationByEmailAndPassword(email, hashedPassword);
-        if (organization != null) {
-            String token = JWT.create()
-                    .withIssuer("eventmania")
-                    .withClaim("roleID", "Organization")
-                    .withClaim("userID", organization.getAccountId())
-                    .sign(algorithm);
-            returnMap.put("token", token);
-            returnMap.put("type", "Organization");
-
-            return returnMap;
-        }
-
-        Admin admin = adminRepository.getAdminByEmailAndPassword(email, hashedPassword);
-        if (admin != null) {
-            String token = JWT.create()
-                    .withIssuer("eventmania")
-                    .withClaim("roleID", "Admin")
-                    .withClaim("userID", admin.getAccountId())
-                    .sign(algorithm);
-            returnMap.put("token", token);
-            returnMap.put("type", "Admin");
-
-            return returnMap;
-        }
-
-        return null;
-
     }
 }
