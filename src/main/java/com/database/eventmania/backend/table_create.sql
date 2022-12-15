@@ -1,6 +1,63 @@
-/*DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-*/
+drop table if exists card cascade;
+
+drop table if exists unticketedevent cascade;
+
+drop table if exists ticket cascade;
+
+drop table if exists category cascade;
+
+drop table if exists ticketedevent cascade;
+
+drop table if exists location cascade;
+
+drop table if exists rating cascade;
+
+drop table if exists screenshot cascade;
+
+drop table if exists report cascade;
+
+drop table if exists event_sponsor cascade;
+
+drop table if exists sponsor cascade;
+
+drop table if exists org_ticketed cascade;
+
+drop table if exists org_unticketed cascade;
+
+drop table if exists friends cascade;
+
+drop table if exists follow_org cascade;
+
+drop table if exists organization cascade;
+
+drop table if exists join_event cascade;
+
+drop table if exists follow_event cascade;
+
+drop table if exists basicuser cascade;
+
+drop table if exists wallet cascade;
+
+drop table if exists event cascade;
+
+drop table if exists admin cascade;
+
+drop view if exists account_with_type cascade;
+
+drop sequence if exists global_role_seq cascade;
+
+drop sequence if exists wallet_wallet_id_seq cascade;
+
+drop sequence if exists event_event_id_seq cascade;
+
+drop sequence if exists ticket_ticket_id_seq cascade;
+
+drop sequence if exists rating_rating_id_seq cascade;
+
+drop sequence if exists report_report_id_seq cascade;
+
+drop sequence if exists sponsor_sponsor_id_seq cascade;
+
 CREATE SEQUENCE global_role_seq;
 
 CREATE TABLE IF NOT EXISTS Admin (
@@ -18,7 +75,7 @@ CREATE TABLE IF NOT EXISTS BasicUser (
     user_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    wallet_id INT UNIQUE NOT NULL,
+    wallet_id INT DEFAULT -1,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     gender VARCHAR(30),
@@ -245,16 +302,37 @@ CREATE TABLE IF NOT EXISTS follow_event(
 );
 
 
+CREATE OR REPLACE FUNCTION create_base_wallet_func()
+    RETURNS trigger AS
+$$
+BEGIN
+    INSERT INTO Wallet (balance) VALUES (0);
+    UPDATE BasicUser SET wallet_id = currval('wallet_wallet_id_seq') WHERE user_id = currval('global_role_seq');
+    RETURN NEW;
+END;
+$$
+    LANGUAGE 'plpgsql';
+
+CREATE TRIGGER create_base_wallet
+    AFTER INSERT
+    ON BasicUser
+    FOR EACH ROW
+EXECUTE PROCEDURE create_base_wallet_func();
 
 
 
+CREATE VIEW account_with_type AS(
+SELECT organization_id, email, hash_password, 'Organization' AS account_type
+FROM Organization
+    UNION
+SELECT user_id, email, hash_password, 'BasicUser' AS account_type
+FROM BasicUser
+    UNION
+SELECT admin_id, email, hash_password, 'Admin' AS account_type
+FROM Admin);
 
+INSERT INTO Admin (hash_password, email) VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
 
+INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
+    VALUES (md5(random()::text), 'ahmet@gmail.com', NULL, 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
 
-
-
-
-
-
-/*INSERT INTO Account (password, email) VALUES ('456', 'berkay123@gmail.com'), ('1234', 'test@gmail.com');
-*/
