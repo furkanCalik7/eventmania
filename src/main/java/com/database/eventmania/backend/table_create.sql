@@ -1,5 +1,7 @@
+CREATE SEQUENCE global_role_seq;
+
 CREATE TABLE IF NOT EXISTS Admin (
-    admin_id INT NOT NULL,
+    admin_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     PRIMARY KEY (admin_id)
@@ -11,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Wallet(
 );
 
 CREATE TABLE IF NOT EXISTS BasicUser (
-    user_id serial primary key not null,
+    user_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     wallet_id INT UNIQUE NOT NULL,
@@ -25,7 +27,7 @@ CREATE TABLE IF NOT EXISTS BasicUser (
 );
 
 CREATE TABLE IF NOT EXISTS Organization (
-    organization_id INT NOT NULL,
+    organization_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     admin_id INT NOT NULL,
@@ -36,7 +38,6 @@ CREATE TABLE IF NOT EXISTS Organization (
     organization_name VARCHAR(30) NOT NULL,
     description VARCHAR(140),
     phone_number VARCHAR(20) UNIQUE NOT NULL,
-    PRIMARY KEY (organization_id),
     FOREIGN KEY (admin_id) REFERENCES Admin(admin_id),
     FOREIGN KEY (wallet_id) REFERENCES Wallet(wallet_id)
         ON DELETE CASCADE
