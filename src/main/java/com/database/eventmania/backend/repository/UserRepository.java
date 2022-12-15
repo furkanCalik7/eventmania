@@ -1,13 +1,14 @@
 package com.database.eventmania.backend.repository;
 
 import com.database.eventmania.backend.entity.BasicUser;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.database.eventmania.backend.entity.enums.Gender;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 @Repository
 public class UserRepository extends BaseRepository {
@@ -71,19 +72,26 @@ public class UserRepository extends BaseRepository {
         throw new SQLException("Connection to the database failed");
     }
 
-    public boolean saveUser(String username, String password) throws SQLException {
+    public boolean saveUser(String email, String hashPassword,
+                            String firstName, String lastName, Gender gender,
+                            String phoneNumber, LocalDate dob) throws SQLException {
+
         Connection conn = super.getConnection();
-        // TODO: fix here
+
         if (conn != null) {
-            String query = "INSERT INTO basicuser (hash_password, email, wallet_id, first_name, last_name) " +
-                    "VALUES (?,?,?,?,?)";
+            String query = "INSERT INTO BasicUser (hash_password, email, first_name, last_name, gender, phone_number, date_of_birth) " +
+                    "VALUES (?,?,?,?,?,?,?)";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, password);
-            stmt.setString(2, username);
-            stmt.setInt(3, 0);
-            stmt.setString(4, "furkan");
-            stmt.setString(5, "calik");
+            stmt.setString(1, hashPassword);
+            stmt.setString(2, email);
+            stmt.setString(3, firstName);
+            stmt.setString(4, lastName);
+            stmt.setString(5, gender.name());
+            stmt.setString(6, phoneNumber);
+            stmt.setDate(7, java.sql.Date.valueOf(dob));
+
             ResultSet rs = stmt.executeQuery();
+
             return true;
         }
         return false;

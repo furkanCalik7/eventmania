@@ -1,18 +1,14 @@
 package com.database.eventmania.backend.service;
 
 import com.database.eventmania.backend.entity.BasicUser;
+import com.database.eventmania.backend.entity.enums.Gender;
 import com.database.eventmania.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.time.LocalDate;
 
 @Service
 public class UserService {
@@ -33,8 +29,10 @@ public class UserService {
         return userRepository.getUserByEmailAndPassword(email, password);
     }
 
-    public boolean saveUser(String username, String password) throws SQLException {
+    public boolean saveUser(String email, String password,
+                            String firstName, String lastName, Gender gender,
+                            String phoneNumber, LocalDate dob) throws SQLException {
         String hashedPassword = bCryptPasswordEncoder.encode(password);
-        return userRepository.saveUser(username, hashedPassword);
+        return userRepository.saveUser(email, hashedPassword, firstName, lastName, gender, phoneNumber, dob);
     }
 }

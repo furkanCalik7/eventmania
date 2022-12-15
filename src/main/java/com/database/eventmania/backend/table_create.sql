@@ -75,11 +75,7 @@ CREATE TABLE IF NOT EXISTS BasicUser (
     user_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-<<<<<<< Updated upstream
-    wallet_id INT DEFAULT -1,
-=======
-    wallet_id INT,
->>>>>>> Stashed changes
+    wallet_id INT NOT NULL DEFAULT -1,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     gender VARCHAR(30),
