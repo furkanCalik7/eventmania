@@ -75,7 +75,11 @@ CREATE TABLE IF NOT EXISTS BasicUser (
     user_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+<<<<<<< Updated upstream
     wallet_id INT DEFAULT -1,
+=======
+    wallet_id INT,
+>>>>>>> Stashed changes
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     gender VARCHAR(30),
@@ -291,7 +295,7 @@ CREATE TABLE IF NOT EXISTS join_event(
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS follow_event(
+CREATE TABLE IF NOT EXISTS follow_event (
     event_id INT NOT NULL,
     user_id INT NOT NULL,
     PRIMARY KEY (event_id, user_id),
@@ -300,6 +304,20 @@ CREATE TABLE IF NOT EXISTS follow_event(
     FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
         ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS event_type(
+	event_id INT NOT NULL,
+	type_of_event VARCHAR(50) NOT NULL,
+	PRIMARY KEY (event_id),
+	FOREIGN KEY (event_id) REFERENCES Event(event_id)
+	ON DELETE CASCADE
+);
+
+INSERT INTO Admin (hash_password, email) VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
+
+INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
+VALUES (md5(random()::text), 'ahmet@gmail.com', NULL, 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
+
 
 
 CREATE OR REPLACE FUNCTION create_base_wallet_func()
