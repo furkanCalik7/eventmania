@@ -1,10 +1,12 @@
+/*DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+*/
 CREATE SEQUENCE global_role_seq;
 
 CREATE TABLE IF NOT EXISTS Admin (
     admin_id INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    PRIMARY KEY (admin_id)
+    email VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Wallet(
@@ -110,7 +112,7 @@ CREATE TABLE IF NOT EXISTS Ticket (
         ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
         ON DELETE CASCADE,
-    FOREIGN KEY (category_name) REFERENCES Category(category_name)
+    FOREIGN KEY (category_name, ticketed_event_id) REFERENCES Category(category_name, ticketed_event_id)
         ON DELETE SET NULL
 );
 
@@ -149,7 +151,6 @@ CREATE TABLE IF NOT EXISTS Report (
     report_type VARCHAR(50) NOT NULL,
     report_state VARCHAR(50),
     report_date TIMESTAMPTZ NOT NULL,
-    PRIMARY KEY (report_id),
     FOREIGN KEY (event_id) REFERENCES Event(event_id)
         ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES BasicUser(user_id)
@@ -243,15 +244,6 @@ CREATE TABLE IF NOT EXISTS follow_event(
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS event_sponsor (
-    sponsor_id INT NOT NULL,
-    event_id INT NOT NULL,
-    PRIMARY KEY (sponsor_id, event_id),
-    FOREIGN KEY (sponsor_id) REFERENCES Sponsor(sponsor_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES Event(event_id)
-        ON DELETE CASCADE
-);
 
 
 
