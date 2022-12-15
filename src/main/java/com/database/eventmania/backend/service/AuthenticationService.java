@@ -59,8 +59,7 @@ public class AuthenticationService {
     }
 
 
-// TODO: write a method that identifies the user type
-    
+// TODO: Find a method to how to identify the user type
    public Map<String, Object> authenticateAccount(String email, String password) throws SQLException {
         String hashedPassword = PasswordService.encrypt(password);
         // TODO: THIS IS REQUIRED

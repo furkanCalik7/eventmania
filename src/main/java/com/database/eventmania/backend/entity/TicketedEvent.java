@@ -7,6 +7,7 @@ import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -30,8 +31,6 @@ public class TicketedEvent extends Event {
         this.saleStartTime = saleStartTime;
         this.saleEndTime = saleEndTime;
     }
-
     // TODO: getCapacity() method should be implemented
-
 }
 

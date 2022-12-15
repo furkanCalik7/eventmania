@@ -13,6 +13,7 @@ public class AdminRepository extends BaseRepository {
     public AdminRepository() {
         super.connect();
     }
+
     public Admin getAdminById(Long adminId) throws SQLException {
         Connection conn = super.getConnection();
         if (conn != null) {
