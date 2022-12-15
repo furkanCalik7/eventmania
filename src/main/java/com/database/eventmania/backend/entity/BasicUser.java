@@ -12,6 +12,7 @@ import java.time.Period;
 @Getter
 @Setter
 public class BasicUser extends Account {
+    private Long walletId;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -20,24 +21,16 @@ public class BasicUser extends Account {
     private Integer age;
     private LocalDate dob;
 
-    public BasicUser(Long userId, String email, String hashPassword,
+    public BasicUser(Long userId, Long walletId, String email, String hashPassword,
                      String firstName, String lastName, Gender gender,
                      String phoneNumber, LocalDate dob) {
         super(userId, email, hashPassword);
+        this.walletId = walletId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.dob = dob;
-    }
-
-    public BasicUser(Long accountId, String email, String hashPassword, String firstName, String lastName, Gender gender, String phoneNumber, Integer age) {
-        super(accountId, email, hashPassword);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.phoneNumber = phoneNumber;
-        this.age = age;
     }
 
     public Integer getAge() {
