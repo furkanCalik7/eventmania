@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(path = "/login")
-public class LoginController {
-    @GetMapping()
-    public ModelAndView loginPage() {
-        ModelAndView mav = new ModelAndView("login.html");
+@RequestMapping("event")
+public class EventController {
+
+    @GetMapping("create")
+    public ModelAndView createEvent() {
+        ModelAndView mav = new ModelAndView("frontend/event/create_event.html");
         return mav;
     }
 }

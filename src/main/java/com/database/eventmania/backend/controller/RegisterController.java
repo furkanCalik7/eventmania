@@ -1,7 +1,6 @@
 package com.database.eventmania.backend.controller;
 
 import com.database.eventmania.backend.model.BasicUserRegisterModel;
-import com.database.eventmania.backend.model.RegisterModel;
 import com.database.eventmania.backend.service.OrganizationService;
 import com.database.eventmania.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -41,15 +40,14 @@ public class RegisterController {
                 registerModel.getGender(),
                 registerModel.getPhoneNumber(),
                 registerModel.getDob()
-                );
+        );
         return "";
     }
-
-    @PostMapping()
-    public String registerOrganization(@ModelAttribute("registerModel") OrganizationRegisterModel registerModel) throws SQLException {
-        // organizationService.saveOrganization(
-
-        //         );
-        return "";
-    }
+//    @PostMapping()
+//    public String registerOrganization(@ModelAttribute("registerModel") OrganizationRegisterModel registerModel) throws SQLException {
+//        // organizationService.saveOrganization(
+//
+//        //         );
+//        return "";
+//    }
 }

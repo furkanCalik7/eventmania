@@ -15,7 +15,10 @@ public class BasicUserRegisterModel {
     private String password;
     private String firstName;
     private String lastName;
-    private Gender gender;
+    private String gender;
     private String phoneNumber;
-    private LocalDate dob;
+    private String dob;
+
+    public BasicUserRegisterModel() {
+    }
 }

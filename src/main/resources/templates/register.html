@@ -24,7 +24,7 @@
                         <form th:action="@{/register}" th:object="${registerModel}" class="text-center" method="post">
                             <div class="mb-3"></div>
                             <label class="form-label" style="display: block;text-align: left;">Email</label><input
-                                class="form-control" th:field="*{username}" type="email" name="Email"
+                                class="form-control" th:field="*{email}" type="email" name="Email"
                                 placeholder="Email"
                                 style="margin-bottom: 2px;"/><label class="form-label"
                                                                     style="display: block;text-align: left;">Password</label><input
@@ -33,32 +33,40 @@
                             <div class="d-md-flex justify-content-md-start align-items-md-center mb-3">
                                 <div style="margin: 0px;margin-right: 14px;margin-top: 10px;"><label class="form-label"
                                                                                                      style="display: block;text-align: left;">Name</label><input
-                                        class="form-control" type="text" name="Name" placeholder="Name"/></div>
+                                        th:field="*{firstName}" class="form-control" type="text" name="Name"
+                                        placeholder="Name"/></div>
                                 <div style="margin-top: 9px;"><label class="form-label"
                                                                      style="display: block;text-align: left;">Surname</label><input
-                                        class="form-control" type="text" name="Surname" placeholder="Surname"/></div>
+                                        class="form-control" type="text" th:field="*{lastName}" name="Surname"
+                                        placeholder="Surname"/></div>
                             </div>
                             <label class="form-label" style="display: block;text-align: left;">Telephone</label><input
-                                class="form-control" type="tel" placeholder="Telephone" name="Telephone"
+                                class="form-control" type="tel" th:field="*{phoneNumber}" placeholder="Telephone"
+                                name="Telephone"
                                 style="margin-bottom: 3px;"/><label class="form-label"
                                                                     style="display: block;text-align: left;">Gender</label>
                             <div class="container">
                                 <div class="form-check" style="text-align: left;"><input id="formCheck-1"
                                                                                          class="form-check-input"
+                                                                                         value="male"
+                                                                                         th:field="*{gender}"
                                                                                          type="radio"/><label
                                         class="form-check-label" for="formCheck-1">Male</label></div>
                                 <div class="form-check" style="text-align: left;"><input id="formCheck-2"
                                                                                          class="form-check-input"
+                                                                                         value="female"
+                                                                                         th:field="*{gender}"
                                                                                          type="radio"/><label
                                         class="form-check-label" for="formCheck-2">Female</label></div>
-                                <div class="form-check" style="text-align: left;"><input id="formCheck-1"
+                                <div class="form-check" style="text-align: left;"><input id="formCheck-3"
                                                                                          class="form-check-input"
+                                                                                         th:field="*{gender}"
+                                                                                         value="other"
                                                                                          type="radio"/><label
                                         class="form-check-label" for="formCheck-1">Other</label></div>
                             </div>
                             <label class="form-label" style="display: block;text-align: left;">Birth Date</label><input
-                                class="form-control" type="datetime-local" name="birthdate"/>
-                            <fieldset></fieldset>
+                                class="form-control" th:field="*{dob}" type="datetime-local" name="birthdate"/>
                             <div class="mb-3">
                                 <button class="btn btn-primary d-block w-100" type="submit" style="margin-top: 9px;">
                                     Sign up
