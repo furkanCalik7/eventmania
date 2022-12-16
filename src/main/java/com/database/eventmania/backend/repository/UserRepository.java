@@ -88,6 +88,7 @@ public class UserRepository extends BaseRepository {
             stmt.setString(4, lastName);
             stmt.setString(5, gender.name());
             stmt.setString(6, phoneNumber);
+            // TODO: I fixed the date time problem in the frontend, this should be changed I guess.
             stmt.setDate(7, java.sql.Date.valueOf(dob));
 
             ResultSet rs = stmt.executeQuery();

@@ -12,8 +12,7 @@ import java.sql.SQLException;
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
+    
     public OrganizationService(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();

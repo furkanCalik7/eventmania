@@ -15,31 +15,11 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private UserRepository userRepository;
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository, AccountRepository accountRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
-
-    /*
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        try {
-            // TODO: add the view implementation that I can get the type of the user and the username at the same query
-            // RECOMMENDATION: Use the view query in the homework
-            // TODO: make the three table (user, admin and orginaztion) sequential ids increment
-            BasicUser user = userRepository.getUserByEmail(username);
-            if (user == null) throw new UsernameNotFoundException("Username or password is invalid.");
-            return new User(user.getEmail(), user.getHashPassword(), List.of(new SimpleGrantedAuthority("BasicUser")));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-     */
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
