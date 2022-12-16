@@ -4,10 +4,7 @@ import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.entity.enums.Gender;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 
 @Repository
@@ -76,6 +73,7 @@ public class UserRepository extends BaseRepository {
                             String firstName, String lastName, Gender gender,
                             String phoneNumber, LocalDate dob) throws SQLException {
 
+
         Connection conn = super.getConnection();
 
         if (conn != null) {
@@ -89,7 +87,7 @@ public class UserRepository extends BaseRepository {
             stmt.setString(5, gender.name());
             stmt.setString(6, phoneNumber);
             // TODO: I fixed the date time problem in the frontend, this should be changed I guess.
-            stmt.setDate(7, java.sql.Date.valueOf(dob));
+            stmt.setDate(7, Date.valueOf(dob));
 
             ResultSet rs = stmt.executeQuery();
 

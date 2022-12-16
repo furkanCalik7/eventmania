@@ -16,9 +16,9 @@ public abstract class BaseRepository {
 
 
     private String SERVER_URL = "jdbc:postgresql://db-postgresql-fra1-49552-do-user-8422201-0.b.db.ondigitalocean.com:25060/defaultdb";
-    private String USERNAME = "postgres_user";
+    private String USERNAME = "doadmin";
 
-    private String PASSWORD = "AVNS_ZSFGuA-Go8U6TkjL8fk";
+    private String PASSWORD = "AVNS_FBj67GgeDeXYsD6RRIG";
 
     private Connection connection;
 
