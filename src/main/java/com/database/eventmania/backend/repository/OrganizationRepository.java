@@ -49,4 +49,21 @@ public class OrganizationRepository extends BaseRepository {
 
         throw new SQLException("Connection to the database failed");
     }
+
+    public boolean saveOrganization(String email, String hashedPassword,
+                                    String organizationName, String description, String phoneNumber) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn != null) {
+            String query = "INSERT INTO Organization (hashedPassword, email, organization_name, description, phone_number) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, email);
+            stmt.setString(3, organizationName);
+            stmt.setString(4, description);
+            stmt.setString(5, phoneNumber);
+            return stmt.executeUpdate() > 0;
+        }
+        return false;
+    }
 }

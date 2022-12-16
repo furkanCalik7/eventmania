@@ -8,5 +8,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class OrganizationRegisterModel {
+    private String email;
+    private String password;
+    private String organizationName;
+    private String description;
+    private String phoneNumber;
 
 }
