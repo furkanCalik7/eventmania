@@ -21,8 +21,8 @@ public class RegisterController {
     }
 
     // TODO: different login page functions for different user types
-    @GetMapping()
-    public ModelAndView loginPage() {
+    @GetMapping("/user")
+    public ModelAndView registerPage() {
         ModelAndView mav = new ModelAndView("register.html");
         BasicUserRegisterModel registerModel = new BasicUserRegisterModel();
         mav.addObject("registerModel", registerModel);
