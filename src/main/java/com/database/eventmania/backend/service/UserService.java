@@ -38,7 +38,7 @@ public class UserService {
                             String firstName, String lastName, String gender,
                             String phoneNumber, String dob) throws SQLException {
         String hashedPassword = bCryptPasswordEncoder.encode(password);
-//        return userRepository.saveUser(email, hashedPassword, firstName, lastName, gender, phoneNumber, dob);
-        return true;
+        Gender genderEnum = Gender.valueOf( gender.toUpperCase() );
+        return userRepository.saveUser(email, hashedPassword, firstName, lastName, genderEnum, phoneNumber, LocalDate.parse(dob));
     }
 }
