@@ -347,6 +347,6 @@ FROM Admin);
 
 INSERT INTO Admin (hash_password, email) VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
 
-INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
-    VALUES (md5(random()::text), 'ahmet@gmail.com', NULL, 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
+INSERT INTO BasicUser (hash_password, email, first_name, last_name, gender, phone_number, date_of_birth)
+    VALUES (md5(random()::text), 'ahmet@gmail.com', 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
 
