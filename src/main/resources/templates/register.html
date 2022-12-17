@@ -24,20 +24,21 @@
 						<form th:action="@{/register}" th:object="${registerModel}" class="text-center" method="post">
 							<div class="mb-3"></div>
 							<label class="form-label" style="display: block;text-align: left;">Email</label><input
-								class="form-control" th:field="*{email}" type="email" name="Email"
+								class="form-control" th:field="*{email}" required type="email" name="Email"
 								placeholder="Email"
 								style="margin-bottom: 2px;"/><label class="form-label"
 							                                        style="display: block;text-align: left;">Password</label><input
-								class="form-control" th:field="*{password}" type="password" placeholder="Password"
+								class="form-control" th:field="*{password}" required type="password"
+								placeholder="Password"
 								name="Password"/>
 							<div class="d-md-flex justify-content-md-start align-items-md-center mb-3">
 								<div style="margin: 0px;margin-right: 14px;margin-top: 10px;"><label class="form-label"
 								                                                                     style="display: block;text-align: left;">Name</label><input
-										th:field="*{firstName}" class="form-control" type="text" name="Name"
+										th:field="*{firstName}" required class="form-control" type="text" name="Name"
 										placeholder="Name"/></div>
 								<div style="margin-top: 9px;"><label class="form-label"
 								                                     style="display: block;text-align: left;">Surname</label><input
-										class="form-control" type="text" th:field="*{lastName}" name="Surname"
+										class="form-control" type="text" required th:field="*{lastName}" name="Surname"
 										placeholder="Surname"/></div>
 							</div>
 							<label class="form-label" style="display: block;text-align: left;">Telephone</label><input
@@ -48,17 +49,20 @@
 							<div class="container">
 								<div class="form-check" style="text-align: left;"><input id="formCheck-1"
 								                                                         class="form-check-input"
+								                                                         required
 								                                                         value="male"
 								                                                         th:field="*{gender}"
 								                                                         type="radio"/><label
 										class="form-check-label" for="formCheck-1">Male</label></div>
 								<div class="form-check" style="text-align: left;"><input id="formCheck-2"
 								                                                         class="form-check-input"
+								                                                         required
 								                                                         value="female"
 								                                                         th:field="*{gender}"
 								                                                         type="radio"/><label
 										class="form-check-label" for="formCheck-2">Female</label></div>
 								<div class="form-check" style="text-align: left;"><input id="formCheck-3"
+								                                                         required
 								                                                         class="form-check-input"
 								                                                         th:field="*{gender}"
 								                                                         value="other"
@@ -66,12 +70,29 @@
 										class="form-check-label" for="formCheck-1">Other</label></div>
 							</div>
 							<label class="form-label" style="display: block;text-align: left;">Birth Date</label><input
-								class="form-control" th:field="*{dob}" type="date" name="birthdate"/>
-							<div th:if="${param.register_success}" class="mb-3">
-								<div class="alert alert-success">Registered successfully. You can log in.
+								class="form-control" th:field="*{dob}" type="date" required name="birthdate"/>
+							<div th:switch="${#strings.toString(param.result)}">
+								<!--								<div th:if="${param.result} == 'success'" class="mb-3">-->
+								<div th:case="'success'">
+									<br>
+									<div class="alert alert-success">Registered successfully. You can log in.
+									</div>
+									<br>
+								</div>
+								<div th:case="'error'" class="mb-3">
+									<br>
+									<div class="alert alert-danger"> Could not register the system.
+									</div>
+									<br>
+								</div>
+								<div th:case="'alreadyExists'" class="mb-3">
+									<br>
+									<div class="alert alert-danger"> Email is already taken. Please select another one.
+									</div>
+									<br>
 								</div>
 							</div>
-							<div th:unless="${param.register_success}" class="mb-3">
+							<div class="mb-3">
 								<button class="btn btn-primary d-block w-100" type="submit" style="margin-top: 9px;">
 									Sign up
 								</button>

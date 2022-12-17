@@ -72,10 +72,7 @@ public class UserRepository extends BaseRepository {
     public boolean saveUser(String email, String hashPassword,
                             String firstName, String lastName, Gender gender,
                             String phoneNumber, LocalDate dob) throws SQLException {
-
-
         Connection conn = super.getConnection();
-
         if (conn != null) {
             String query = "INSERT INTO BasicUser (hash_password, email, first_name, last_name, gender, phone_number, date_of_birth) " +
                     "VALUES (?,?,?,?,?,?,?)";
@@ -86,11 +83,9 @@ public class UserRepository extends BaseRepository {
             stmt.setString(4, lastName);
             stmt.setString(5, gender.name());
             stmt.setString(6, phoneNumber);
-            // TODO: I fixed the date time problem in the frontend, this should be changed I guess.
             stmt.setDate(7, Date.valueOf(dob));
-
-            ResultSet rs = stmt.executeQuery();
-
+            // TODO: user executeUpdate rahter executeQuery since its throwing "result is returned"
+            stmt.executeUpdate();
             return true;
         }
         return false;

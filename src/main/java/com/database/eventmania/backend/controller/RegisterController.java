@@ -3,6 +3,8 @@ package com.database.eventmania.backend.controller;
 import com.database.eventmania.backend.model.BasicUserRegisterModel;
 import com.database.eventmania.backend.service.OrganizationService;
 import com.database.eventmania.backend.service.UserService;
+import org.springframework.boot.Banner;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,7 +22,6 @@ public class RegisterController {
         this.organizationService = organizationService;
     }
 
-    // TODO: different login page functions for different user types
     @GetMapping("/user")
     public ModelAndView registerPage() {
         ModelAndView mav = new ModelAndView("register.html");
@@ -31,17 +32,23 @@ public class RegisterController {
 
     // TODO: register organization
     @PostMapping()
-    public String registerBasicUser(@ModelAttribute("registerModel") BasicUserRegisterModel registerModel) throws SQLException {
-        userService.saveUser(
-                registerModel.getEmail(),
-                registerModel.getPassword(),
-                registerModel.getFirstName(),
-                registerModel.getLastName(),
-                registerModel.getGender(),
-                registerModel.getPhoneNumber(),
-                registerModel.getDob()
-        );
-        return "";
+    public ModelAndView registerBasicUser(@ModelAttribute("registerModel") BasicUserRegisterModel registerModel, ModelMap modelMap) {
+        try {
+            userService.saveUser(
+                    registerModel.getEmail(),
+                    registerModel.getPassword(),
+                    registerModel.getFirstName(),
+                    registerModel.getLastName(),
+                    registerModel.getGender(),
+                    registerModel.getPhoneNumber(),
+                    registerModel.getDob()
+            );
+            modelMap.addAttribute("result", "success");
+        } catch (SQLException e) {
+            if (e.getSQLState() == "23505") modelMap.addAttribute("result", "alreadyExists");
+            else modelMap.addAttribute("result", "error");
+        }
+        return new ModelAndView("redirect:/register/user", modelMap);
     }
 //    @PostMapping()
 //    public String registerOrganization(@ModelAttribute("registerModel") OrganizationRegisterModel registerModel) throws SQLException {
