@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Service
 public class UserService {
@@ -35,5 +36,9 @@ public class UserService {
         String hashedPassword = bCryptPasswordEncoder.encode(password);
         Gender genderEnum = Gender.valueOf( gender.toUpperCase() );
         return userRepository.saveUser(email, hashedPassword, firstName, lastName, genderEnum, phoneNumber, LocalDate.parse(dob));
+    }
+
+    public ArrayList<BasicUser> getALlUsers() throws SQLException {
+        return userRepository.getAllUsers();
     }
 }
