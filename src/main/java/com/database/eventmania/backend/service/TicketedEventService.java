@@ -23,9 +23,13 @@ public class TicketedEventService {
                                        VerificationStatus verificationStatus, String eventName, String eventDescription,
                                        LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
                                        Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
-                                       LocalDateTime saleStartTime, LocalDateTime saleEndTime) throws SQLException {
-        return ticketedEventRepository.createTicketedEvent(adminId, feedback, verificationDate, verificationStatus,
-                                                            eventName, eventDescription, startDate, endDate, isOnline, imageUrl,
-                                                            minimumAge, currentState, eventType, salesChannel, saleStartTime, saleEndTime);
+                                       LocalDateTime saleStartTime, LocalDateTime saleEndTime,
+                                       String locationName, Float latitude, Float longitude,
+                                       String postalCode, String state, String city, String street, String country,
+                                       String addressDescription) throws SQLException {
+        return ticketedEventRepository.createTicketedEvent(adminId, feedback, verificationDate, verificationStatus, eventName,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,
+                saleStartTime, saleEndTime, locationName, latitude, longitude, postalCode, state, city,
+                street, country, addressDescription);
     }
 }

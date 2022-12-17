@@ -3,6 +3,7 @@ package com.database.eventmania.backend.service;
 import com.database.eventmania.backend.DTO.EventDTO;
 import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
+import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import com.database.eventmania.backend.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,18 @@ public class EventService {
     private Integer minimumAge;
     private EventState currentState;
     private EventType eventType;
-    public boolean createEvent(Long adminId, String feedback, LocalDateTime verificationDate,
+    public boolean createEvent(boolean isTicketed, Long adminId, String feedback, LocalDateTime verificationDate,
                                VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, EventType eventType) throws SQLException {
-        return eventRepository.createEvent(adminId, feedback, verificationDate, verificationStatus,
-                                            eventName, eventDescription, startDate, endDate, isOnline, imageUrl,
-                                            minimumAge, currentState, eventType);
+                               Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                               LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
+                               Integer capacity, String locationName, Float latitude, Float longitude,
+                               String postalCode, String state, String city, String street, String country,
+                               String addressDescription) throws SQLException {
+        return eventRepository.createEvent(isTicketed, adminId, feedback, verificationDate, verificationStatus, eventName,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,
+                saleStartTime, saleEndTime, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
+                street, country, addressDescription);
     }
 
     public boolean deleteEvent(Long eventId) throws SQLException {

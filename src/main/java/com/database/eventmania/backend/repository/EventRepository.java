@@ -34,15 +34,114 @@ public class EventRepository extends BaseRepository {
         return true;
     }
 
+    public boolean createEvent(boolean isTicketed, Long adminId, String feedback, LocalDateTime verificationDate,
+                               VerificationStatus verificationStatus, String eventName, String eventDescription,
+                               LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
+                               Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                               LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
+                               Integer capacity, String locationName, Float latitude, Float longitude,
+                               String postalCode, String state, String city, String street, String country,
+                               String addressDescription) throws SQLException {
+        Connection conn = super.getConnection();
+
+        String insertQuery = "INSERT INTO Event (admin_id, feedback, verification_date, verification_status, " +
+                "event_name, description, start_date, end_date, is_online, image_url, minimum_age, " +
+                "current_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement stmt = conn.prepareStatement(insertQuery);
+        stmt.setLong(1, adminId);
+        stmt.setString(2, feedback);
+        stmt.setObject(3, verificationDate);
+        stmt.setString(4, verificationStatus.toString());
+        stmt.setString(5, eventName);
+        stmt.setString(6, eventDescription);
+        stmt.setTimestamp(7, java.sql.Timestamp.valueOf(startDate));
+        stmt.setTimestamp(8, java.sql.Timestamp.valueOf(endDate));
+        stmt.setBoolean(9, isOnline);
+        stmt.setString(10, imageUrl);
+        stmt.setInt(11, minimumAge);
+        stmt.setString(12, currentState.toString());
+
+        if (stmt.executeUpdate() == 0) {
+            throw new SQLException("Creating event failed, no rows affected.");
+        }
+
+        // query a sequence to get the last inserted event id
+        String query = "SELECT currval('event_event_id_seq')";
+        stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        Long eventId = rs.getLong(1);
+
+        // create event in event_type table
+        createEventInEventType(eventId, eventType);
+
+        // create event in ticketed_event table
+        if (isTicketed) {
+            insertQuery = "INSERT INTO TicketedEvent (event_id, sales_channel, sale_start_time, sale_end_time) " +
+                    "VALUES (?, ?, ?, ?)";
+            stmt = conn.prepareStatement(insertQuery);
+            stmt.setLong(1, eventId);
+            stmt.setString(2, salesChannel.toString());
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(saleStartTime));
+            stmt.setTimestamp(4, java.sql.Timestamp.valueOf(saleEndTime));
+
+            if (stmt.executeUpdate() == 0) {
+                throw new SQLException("Creating event in ticketed_event table failed, no rows affected.");
+            }
+        }
+
+        else {
+            insertQuery = "INSERT INTO UnticketedEvent (event_id, user_id, capacity) VALUES (?,?,?)";
+            stmt = conn.prepareStatement(insertQuery);
+            stmt.setLong(1, eventId);
+            stmt.setLong(2, userId);
+            stmt.setInt(3, capacity);
+
+            if (stmt.executeUpdate() == 0) {
+                throw new SQLException("Creating event in unticketed_event table failed, no rows affected.");
+            }
+        }
+
+        // create event in Location table
+        insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
+                "postal_code, state, city, street, country, address_description) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        stmt = conn.prepareStatement(insertQuery);
+        stmt.setLong(1, eventId);
+        stmt.setString(2, locationName);
+        stmt.setDouble(3, latitude);
+        stmt.setDouble(4, longitude);
+        stmt.setString(5, postalCode);
+        stmt.setString(6, state);
+        stmt.setString(7, city);
+        stmt.setString(8, street);
+        stmt.setString(9, country);
+        stmt.setString(10, addressDescription);
+
+        if (stmt.executeUpdate() == 0) {
+            throw new SQLException("Creating event in Location table failed, no rows affected.");
+        }
+
+
+
+        return true;
+    }
+
+    /*
+    // TODO: Add a method to create an event in the correct event table
     public boolean createEvent(Long adminId, String feedback, LocalDateTime verificationDate,
                                VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, EventType eventType) throws SQLException {
+                               Integer minimumAge, EventState currentState, EventType eventType, boolean isTicketed) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null)
             return false;
 
+        if (isTicketed) {
+
+        }
         String query = "INSERT INTO Event (admin_id, feedback, verification_date, verification_status, event_name, " +
                 "description, start_date, end_date, is_online, image_url, minimum_age, current_state) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -78,6 +177,8 @@ public class EventRepository extends BaseRepository {
         return true;
     }
 
+     */
+
     public boolean deleteEvent(Long eventId) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -92,6 +193,7 @@ public class EventRepository extends BaseRepository {
 
         return stmt.executeUpdate() > 0;
     }
+
 
     public EventDTO getEventById(Long eventId) throws SQLException {
         Connection conn = super.getConnection();
