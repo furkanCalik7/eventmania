@@ -27,8 +27,8 @@ public class TicketedEventRepository extends BaseRepository {
                                        String addressDescription) throws SQLException {
         Connection conn = super.getConnection();
 
-        if (conn == null)
-            throw new SQLException("Connection to the database could not be established");
+//        if (conn == null)
+//            throw new SQLException("Connection to the database could not be established");
 
         return eventRepository.createEvent(true, adminId, feedback, verificationDate, verificationStatus, eventName,
                 eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,

@@ -76,12 +76,12 @@ CREATE TABLE IF NOT EXISTS Wallet
 
 CREATE TABLE IF NOT EXISTS BasicUser
 (
-    user_id       INT PRIMARY KEY              DEFAULT nextval('global_role_seq') NOT NULL,
-    hash_password VARCHAR(64)         NOT NULL,
-    email         VARCHAR(255) UNIQUE NOT NULL,
+    user_id       INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
+    hash_password VARCHAR(64)                                        NOT NULL,
+    email         VARCHAR(255) UNIQUE                                NOT NULL,
     wallet_id     INT,
-    first_name    VARCHAR(30)         NOT NULL,
-    last_name     VARCHAR(30)         NOT NULL,
+    first_name    VARCHAR(30)                                        NOT NULL,
+    last_name     VARCHAR(30)                                        NOT NULL,
     gender        VARCHAR(30),
     phone_number  VARCHAR(20),
     date_of_birth DATE,
@@ -388,25 +388,67 @@ FROM Admin);
 
 CREATE VIEW event_with_type AS
 (
-WITH joined_event_type_location AS (
-    SELECT *
-    FROM Event
-             JOIN event_type USING (event_id)
-             JOIN location USING (event_id)
-)
-SELECT event_id, admin_id, feedback, verification_date, verification_status, event_name, description,
-       start_date, end_date, is_online, image_url, minimum_age, current_state, location_name, latitude,
-       longitude, postal_code, state, city, street, country, address_description, type_of_event,
+WITH joined_event_type_location AS (SELECT *
+                                    FROM Event
+                                             JOIN event_type USING (event_id)
+                                             JOIN location USING (event_id))
+SELECT event_id,
+       admin_id,
+       feedback,
+       verification_date,
+       verification_status,
+       event_name,
+       description,
+       start_date,
+       end_date,
+       is_online,
+       image_url,
+       minimum_age,
+       current_state,
+       location_name,
+       latitude,
+       longitude,
+       postal_code,
+       state,
+       city,
+       street,
+       country,
+       address_description,
+       type_of_event,
        'Ticketed' AS ticketed_type
-FROM joined_event_type_location JOIN TicketedEvent USING (event_id)
+FROM joined_event_type_location
+         JOIN TicketedEvent USING (event_id)
 UNION
-SELECT event_id, admin_id, feedback, verification_date, verification_status, event_name, description,
-       start_date, end_date, is_online, image_url, minimum_age, current_state, location_name, latitude,
-       longitude, postal_code, state, city, street, country, address_description, type_of_event,
+SELECT event_id,
+       admin_id,
+       feedback,
+       verification_date,
+       verification_status,
+       event_name,
+       description,
+       start_date,
+       end_date,
+       is_online,
+       image_url,
+       minimum_age,
+       current_state,
+       location_name,
+       latitude,
+       longitude,
+       postal_code,
+       state,
+       city,
+       street,
+       country,
+       address_description,
+       type_of_event,
        'Unticketed' AS ticketed_type
-FROM joined_event_type_location JOIN UnticketedEvent USING (event_id)
-);
+FROM joined_event_type_location
+         JOIN UnticketedEvent USING (event_id)
+    );
 
+ALTER TABLE event
+    ALTER COLUMN admin_id DROP NOT NULL;
 
 INSERT INTO Admin (hash_password, email)
 VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');

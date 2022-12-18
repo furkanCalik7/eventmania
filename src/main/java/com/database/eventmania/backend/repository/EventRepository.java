@@ -20,6 +20,11 @@ import java.util.ArrayList;
 
 @Repository
 public class EventRepository extends BaseRepository {
+
+    public EventRepository() {
+        super.connect();
+    }
+
     public boolean createEventInEventType(Long eventId, EventType eventType) throws SQLException {
         Connection conn = super.getConnection();
         String insertQuery = "INSERT INTO event_type (event_id, type_of_event) VALUES (?, ?)";
@@ -44,23 +49,20 @@ public class EventRepository extends BaseRepository {
                                String addressDescription) throws SQLException {
         Connection conn = super.getConnection();
 
-        String insertQuery = "INSERT INTO Event (admin_id, feedback, verification_date, verification_status, " +
+        String insertQuery = "INSERT INTO Event (" +
                 "event_name, description, start_date, end_date, is_online, image_url, minimum_age, " +
-                "current_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+                "current_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // I removed the not null constraint in the database for admin_id since it can be null
         PreparedStatement stmt = conn.prepareStatement(insertQuery);
-        stmt.setLong(1, adminId);
-        stmt.setString(2, feedback);
-        stmt.setObject(3, verificationDate);
-        stmt.setString(4, verificationStatus.toString());
-        stmt.setString(5, eventName);
-        stmt.setString(6, eventDescription);
-        stmt.setTimestamp(7, java.sql.Timestamp.valueOf(startDate));
-        stmt.setTimestamp(8, java.sql.Timestamp.valueOf(endDate));
-        stmt.setBoolean(9, isOnline);
-        stmt.setString(10, imageUrl);
-        stmt.setInt(11, minimumAge);
-        stmt.setString(12, currentState.toString());
+        stmt.setString(1, eventName);
+        stmt.setString(2, eventDescription);
+        stmt.setTimestamp(3, java.sql.Timestamp.valueOf(startDate));
+        stmt.setTimestamp(4, java.sql.Timestamp.valueOf(endDate));
+        stmt.setBoolean(5, isOnline);
+        stmt.setString(6, imageUrl);
+        stmt.setInt(7, minimumAge);
+        // The newly created event is always in the upcoming state when it is created (I think)
+        stmt.setString(8, EventState.UPCOMING.toString());
 
         if (stmt.executeUpdate() == 0) {
             throw new SQLException("Creating event failed, no rows affected.");
@@ -89,9 +91,7 @@ public class EventRepository extends BaseRepository {
             if (stmt.executeUpdate() == 0) {
                 throw new SQLException("Creating event in ticketed_event table failed, no rows affected.");
             }
-        }
-
-        else {
+        } else {
             insertQuery = "INSERT INTO UnticketedEvent (event_id, user_id, capacity) VALUES (?,?,?)";
             stmt = conn.prepareStatement(insertQuery);
             stmt.setLong(1, eventId);
@@ -102,27 +102,26 @@ public class EventRepository extends BaseRepository {
                 throw new SQLException("Creating event in unticketed_event table failed, no rows affected.");
             }
         }
-
+        // TODO: buradaki location_name e bir ayar yapmamiz lazim
         // create event in Location table
         insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
                 "postal_code, state, city, street, country, address_description) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         stmt = conn.prepareStatement(insertQuery);
         stmt.setLong(1, eventId);
-        stmt.setString(2, locationName);
+        stmt.setString(2, "");
         stmt.setDouble(3, latitude);
         stmt.setDouble(4, longitude);
         stmt.setString(5, postalCode);
         stmt.setString(6, state);
         stmt.setString(7, city);
-        stmt.setString(8, street);
+        stmt.setString(8, "");
         stmt.setString(9, country);
         stmt.setString(10, addressDescription);
 
         if (stmt.executeUpdate() == 0) {
             throw new SQLException("Creating event in Location table failed, no rows affected.");
         }
-
 
 
         return true;
@@ -244,9 +243,7 @@ public class EventRepository extends BaseRepository {
 
                 dto.addObject("event", event);
 
-            }
-
-            else if (Objects.equals(rs.getString("ticketed_type"), "unticketed")) {
+            } else if (Objects.equals(rs.getString("ticketed_type"), "unticketed")) {
                 // find the event in the unticketed_event table with the given event_id
                 query = "SELECT * " +
                         "FROM UnticketedEvent JOIN event_with_type USING(event_id) " +

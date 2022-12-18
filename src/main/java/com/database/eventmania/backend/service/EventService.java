@@ -16,10 +16,16 @@ import java.util.ArrayList;
 @Service
 public class EventService {
     private final EventRepository eventRepository;
+    private final UnticketedEventService unticketedEventService;
+    private final TicketedEventService ticketedEventService;
+
     @Autowired
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, UnticketedEventService unticketedEventService, TicketedEventService ticketedEventService) {
         this.eventRepository = eventRepository;
+        this.unticketedEventService = unticketedEventService;
+        this.ticketedEventService = ticketedEventService;
     }
+
     private Long eventId;
     private Long adminId;
     private String feedback;
@@ -34,6 +40,7 @@ public class EventService {
     private Integer minimumAge;
     private EventState currentState;
     private EventType eventType;
+
     public boolean createEvent(boolean isTicketed, Long adminId, String feedback, LocalDateTime verificationDate,
                                VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
@@ -42,6 +49,7 @@ public class EventService {
                                Integer capacity, String locationName, Float latitude, Float longitude,
                                String postalCode, String state, String city, String street, String country,
                                String addressDescription) throws SQLException {
+
         return eventRepository.createEvent(isTicketed, adminId, feedback, verificationDate, verificationStatus, eventName,
                 eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,
                 saleStartTime, saleEndTime, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
@@ -58,5 +66,9 @@ public class EventService {
 
     public ArrayList<EventDTO> getAllEvents() throws SQLException {
         return eventRepository.getAllEvents();
+    }
+
+    private void savePhoto() {
+
     }
 }

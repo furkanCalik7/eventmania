@@ -21,6 +21,8 @@ public class EventModel {
     private String city;
     private String country;
     private String postalCode;
+    private String longitude;
+    private String latitude;
     private String startdate;
     private String enddate;
     private MultipartFile file;
@@ -29,4 +31,7 @@ public class EventModel {
     private String capacity;
     private String locationType;
     private String eventPaymentType;
+    private String eventDescription;
+    private String salesStartTime;
+    private String salesEndTime;
 }

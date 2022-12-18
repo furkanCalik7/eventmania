@@ -18,6 +18,8 @@ function initAutocomplete() {
 function fillInAddress() {
     const place = autocomplete.getPlace();
     console.log(place);
+    $("#lati-input").val(place.geometry.location.lat());
+    $("#long-input").val(place.geometry.location.lng());
     let address = document.querySelector("#address-input");
     let state = document.querySelector("#state-input");
     let city = document.querySelector("#city-input");
@@ -58,7 +60,7 @@ function fillInAddress() {
 
 google.maps.event.addDomListener(window, 'load', initAutocomplete);
 $("#online-event-span").hide();
-$("#is-online-input").val("venue");
+$("#is-online-input").val("VENUE");
 $("#venue-button").addClass("btn-info");
 $("#online-button").click(function () {
     $("#online-button").addClass("btn-info");
@@ -66,7 +68,7 @@ $("#online-button").click(function () {
     $("#online-event-span").show();
     $("#location_input").hide();
     $("#location-details-page").hide();
-    $("#is-online-input").val("online");
+    $("#is-online-input").val("ONLINE");
 });
 
 $("#venue-button").click(function () {
@@ -75,7 +77,7 @@ $("#venue-button").click(function () {
     $("#online-button").removeClass("btn-info");
     $("#location_input").show();
     $("#location-details-page").show();
-    $("#is-online-input").val("venue");
+    $("#is-online-input").val("VENUE");
 });
 
 $("#free-button").addClass("btn-info");
@@ -85,15 +87,15 @@ $("#free-button").click(function () {
     $("#free-button").addClass("btn-info");
     $("#paid-button").removeClass("btn-info");
     $("#capacity-input").show();
-    $("#event-payment-input").val("free");
+    $("#event-payment-input").val("FREE");
     $("#sales-channel-input").hide();
 });
-$("#event-payment-input").val("free");
+$("#event-payment-input").val("FREE");
 
 $("#paid-button").click(function () {
     $("#paid-button").addClass("btn-info");
     $("#free-button").removeClass("btn-info");
     $("#sales-channel-input").show();
     $("#capacity-input").hide();
-    $("#event-payment-input").val("paid");
+    $("#event-payment-input").val("PAID");
 });

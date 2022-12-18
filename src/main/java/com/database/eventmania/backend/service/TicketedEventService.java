@@ -1,35 +1,49 @@
 package com.database.eventmania.backend.service;
 
+import com.database.eventmania.backend.Utils;
 import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
+import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.repository.TicketedEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 @Service
 public class TicketedEventService {
     private final TicketedEventRepository ticketedEventRepository;
+
     @Autowired
     public TicketedEventService(TicketedEventRepository ticketedEventRepository) {
         this.ticketedEventRepository = ticketedEventRepository;
     }
 
-    public boolean createTicketedEvent(Long adminId, String feedback, LocalDateTime verificationDate,
-                                       VerificationStatus verificationStatus, String eventName, String eventDescription,
-                                       LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                                       Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
-                                       LocalDateTime saleStartTime, LocalDateTime saleEndTime,
-                                       String locationName, Float latitude, Float longitude,
-                                       String postalCode, String state, String city, String street, String country,
-                                       String addressDescription) throws SQLException {
-        return ticketedEventRepository.createTicketedEvent(adminId, feedback, verificationDate, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,
-                saleStartTime, saleEndTime, locationName, latitude, longitude, postalCode, state, city,
-                street, country, addressDescription);
+    public boolean createTicketedEvent(EventModel eventModel) throws SQLException, IOException {
+        boolean isOnline = eventModel.getLocationType().equals("online");
+        LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
+        LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
+        LocalDateTime saleStartTime = LocalDateTime.parse(eventModel.getSalesStartTime());
+        LocalDateTime saleEndTime = LocalDateTime.parse(eventModel.getSalesEndTime());
+        EventType eventType = EventType.valueOf(eventModel.getEventType());
+        SalesChannel salesChannel = SalesChannel.valueOf(eventModel.getSalesChannel());
+        float latitude = 0, longitude = 0;
+        if (!isOnline) {
+            latitude = Float.parseFloat(eventModel.getLatitude());
+            longitude = Float.parseFloat(eventModel.getLongitude());
+        }
+        int minimumAge = Integer.parseInt(eventModel.getMinimumAge());
+        Utils.copyFile(eventModel.getFile());
+        return ticketedEventRepository.createTicketedEvent(null, null, null,
+                null, eventModel.getTitle(), eventModel.getEventDescription(), startDate,
+                endDate, isOnline, eventModel.getFile().getName(), minimumAge,
+                null, eventType, salesChannel, saleStartTime,
+                saleEndTime, eventModel.getVenueLocation(), latitude, longitude,
+                eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(), null, eventModel.getCountry(),
+                eventModel.getAddress());
     }
 }
