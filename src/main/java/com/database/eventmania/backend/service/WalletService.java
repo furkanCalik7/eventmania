@@ -1,5 +1,6 @@
 package com.database.eventmania.backend.service;
 
+import com.database.eventmania.backend.entity.Wallet;
 import com.database.eventmania.backend.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,11 @@ public class WalletService {
     @Autowired
     public WalletService(WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
+    }
+
+
+    public Wallet getWalletById(String walletId) throws SQLException{
+        return walletRepository.getWalletById(Integer.valueOf(walletId));
     }
 
     public boolean createWallet(Integer balance) throws SQLException {

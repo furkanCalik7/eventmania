@@ -1,8 +1,6 @@
 package com.database.eventmania.backend.repository;
 
-import com.database.eventmania.backend.entity.Admin;
-import com.database.eventmania.backend.entity.BasicUser;
-import com.database.eventmania.backend.entity.Organization;
+import com.database.eventmania.backend.entity.*;
 import com.database.eventmania.backend.entity.enums.Gender;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 
@@ -104,6 +102,13 @@ public abstract class BaseRepository {
                 rs.getInt("point"),
                 rs.getString("topic"),
                 rs.getString("comment")
+        );
+    }
+
+    public Wallet convertQueryResultToWallet(ResultSet rs) throws SQLException{
+        return new Wallet(
+                Long.valueOf(rs.getInt("wallet_id")),
+                rs.getInt("balance")
         );
     }
 }

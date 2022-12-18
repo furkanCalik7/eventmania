@@ -1,9 +1,12 @@
 package com.database.eventmania.backend.repository;
 
+import com.database.eventmania.backend.entity.Rating;
+import com.database.eventmania.backend.entity.Wallet;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
@@ -23,8 +26,21 @@ public class WalletRepository extends BaseRepository {
         return false;
     }
 
-    //TODO: getWalletById methodu yazılacak
+    public Wallet getWalletById(Integer walletId) throws SQLException{
+        Connection conn = super.getConnection();
+        if(conn != null){
+            String query = "SELECT * FROM Wallet WHERE wallet_id =?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, walletId);
+            ResultSet rs = stmt.executeQuery();
 
+            if(rs.next())
+                return convertQueryResultToWallet(rs);
+            return null;
+        }
+        throw new SQLException("Connection to the database failed");
+
+    }
     public boolean deleteWallet(Integer walletId) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
