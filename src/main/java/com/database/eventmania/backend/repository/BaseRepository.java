@@ -3,14 +3,10 @@ package com.database.eventmania.backend.repository;
 import com.database.eventmania.backend.entity.*;
 import com.database.eventmania.backend.entity.enums.Gender;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public abstract class BaseRepository {
 
@@ -96,6 +92,17 @@ public abstract class BaseRepository {
                 rs.getDate("verification_date").toLocalDate(),
                 verificationStatus,
                 rs.getString("feedback")
+        );
+    }
+
+    public Rating convertQueryResultToRating(ResultSet rs) throws SQLException {
+        return new Rating(
+                rs.getLong("rating_id"),
+                rs.getLong("event_id"),
+                rs.getLong("user_id"),
+                rs.getInt("point"),
+                rs.getString("topic"),
+                rs.getString("comment")
         );
     }
 }

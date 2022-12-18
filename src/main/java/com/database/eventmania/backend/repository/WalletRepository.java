@@ -22,18 +22,21 @@ public class WalletRepository extends BaseRepository {
         }
         return false;
     }
-    public boolean deleteWallet(Long walletId) throws SQLException {
+
+    //TODO: getWalletById methodu yazılacak
+
+    public boolean deleteWallet(Integer walletId) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
             String query = "DELETE FROM Wallet WHERE wallet_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, walletId.intValue());
+            stmt.setInt(1, walletId);
             stmt.executeUpdate();
             return true;
         }
         return false;
     }
-    public boolean updateWallet(Long walletId, Integer balance) throws SQLException {
+    public boolean updateWallet(Integer walletId, Integer balance) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
             String query = "UPDATE Wallet " +
@@ -41,14 +44,14 @@ public class WalletRepository extends BaseRepository {
                             "WHERE wallet_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, balance);
-            stmt.setInt(2, walletId.intValue());
+            stmt.setInt(2, walletId);
             stmt.executeUpdate();
             return true;
         }
         return false;
     }
 
-    public boolean addMoney(Long walletId, Integer amount) throws SQLException {
+    public boolean addMoney(Integer walletId, Integer amount) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
             String query = "UPDATE Wallet " +
@@ -56,13 +59,13 @@ public class WalletRepository extends BaseRepository {
                             "WHERE wallet_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, amount);
-            stmt.setInt(2, walletId.intValue());
+            stmt.setInt(2, walletId);
             stmt.executeUpdate();
             return true;
         }
         return false;
     }
-    public boolean withdrawMoney(Long walletId, Integer amount) throws SQLException {
+    public boolean withdrawMoney(Integer walletId, Integer amount) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
             String query = "UPDATE Wallet " +
@@ -70,13 +73,13 @@ public class WalletRepository extends BaseRepository {
                             "WHERE wallet_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, amount);
-            stmt.setInt(2, walletId.intValue());
+            stmt.setInt(2, walletId);
             stmt.executeUpdate();
             return true;
         }
         return false;
     }
-    public boolean buyTicket(Long buyerWalletId, Long sellerWalletId, Integer amount) throws SQLException {
+    public boolean buyTicket(Integer buyerWalletId, Integer sellerWalletId, Integer amount) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
             String query = "UPDATE Wallet " +
@@ -84,14 +87,14 @@ public class WalletRepository extends BaseRepository {
                             "WHERE wallet_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, amount);
-            stmt.setInt(2, buyerWalletId.intValue());
+            stmt.setInt(2, buyerWalletId);
             stmt.executeUpdate();
             query = "UPDATE Wallet " +
                     "SET balance = balance + ? " +
                     "WHERE wallet_id = ?";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, amount);
-            stmt.setInt(2, sellerWalletId.intValue());
+            stmt.setInt(2, sellerWalletId);
             stmt.executeUpdate();
             return true;
         }

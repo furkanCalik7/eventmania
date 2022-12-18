@@ -19,20 +19,20 @@ public class WalletService {
         return walletRepository.createWallet(balance);
     }
 
-    public boolean deleteWallet(Long walletId) throws SQLException{
+    public boolean deleteWallet(Integer walletId) throws SQLException{
         return walletRepository.deleteWallet(walletId);
     }
 
-    public boolean updateWallet(Long walletId, Integer balance) throws SQLException {
+    public boolean updateWallet(Integer walletId, Integer balance) throws SQLException {
         return walletRepository.updateWallet(walletId, balance);
     }
-    public boolean addMoney(Long walletId, Integer amount) throws SQLException {
+    public boolean addMoney(Integer walletId, Integer amount) throws SQLException {
         return walletRepository.addMoney(walletId, amount);
     }
-    public boolean withdrawMoney(Long walletId, Integer amount) throws SQLException {
+    public boolean withdrawMoney(Integer walletId, Integer amount) throws SQLException {
         return walletRepository.withdrawMoney(walletId, amount);
     }
-    public boolean buyTicket(Long buyerWalletId, Long sellerWalletId, Integer amount) throws SQLException {
+    public boolean buyTicket(Integer buyerWalletId, Integer sellerWalletId, Integer amount) throws SQLException {
         return walletRepository.buyTicket(buyerWalletId, sellerWalletId, amount);
     }
 }
