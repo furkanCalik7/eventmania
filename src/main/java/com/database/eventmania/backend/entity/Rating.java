@@ -9,6 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Rating {
     private Long ratingId;
+    private Long eventId;
+    private Long userId;
     private Integer point;
     private String topic;
     private String comment;

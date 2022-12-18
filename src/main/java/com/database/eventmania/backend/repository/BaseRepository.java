@@ -95,5 +95,16 @@ public abstract class BaseRepository {
                 rs.getString("feedback")
         );
     }
+
+    public Rating convertQueryResultToRating(ResultSet rs) throws SQLException {
+        return new Rating(
+                rs.getLong("rating_id"),
+                rs.getLong("event_id"),
+                rs.getLong("user_id"),
+                rs.getInt("point"),
+                rs.getString("topic"),
+                rs.getString("comment")
+        );
+    }
 }
 
