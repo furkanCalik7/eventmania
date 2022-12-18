@@ -9,8 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Location {
     private Long eventId;
-    private String latitude;
-    private String longitude;
+    private Float latitude;
+    private Float longitude;
     private String locationName;
     private String addressDescription;
     private String country;

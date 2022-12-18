@@ -27,6 +27,7 @@ public class Event {
     private Integer minimumAge;
     private EventState currentState;
     private EventType eventType;
+    private boolean isTicketed;
 
 }
 

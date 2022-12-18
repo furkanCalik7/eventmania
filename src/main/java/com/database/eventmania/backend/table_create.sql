@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS BasicUser
     user_id       INT PRIMARY KEY              DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password VARCHAR(64)         NOT NULL,
     email         VARCHAR(255) UNIQUE NOT NULL,
-    wallet_id     INT                 NOT NULL DEFAULT -1,
+    wallet_id     INT,
     first_name    VARCHAR(30)         NOT NULL,
     last_name     VARCHAR(30)         NOT NULL,
     gender        VARCHAR(30),
@@ -339,7 +339,22 @@ VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
 INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
 VALUES (md5(random()::text), 'ahmet@gmail.com', NULL, 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
 
+CREATE OR REPLACE FUNCTION create_event_after_ticketed_event()
+    RETURNS trigger AS
+$$
+BEGIN
+    INSERT INTO Event (event_id) VALUES (0);
+    UPDATE BasicUser SET wallet_id = currval('wallet_wallet_id_seq') WHERE user_id = currval('global_role_seq');
+    RETURN NEW;
+END;
+$$
+    LANGUAGE 'plpgsql';
 
+CREATE TRIGGER create_base_wallet
+    AFTER INSERT
+    ON BasicUser
+    FOR EACH ROW
+EXECUTE PROCEDURE create_base_wallet_func();
 
 CREATE OR REPLACE FUNCTION create_base_wallet_func()
     RETURNS trigger AS
@@ -371,14 +386,31 @@ UNION
 SELECT admin_id, email, hash_password, 'Admin' AS account_type
 FROM Admin);
 
+CREATE VIEW event_with_type AS
+(
+WITH joined_event_type_location AS (
+    SELECT *
+    FROM Event
+             JOIN event_type USING (event_id)
+             JOIN location USING (event_id)
+)
+SELECT event_id, admin_id, feedback, verification_date, verification_status, event_name, description,
+       start_date, end_date, is_online, image_url, minimum_age, current_state, location_name, latitude,
+       longitude, postal_code, state, city, street, country, address_description, type_of_event,
+       'Ticketed' AS ticketed_type
+FROM joined_event_type_location JOIN TicketedEvent USING (event_id)
+UNION
+SELECT event_id, admin_id, feedback, verification_date, verification_status, event_name, description,
+       start_date, end_date, is_online, image_url, minimum_age, current_state, location_name, latitude,
+       longitude, postal_code, state, city, street, country, address_description, type_of_event,
+       'Unticketed' AS ticketed_type
+FROM joined_event_type_location JOIN UnticketedEvent USING (event_id)
+);
+
+
 INSERT INTO Admin (hash_password, email)
 VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
 
 INSERT INTO BasicUser (hash_password, email, first_name, last_name, gender, phone_number, date_of_birth)
 VALUES (md5(random()::text), 'ahmet@gmail.com', 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
 
-ALTER TABLE basicuser
-    ALTER COLUMN wallet_id DROP NOT NULL;
-
-ALTER TABLE basicuser
-    ALTER COLUMN wallet_id DROP default;

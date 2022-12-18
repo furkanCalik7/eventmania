@@ -1,16 +1,17 @@
 package com.database.eventmania.backend.repository;
 
-import com.database.eventmania.backend.entity.*;
+import com.database.eventmania.backend.entity.Admin;
+import com.database.eventmania.backend.entity.BasicUser;
+import com.database.eventmania.backend.entity.Organization;
 import com.database.eventmania.backend.entity.enums.Gender;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class BaseRepository {
-
-
     private String SERVER_URL = "jdbc:postgresql://db-postgresql-fra1-49552-do-user-8422201-0.b.db.ondigitalocean.com:25060/defaultdb";
     private String USERNAME = "doadmin";
 

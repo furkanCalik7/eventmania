@@ -26,7 +26,7 @@ public class TicketedEvent extends Event {
                          Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
                          LocalDateTime saleStartTime, LocalDateTime saleEndTime) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
-                endDate, isOnline, imageUrl, minimumAge, currentState, eventType);
+                endDate, isOnline, imageUrl, minimumAge, currentState, eventType, true);
         this.salesChannel = salesChannel;
         this.saleStartTime = saleStartTime;
         this.saleEndTime = saleEndTime;

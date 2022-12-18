@@ -19,7 +19,7 @@ public class UnticketedEvent extends Event {
                            LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
                            Integer minimumAge, EventState currentState, EventType eventType, Long userId, Integer capacity) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
-                endDate, isOnline, imageUrl, minimumAge, currentState, eventType);
+                endDate, isOnline, imageUrl, minimumAge, currentState, eventType, false);
         this.userId = userId;
         this.capacity = capacity;
     }

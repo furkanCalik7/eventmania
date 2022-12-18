@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Repository
 public class UserRepository extends BaseRepository {
@@ -89,5 +90,20 @@ public class UserRepository extends BaseRepository {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<BasicUser> getAllUsers() throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn != null) {
+            String query = "SELECT * FROM BasicUser";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            ArrayList<BasicUser> users = new ArrayList<>();
+            while (rs.next()) {
+                users.add(convertQueryResultToUser(rs));
+            }
+            return users;
+        }
+        throw new SQLException("Connection to the database failed");
     }
 }
