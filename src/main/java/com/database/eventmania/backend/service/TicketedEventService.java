@@ -24,7 +24,7 @@ public class TicketedEventService {
         this.ticketedEventRepository = ticketedEventRepository;
     }
 
-    public boolean createTicketedEvent(EventModel eventModel) throws SQLException, IOException {
+    public boolean createTicketedEvent(EventModel eventModel, String email) throws SQLException, IOException {
         boolean isOnline = eventModel.getLocationType().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
         LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
@@ -43,11 +43,11 @@ public class TicketedEventService {
 
         int minimumAge = Integer.parseInt(eventModel.getMinimumAge());
         Utils.copyFile(eventModel.getFile());
-        return ticketedEventRepository.createTicketedEvent( VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
+        return ticketedEventRepository.createTicketedEvent(VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
                 startDate, endDate, isOnline, eventModel.getFile().getName(), minimumAge,
                 EventState.UPCOMING, eventTypes, salesChannel, saleStartTime,
                 saleEndTime, eventModel.getVenueLocation(), latitude, longitude,
-                eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(),  eventModel.getCountry(),
+                eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(), eventModel.getCountry(),
                 eventModel.getAddress());
     }
 }

@@ -66,23 +66,6 @@
 			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-5" value="OTHER" class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-5">Other</label></div>
 		</div>
-
-
-<!--			<select-->
-<!--					th:field="*{eventType}"-->
-<!--					class="form-select">-->
-<!--				<optgroup label="Select type">-->
-<!--					<option value="CONCERT" selected>Concert</option>-->
-<!--					<option value="FESTIVAL">Festival</option>-->
-<!--					<option value="SPORTS">Sports</option>-->
-<!--					<option value="ART">Art</option>-->
-<!--					<option value="MUSIC">Music</option>-->
-<!--					<option value="CINEMA">Cinema</option>-->
-<!--					<option value="SOCIAL_GATHERING">Social Gathering</option>-->
-<!--					<option value="TALK_SHOW">Talk Show</option>-->
-<!--					<option value="OTHER">Other</option>-->
-<!--				</optgroup>-->
-<!--			</select>-->
 		<hr/>
 		<h2 class="text-start" style="margin: 0; margin-bottom: 12px">
 			Location
@@ -197,10 +180,13 @@
 			type="datetime-local"
 			th:field="*{startdate}"
 			style="margin-bottom: 13px"
+			required
 	/><label class="form-label" style="margin-top: 7px">End time</label
 	><input class="form-control"
 		    th:field="*{enddate}"
-		    type="datetime-local"/>
+		    type="datetime-local"
+			required
+	/>
 		<hr/>
 		<h2 class="text-start" style="margin-bottom: 12px; margin-top: 18px">
 			Extra features
