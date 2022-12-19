@@ -105,11 +105,10 @@ public class EventRepository extends BaseRepository {
                 throw new SQLException("Creating event in unticketed_event table failed, no rows affected.");
             }
         }
-        // TODO: buradaki location_name e bir ayar yapmamiz lazim
-        // create event in Location table
+        // creates event in Location table
         insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
                 "postal_code, state, city, country, address_description) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         stmt = conn.prepareStatement(insertQuery);
         stmt.setLong(1, eventId);
         stmt.setString(2, locationName);
