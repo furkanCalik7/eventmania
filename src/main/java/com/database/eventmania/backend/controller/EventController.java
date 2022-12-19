@@ -6,6 +6,8 @@ import com.database.eventmania.backend.service.UnticketedEventService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("event")
 public class EventController {
@@ -27,13 +29,10 @@ public class EventController {
     }
 
     @PostMapping("create")
-    public String createEvent(@ModelAttribute("eventModel") EventModel eventModel) {
-        // Create event section
-        // TODO: upload img to under /static/img with a naming that specifies the newly created event id
-        // TODO: Implement the below code in servis method
+    public String createEvent(Principal principal, @ModelAttribute("eventModel") EventModel eventModel) {
         try {
             if (eventModel.getEventPaymentType().equals("PAID")) {
-                ticketedEventService.createTicketedEvent(eventModel);
+                ticketedEventService.createTicketedEvent(eventModel, principal.getName());
             }
 
         } catch (Exception e) {
