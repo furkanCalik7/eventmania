@@ -41,4 +41,8 @@ public class UserService {
     public ArrayList<BasicUser> getALlUsers() throws SQLException {
         return userRepository.getAllUsers();
     }
+
+    public boolean deleteUserById(Long userId) throws SQLException {
+        return userRepository.deleteUserById(userId);
+    }
 }

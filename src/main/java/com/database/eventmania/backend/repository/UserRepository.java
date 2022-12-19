@@ -106,4 +106,16 @@ public class UserRepository extends BaseRepository {
         }
         throw new SQLException("Connection to the database failed");
     }
+
+    public boolean deleteUserById(Long userId) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn != null) {
+            String query = "DELETE FROM BasicUser WHERE user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setLong(1, userId);
+            stmt.executeUpdate();
+            return true;
+        }
+        return false;
+    }
 }

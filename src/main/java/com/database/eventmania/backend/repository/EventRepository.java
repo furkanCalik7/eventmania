@@ -123,7 +123,6 @@ public class EventRepository extends BaseRepository {
             throw new SQLException("Creating event in Location table failed, no rows affected.");
         }
 
-
         return true;
     }
 
