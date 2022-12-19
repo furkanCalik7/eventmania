@@ -13,7 +13,8 @@ public class Utils {
         OutputStream os = null;
         try {
             is = new FileInputStream(convFile);
-            os = new FileOutputStream("C:\\Users\\Furkan\\Desktop\\eventmania\\src\\main\\resources\\static\\img\\" + file.getOriginalFilename());
+            //get the current path of the project
+            os = new FileOutputStream(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\img\\" + file.getOriginalFilename());
             byte[] buf = new byte[1024];
             int bytesRead;
             while ((bytesRead = is.read(buf)) > 0) {

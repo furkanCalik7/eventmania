@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 public class UnticketedEventService {
@@ -22,12 +23,12 @@ public class UnticketedEventService {
     public boolean createUnticketedEvent(Long adminId, String feedback, LocalDateTime verificationDate,
                                          VerificationStatus verificationStatus, String eventName, String eventDescription,
                                          LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                                         Integer minimumAge, EventState currentState, EventType eventType,
+                                         Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes,
                                          Long userId, Integer capacity, String locationName, Float latitude, Float longitude,
-                                         String postalCode, String state, String city, String street, String country,
+                                         String postalCode, String state, String city, String country,
                                          String addressDescription) throws SQLException {
-        return unticketedEventRepository.createUnticketedEvent(adminId, feedback, verificationDate, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, userId, capacity,
-                locationName, latitude, longitude, postalCode, state, city, street, country, addressDescription);
+        return unticketedEventRepository.createUnticketedEvent(verificationStatus, eventName,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, userId, capacity,
+                locationName, latitude, longitude, postalCode, state, city, country, addressDescription);
     }
 }

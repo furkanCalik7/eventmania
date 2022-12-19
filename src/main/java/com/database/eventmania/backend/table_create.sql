@@ -1,3 +1,5 @@
+drop table if exists event_type cascade;
+
 drop table if exists card cascade;
 
 drop table if exists unticketedevent cascade;
@@ -119,7 +121,7 @@ CREATE TABLE IF NOT EXISTS Card
 CREATE TABLE IF NOT EXISTS Event
 (
     event_id            SERIAL PRIMARY KEY NOT NULL,
-    admin_id            INT                NOT NULL,
+    admin_id            INT,
     feedback            VARCHAR(280),
     verification_date   TIMESTAMPTZ,
     verification_status VARCHAR(50),
@@ -187,15 +189,14 @@ CREATE TABLE IF NOT EXISTS Ticket
 CREATE TABLE IF NOT EXISTS Location
 (
     event_id            INT          NOT NULL,
-    location_name       VARCHAR(50)  NOT NULL,
+    location_name       VARCHAR(500)  NOT NULL,
     latitude            FLOAT8       NOT NULL,
     longitude           FLOAT8       NOT NULL,
     postal_code         VARCHAR(20)  NOT NULL,
     state               VARCHAR(50)  NOT NULL,
     city                VARCHAR(50)  NOT NULL,
-    street              VARCHAR(100) NOT NULL,
     country             VARCHAR(50)  NOT NULL,
-    address_description VARCHAR(280),
+    address_description VARCHAR(500),
     PRIMARY KEY (event_id, latitude, longitude),
     FOREIGN KEY (event_id) REFERENCES Event (event_id)
         ON DELETE CASCADE
@@ -328,27 +329,12 @@ CREATE TABLE IF NOT EXISTS event_type
 (
     event_id      INT         NOT NULL,
     type_of_event VARCHAR(50) NOT NULL,
-    PRIMARY KEY (event_id),
+    PRIMARY KEY (event_id, type_of_event),
     FOREIGN KEY (event_id) REFERENCES Event (event_id)
         ON DELETE CASCADE
 );
 
-INSERT INTO Admin (hash_password, email)
-VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
 
-INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
-VALUES (md5(random()::text), 'ahmet@gmail.com', NULL, 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
-
-CREATE OR REPLACE FUNCTION create_event_after_ticketed_event()
-    RETURNS trigger AS
-$$
-BEGIN
-    INSERT INTO Event (event_id) VALUES (0);
-    UPDATE BasicUser SET wallet_id = currval('wallet_wallet_id_seq') WHERE user_id = currval('global_role_seq');
-    RETURN NEW;
-END;
-$$
-    LANGUAGE 'plpgsql';
 
 CREATE TRIGGER create_base_wallet
     AFTER INSERT
@@ -366,12 +352,6 @@ BEGIN
 END;
 $$
     LANGUAGE 'plpgsql';
-
-CREATE TRIGGER create_base_wallet
-    AFTER INSERT
-    ON BasicUser
-    FOR EACH ROW
-EXECUTE PROCEDURE create_base_wallet_func();
 
 
 
@@ -411,7 +391,6 @@ SELECT event_id,
        postal_code,
        state,
        city,
-       street,
        country,
        address_description,
        type_of_event,
@@ -438,7 +417,6 @@ SELECT event_id,
        postal_code,
        state,
        city,
-       street,
        country,
        address_description,
        type_of_event,
@@ -447,12 +425,9 @@ FROM joined_event_type_location
          JOIN UnticketedEvent USING (event_id)
     );
 
-ALTER TABLE event
-    ALTER COLUMN admin_id DROP NOT NULL;
-
+/*123 sifre*/
 INSERT INTO Admin (hash_password, email)
-VALUES ('$2a$10$Q8QZ7Z7Z7Z7Z7Z7Z7Z7Z7e', 'berkayclmz@gmail.com');
+VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayclmz@gmail.com');
 
-INSERT INTO BasicUser (hash_password, email, first_name, last_name, gender, phone_number, date_of_birth)
-VALUES (md5(random()::text), 'ahmet@gmail.com', 'ahmmet', 'karaman', 'male', '123-456-789', '2001-07-21');
-
+INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
+VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman', 'male', '123-456-789', '2001-07-21');

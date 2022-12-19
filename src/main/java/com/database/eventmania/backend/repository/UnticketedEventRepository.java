@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Repository
 public class UnticketedEventRepository extends BaseRepository {
@@ -17,21 +18,20 @@ public class UnticketedEventRepository extends BaseRepository {
     public UnticketedEventRepository(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
-    public boolean createUnticketedEvent(Long adminId, String feedback, LocalDateTime verificationDate,
-                                         VerificationStatus verificationStatus, String eventName, String eventDescription,
+    public boolean createUnticketedEvent(VerificationStatus verificationStatus, String eventName, String eventDescription,
                                          LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                                         Integer minimumAge, EventState currentState, EventType eventType,
+                                         Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes,
                                          Long userId, Integer capacity, String locationName, Float latitude, Float longitude,
-                                         String postalCode, String state, String city, String street, String country,
+                                         String postalCode, String state, String city, String country,
                                          String addressDescription) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
 
-        return eventRepository.createEvent(false, adminId, feedback, verificationDate, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, null,
+        return eventRepository.createEvent(false,  verificationStatus, eventName,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, null,
                 null, null, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
-                street, country, addressDescription);
+                country, addressDescription);
     }
 }

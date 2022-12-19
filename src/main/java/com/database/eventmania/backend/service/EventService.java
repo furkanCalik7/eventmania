@@ -41,19 +41,18 @@ public class EventService {
     private EventState currentState;
     private EventType eventType;
 
-    public boolean createEvent(boolean isTicketed, Long adminId, String feedback, LocalDateTime verificationDate,
-                               VerificationStatus verificationStatus, String eventName, String eventDescription,
+    public boolean createEvent(boolean isTicketed, VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                               Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
                                LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
                                Integer capacity, String locationName, Float latitude, Float longitude,
-                               String postalCode, String state, String city, String street, String country,
+                               String postalCode, String state, String city, String country,
                                String addressDescription) throws SQLException {
 
-        return eventRepository.createEvent(isTicketed, adminId, feedback, verificationDate, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventType, salesChannel,
+        return eventRepository.createEvent(isTicketed, verificationStatus, eventName,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, salesChannel,
                 saleStartTime, saleEndTime, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
-                street, country, addressDescription);
+                country, addressDescription);
     }
 
     public boolean deleteEvent(Long eventId) throws SQLException {

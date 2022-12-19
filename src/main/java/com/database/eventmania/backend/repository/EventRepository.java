@@ -25,33 +25,35 @@ public class EventRepository extends BaseRepository {
         super.connect();
     }
 
-    public boolean createEventInEventType(Long eventId, EventType eventType) throws SQLException {
+    public boolean createEventsInEventType(Long eventId, ArrayList<EventType> eventTypes) throws SQLException {
         Connection conn = super.getConnection();
-        String insertQuery = "INSERT INTO event_type (event_id, type_of_event) VALUES (?, ?)";
-
-        PreparedStatement stmt = conn.prepareStatement(insertQuery);
-        stmt.setLong(1, eventId);
-        stmt.setString(2, eventType.toString());
-
-        if (stmt.executeUpdate() == 0) {
-            throw new SQLException("Creating event in event_type table failed, no rows affected.");
+        if (conn == null)
+            throw new SQLException("Connection to the database could not be established");
+        for (EventType eventType : eventTypes) {
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO event_type (event_id, type_of_event) VALUES (?, ?)");
+            stmt.setLong(1, eventId);
+            stmt.setString(2, eventType.toString());
+            stmt.executeUpdate();
+            if (stmt.executeUpdate() == 0) {
+                throw new SQLException("Creating event in event_type table failed, no rows affected.");
+            }
         }
         return true;
     }
 
-    public boolean createEvent(boolean isTicketed, Long adminId, String feedback, LocalDateTime verificationDate,
+    public boolean createEvent(boolean isTicketed,
                                VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                               Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
                                LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
                                Integer capacity, String locationName, Float latitude, Float longitude,
-                               String postalCode, String state, String city, String street, String country,
+                               String postalCode, String state, String city, String country,
                                String addressDescription) throws SQLException {
         Connection conn = super.getConnection();
 
         String insertQuery = "INSERT INTO Event (" +
                 "event_name, description, start_date, end_date, is_online, image_url, minimum_age, " +
-                "current_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "current_state, verification_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         // I removed the not null constraint in the database for admin_id since it can be null
         PreparedStatement stmt = conn.prepareStatement(insertQuery);
         stmt.setString(1, eventName);
@@ -61,8 +63,9 @@ public class EventRepository extends BaseRepository {
         stmt.setBoolean(5, isOnline);
         stmt.setString(6, imageUrl);
         stmt.setInt(7, minimumAge);
+        stmt.setString(8, currentState.toString());
         // The newly created event is always in the upcoming state when it is created (I think)
-        stmt.setString(8, EventState.UPCOMING.toString());
+        stmt.setString(9, verificationStatus.toString());
 
         if (stmt.executeUpdate() == 0) {
             throw new SQLException("Creating event failed, no rows affected.");
@@ -76,7 +79,7 @@ public class EventRepository extends BaseRepository {
         Long eventId = rs.getLong(1);
 
         // create event in event_type table
-        createEventInEventType(eventId, eventType);
+        createEventsInEventType(eventId, eventTypes);
 
         // create event in ticketed_event table
         if (isTicketed) {
@@ -105,19 +108,18 @@ public class EventRepository extends BaseRepository {
         // TODO: buradaki location_name e bir ayar yapmamiz lazim
         // create event in Location table
         insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
-                "postal_code, state, city, street, country, address_description) " +
+                "postal_code, state, city, country, address_description) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         stmt = conn.prepareStatement(insertQuery);
         stmt.setLong(1, eventId);
-        stmt.setString(2, "");
+        stmt.setString(2, locationName);
         stmt.setDouble(3, latitude);
         stmt.setDouble(4, longitude);
         stmt.setString(5, postalCode);
         stmt.setString(6, state);
         stmt.setString(7, city);
-        stmt.setString(8, "");
-        stmt.setString(9, country);
-        stmt.setString(10, addressDescription);
+        stmt.setString(8, country);
+        stmt.setString(9, addressDescription);
 
         if (stmt.executeUpdate() == 0) {
             throw new SQLException("Creating event in Location table failed, no rows affected.");
