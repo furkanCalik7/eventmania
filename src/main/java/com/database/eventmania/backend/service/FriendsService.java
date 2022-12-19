@@ -21,6 +21,6 @@ public class FriendsService {
     }
 
     public boolean deleteFriend(String userId) throws SQLException{
-        return friendsRepository.deleteFriend(Long.valueOf(userId));
+        return friendsRepository.deleteFriend(Long.valueOf(userId));it branch
     }
 }
