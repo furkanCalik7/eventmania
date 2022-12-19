@@ -10,11 +10,16 @@ import java.util.HashMap;
 
 @Repository
 public class AccountRepository extends BaseRepository {
+
+    public AccountRepository() {
+        super.connect();
+    }
+
     public HashMap<String, String> getAccountByEmail(String email) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn != null) {
-            String query = "SELECT * FROM account_type WHERE email = ?";
+            String query = "SELECT * FROM account_with_type WHERE email = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setString(1, email);
@@ -25,7 +30,7 @@ public class AccountRepository extends BaseRepository {
                 HashMap<String, String> account = new HashMap<>();
                 account.put("email", rs.getString("email"));
                 account.put("password", rs.getString("hash_password"));
-                account.put("type", rs.getString("type"));
+                account.put("type", rs.getString("account_type"));
                 return account;
             }
         }
