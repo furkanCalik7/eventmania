@@ -7,6 +7,8 @@ import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,14 +28,20 @@ public class TicketedEventRepository extends BaseRepository {
             Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
             LocalDateTime saleStartTime, LocalDateTime saleEndTime, String locationName, Float latitude, Float longitude,
             String postalCode, String state, String city, String country,
-            String addressDescription) throws SQLException {
+            String addressDescription, String email) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
-
+        //get organization id from the table account_with_type by email
+        String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        Long organizationId = rs.getLong("organization_id");
         return eventRepository.createEvent(true, verificationStatus, eventName,
                 eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, salesChannel,
-                saleStartTime, saleEndTime, null, null, locationName, latitude, longitude, postalCode, state, city,
-                country, addressDescription);
+                saleStartTime, saleEndTime, null, locationName, latitude, longitude, postalCode, state, city,
+                country, addressDescription, organizationId);
     }
 }

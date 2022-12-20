@@ -33,7 +33,6 @@ public class EventRepository extends BaseRepository {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO event_type (event_id, type_of_event) VALUES (?, ?)");
             stmt.setLong(1, eventId);
             stmt.setString(2, eventType.toString());
-            stmt.executeUpdate();
             if (stmt.executeUpdate() == 0) {
                 throw new SQLException("Creating event in event_type table failed, no rows affected.");
             }
@@ -45,10 +44,10 @@ public class EventRepository extends BaseRepository {
                                VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
                                Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
-                               LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
+                               LocalDateTime saleStartTime, LocalDateTime saleEndTime,
                                Integer capacity, String locationName, Float latitude, Float longitude,
                                String postalCode, String state, String city, String country,
-                               String addressDescription) throws SQLException {
+                               String addressDescription, Long eventCreatorId) throws SQLException {
         Connection conn = super.getConnection();
 
         String insertQuery = "INSERT INTO Event (" +
@@ -83,14 +82,14 @@ public class EventRepository extends BaseRepository {
 
         // create event in ticketed_event table
         if (isTicketed) {
-            insertQuery = "INSERT INTO TicketedEvent (event_id, sales_channel, sale_start_time, sale_end_time) " +
-                    "VALUES (?, ?, ?, ?)";
+            insertQuery = "INSERT INTO TicketedEvent (event_id, sales_channel, sale_start_time, sale_end_time, organization_id) " +
+                    "VALUES (?, ?, ?, ?,?)";
             stmt = conn.prepareStatement(insertQuery);
             stmt.setLong(1, eventId);
             stmt.setString(2, salesChannel.toString());
             stmt.setTimestamp(3, java.sql.Timestamp.valueOf(saleStartTime));
             stmt.setTimestamp(4, java.sql.Timestamp.valueOf(saleEndTime));
-
+            stmt.setLong(5, eventCreatorId);
             if (stmt.executeUpdate() == 0) {
                 throw new SQLException("Creating event in ticketed_event table failed, no rows affected.");
             }
@@ -98,7 +97,7 @@ public class EventRepository extends BaseRepository {
             insertQuery = "INSERT INTO UnticketedEvent (event_id, user_id, capacity) VALUES (?,?,?)";
             stmt = conn.prepareStatement(insertQuery);
             stmt.setLong(1, eventId);
-            stmt.setLong(2, userId);
+            stmt.setLong(2, eventCreatorId);
             stmt.setInt(3, capacity);
 
             if (stmt.executeUpdate() == 0) {
@@ -238,7 +237,8 @@ public class EventRepository extends BaseRepository {
                         EventType.valueOf(eventRs.getString("type_of_event")),
                         SalesChannel.valueOf(eventRs.getString("sales_channel")),
                         eventRs.getTimestamp("sale_start_time").toLocalDateTime(),
-                        eventRs.getTimestamp("sale_end_time").toLocalDateTime()
+                        eventRs.getTimestamp("sale_end_time").toLocalDateTime(),
+                        eventRs.getLong("organization_id")
                 );
 
                 dto.addObject("event", event);
@@ -276,6 +276,7 @@ public class EventRepository extends BaseRepository {
                 dto.addObject("event", event);
             }
 
+            //TODO: street check
             Location location = new Location(
                     rs.getLong("event_id"),
                     rs.getFloat("latitude"),

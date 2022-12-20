@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class TicketedEvent extends Event {
     private SalesChannel salesChannel;
+    private Long organizationId;
     private LocalDateTime saleStartTime;
     private LocalDateTime saleEndTime;
 
@@ -24,12 +25,13 @@ public class TicketedEvent extends Event {
                          VerificationStatus verificationStatus, String eventName, String eventDescription,
                          LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
                          Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
-                         LocalDateTime saleStartTime, LocalDateTime saleEndTime) {
+                         LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long organizationId) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
                 endDate, isOnline, imageUrl, minimumAge, currentState, eventType, true);
         this.salesChannel = salesChannel;
         this.saleStartTime = saleStartTime;
         this.saleEndTime = saleEndTime;
+        this.organizationId = organizationId;
     }
     // TODO: getCapacity() method should be implemented
 }

@@ -48,6 +48,6 @@ public class TicketedEventService {
                 EventState.UPCOMING, eventTypes, salesChannel, saleStartTime,
                 saleEndTime, eventModel.getVenueLocation(), latitude, longitude,
                 eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(), eventModel.getCountry(),
-                eventModel.getAddress());
+                eventModel.getAddress(), email);
     }
 }

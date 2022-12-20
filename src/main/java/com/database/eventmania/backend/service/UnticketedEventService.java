@@ -23,7 +23,7 @@ public class UnticketedEventService {
     public UnticketedEventService(UnticketedEventRepository unticketedEventRepository) {
         this.unticketedEventRepository = unticketedEventRepository;
     }
-    public boolean createUnticketedEvent(EventModel eventModel) throws IOException {
+    public boolean createUnticketedEvent(EventModel eventModel, String email) throws IOException, SQLException {
         boolean isOnline = eventModel.getLocationType().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
         LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
@@ -42,22 +42,9 @@ public class UnticketedEventService {
         Utils.copyFile(eventModel.getFile());
         return unticketedEventRepository.createUnticketedEvent( VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
                 startDate, endDate, isOnline, eventModel.getFile().getName(), minimumAge,
-                EventState.UPCOMING, eventTypes, eventModel.getUserId(),
+                EventState.UPCOMING, eventTypes, Integer.valueOf(eventModel.getCapacity()),
                 eventModel.getVenueLocation(), latitude, longitude,
                 eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(),  eventModel.getCountry(),
-                eventModel.getAddress());
-        }
-
+                eventModel.getAddress(), email);
     }
-    /*public boolean createUnticketedEvent(Long adminId, String feedback, LocalDateTime verificationDate,
-                                         VerificationStatus verificationStatus, String eventName, String eventDescription,
-                                         LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                                         Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes,
-                                         Long userId, Integer capacity, String locationName, Float latitude, Float longitude,
-                                         String postalCode, String state, String city, String country,
-                                         String addressDescription) throws SQLException {
-        return unticketedEventRepository.createUnticketedEvent(verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, userId, capacity,
-                locationName, latitude, longitude, postalCode, state, city, country, addressDescription);
-    }*/
 }

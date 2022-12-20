@@ -34,6 +34,9 @@ public class EventController {
             if (eventModel.getEventPaymentType().equals("PAID")) {
                 ticketedEventService.createTicketedEvent(eventModel, principal.getName());
             }
+            else {
+                unticketedEventService.createUnticketedEvent(eventModel, principal.getName());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 drop table if exists event_type cascade;
 
+drop table if exists org_ticketed cascade;
+
 drop table if exists card cascade;
 
 drop table if exists unticketedevent cascade;
@@ -21,8 +23,6 @@ drop table if exists report cascade;
 drop table if exists event_sponsor cascade;
 
 drop table if exists sponsor cascade;
-
-drop table if exists org_ticketed cascade;
 
 drop table if exists org_unticketed cascade;
 
@@ -142,8 +142,11 @@ CREATE TABLE IF NOT EXISTS TicketedEvent
     sales_channel   VARCHAR(50) NOT NULL,
     sale_start_time TIMESTAMPTZ NOT NULL CHECK (sale_end_time >= sale_start_time),
     sale_end_time   TIMESTAMPTZ NOT NULL CHECK (sale_end_time >= sale_start_time),
+    organization_id INT         NOT NULL,
     PRIMARY KEY (event_id),
     FOREIGN KEY (event_id) REFERENCES Event (event_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (organization_id) REFERENCES Organization (organization_id)
         ON DELETE CASCADE
 );
 
@@ -256,7 +259,7 @@ CREATE TABLE IF NOT EXISTS event_sponsor
     FOREIGN KEY (event_id) REFERENCES Event (event_id)
         ON DELETE CASCADE
 );
-
+/*
 CREATE TABLE IF NOT EXISTS org_ticketed
 (
     event_id        INT         NOT NULL,
@@ -268,6 +271,7 @@ CREATE TABLE IF NOT EXISTS org_ticketed
     FOREIGN KEY (organization_id) REFERENCES Organization (organization_id)
         ON DELETE CASCADE
 );
+*/
 
 CREATE TABLE IF NOT EXISTS org_unticketed
 (

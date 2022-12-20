@@ -41,7 +41,7 @@ public class EventService {
     private EventState currentState;
     private EventType eventType;
 
-    public boolean createEvent(boolean isTicketed, VerificationStatus verificationStatus, String eventName, String eventDescription,
+    /*public boolean createEvent(boolean isTicketed, VerificationStatus verificationStatus, String eventName, String eventDescription,
                                LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
                                Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
                                LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long userId,
@@ -52,8 +52,8 @@ public class EventService {
         return eventRepository.createEvent(isTicketed, verificationStatus, eventName,
                 eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, salesChannel,
                 saleStartTime, saleEndTime, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
-                country, addressDescription);
-    }
+                country, addressDescription, eventCreatorId);
+    }*/
 
     public boolean deleteEvent(Long eventId) throws SQLException {
         return eventRepository.deleteEvent(eventId);
