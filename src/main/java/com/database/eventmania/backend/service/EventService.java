@@ -65,17 +65,7 @@ public class EventService {
         return eventRepository.getEventById(eventId);
     }
 
-    public ArrayList<EventDTO> getAllEvents() throws SQLException {
-        // TODO: Return eventModel instead of eventDTO
-        // TODO: Return the all events whose start date is greater than the current date
-        // TODO: event modelin icerisindeki startdate ve enddate stringlerini formatlayıp gönder (e.g. OCT 23 2022)
-        // bu arada döneceğin event modellarda olması gereken fieldlar:
-        // event id
-        // Startdate (format edilmiş)
-        // name
-        // img name
-        // venue location (uzun olan)
-        // gerisi burası için gereksiz
+    public ArrayList<EventModel> getAllEvents() throws SQLException {
         return eventRepository.getAllEvents();
     }
 

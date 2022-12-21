@@ -36,5 +36,9 @@ public class EventModel {
     private String eventDescription;
     private String salesStartTime;
     private String salesEndTime;
+    private String imageUrl;
+
+    //if the event is online, the locationName is "online"
+    private String locationName;
 }
 

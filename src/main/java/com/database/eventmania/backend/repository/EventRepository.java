@@ -8,13 +8,15 @@ import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
+import com.database.eventmania.backend.model.EventModel;
 import org.springframework.stereotype.Repository;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Objects;
 import java.util.ArrayList;
 
@@ -126,56 +128,6 @@ public class EventRepository extends BaseRepository {
         return true;
     }
 
-    /*
-    // TODO: Add a method to create an event in the correct event table
-    public boolean createEvent(Long adminId, String feedback, LocalDateTime verificationDate,
-                               VerificationStatus verificationStatus, String eventName, String eventDescription,
-                               LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, EventType eventType, boolean isTicketed) throws SQLException {
-        Connection conn = super.getConnection();
-
-        if (conn == null)
-            return false;
-
-        if (isTicketed) {
-
-        }
-        String query = "INSERT INTO Event (admin_id, feedback, verification_date, verification_status, event_name, " +
-                "description, start_date, end_date, is_online, image_url, minimum_age, current_state) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-
-        stmt.setLong(1, adminId);
-        stmt.setString(2, feedback);
-        stmt.setTimestamp(3, java.sql.Timestamp.valueOf(verificationDate));
-        stmt.setString(4, verificationStatus.toString());
-        stmt.setString(5, eventName);
-        stmt.setString(6, eventDescription);
-        stmt.setTimestamp(7, java.sql.Timestamp.valueOf(startDate));
-        stmt.setTimestamp(8, java.sql.Timestamp.valueOf(endDate));
-        stmt.setBoolean(9, isOnline);
-        stmt.setString(10, imageUrl);
-        stmt.setInt(11, minimumAge);
-        stmt.setString(12, currentState.toString());
-
-        if (stmt.executeUpdate() == 0)
-            throw new SQLException("Creating event failed, no rows affected.");
-
-        // get the current value of the event_id sequence
-        query = "SELECT currval('event_event_id_seq')";
-        stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery();
-        rs.next();
-        Long eventId = rs.getLong(1);
-
-        // then create the event in the event_type table
-        createEventInEventType(eventId, eventType);
-
-        return true;
-    }
-
-     */
 
     public boolean deleteEvent(Long eventId) throws SQLException {
         Connection conn = super.getConnection();
@@ -299,30 +251,31 @@ public class EventRepository extends BaseRepository {
         throw new SQLException("Event with id " + eventId + " does not exist");
     }
 
-    public ArrayList<EventDTO> getAllEvents() throws SQLException {
+    public ArrayList<EventModel> getAllEvents() throws SQLException {
         Connection conn = super.getConnection();
-        // create a query that gets all the event ids
-
         if (conn == null)
             throw new SQLException("Connection to the database failed");
-
-        String query = "SELECT event_id FROM event_with_type";
-        ArrayList<EventDTO> events = new ArrayList<>();
-
+        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, L.location_name " +
+                        "FROM Event E " +
+                        "NATURAL JOIN Location L";
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
-
-
-        // Cok yanlis bir kod bu
-        // İdleri toplu alıp tek tek eventleri id ile almaya çalışırsak gereksiz yere database istek göndermiş oluyoruz
-        // ve sistem asiri yavaslar
-        // bunun yerine tek bir query ile eventleri alıp onları döndürmeliyiz
-        // TODO: fix this
-
+        ArrayList<EventModel> events = new ArrayList<>();
         while (rs.next()) {
-            events.add(getEventById(rs.getLong("event_id")));
+            EventModel event = new EventModel();
+            FormatStyle dateStyle = FormatStyle.MEDIUM;
+            FormatStyle timeStyle = FormatStyle.SHORT;
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+            event.setEventId(rs.getLong("event_id"));
+            event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
+            event.setTitle(rs.getString("event_name"));
+            event.setImageUrl(rs.getString("image_url"));
+            if(rs.getBoolean("is_online"))
+                event.setLocationName("Online");
+            else
+                event.setLocationName(rs.getString("location_name"));
+            events.add(event);
         }
-
         return events;
     }
 }
