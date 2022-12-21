@@ -44,7 +44,7 @@ public class TicketedEventService {
         int minimumAge = Integer.parseInt(eventModel.getMinimumAge());
         Utils.copyFile(eventModel.getFile());
         return ticketedEventRepository.createTicketedEvent(VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
-                startDate, endDate, isOnline, eventModel.getFile().getName(), minimumAge,
+                startDate, endDate, isOnline, eventModel.getFile().getOriginalFilename(), minimumAge,
                 EventState.UPCOMING, eventTypes, salesChannel, saleStartTime,
                 saleEndTime, eventModel.getVenueLocation(), latitude, longitude,
                 eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(), eventModel.getCountry(),

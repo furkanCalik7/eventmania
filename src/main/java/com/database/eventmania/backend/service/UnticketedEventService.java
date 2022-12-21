@@ -23,6 +23,7 @@ public class UnticketedEventService {
     public UnticketedEventService(UnticketedEventRepository unticketedEventRepository) {
         this.unticketedEventRepository = unticketedEventRepository;
     }
+
     public boolean createUnticketedEvent(EventModel eventModel, String email) throws IOException, SQLException {
         boolean isOnline = eventModel.getLocationType().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
@@ -40,11 +41,11 @@ public class UnticketedEventService {
 
         int minimumAge = Integer.parseInt(eventModel.getMinimumAge());
         Utils.copyFile(eventModel.getFile());
-        return unticketedEventRepository.createUnticketedEvent( VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
-                startDate, endDate, isOnline, eventModel.getFile().getName(), minimumAge,
+        return unticketedEventRepository.createUnticketedEvent(VerificationStatus.UNDER_REVIEW, eventModel.getTitle(), eventModel.getEventDescription(),
+                startDate, endDate, isOnline, eventModel.getFile().getOriginalFilename(), minimumAge,
                 EventState.UPCOMING, eventTypes, Integer.valueOf(eventModel.getCapacity()),
                 eventModel.getVenueLocation(), latitude, longitude,
-                eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(),  eventModel.getCountry(),
+                eventModel.getPostalCode(), eventModel.getState(), eventModel.getCity(), eventModel.getCountry(),
                 eventModel.getAddress(), email);
     }
 }
