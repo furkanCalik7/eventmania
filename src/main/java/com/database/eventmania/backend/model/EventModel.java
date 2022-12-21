@@ -14,6 +14,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventModel {
+    private Long eventId;
     private String title;
     private ArrayList<String> eventTypes;
     private String venueLocation;
@@ -36,3 +37,4 @@ public class EventModel {
     private String salesStartTime;
     private String salesEndTime;
 }
+

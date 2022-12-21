@@ -5,6 +5,8 @@ import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
+import com.database.eventmania.backend.model.EventModel;
+import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,31 @@ public class EventService {
     }
 
     public ArrayList<EventDTO> getAllEvents() throws SQLException {
+        // TODO: Return eventModel instead of eventDTO
+        // TODO: Return the all events whose start date is greater than the current date
+        // TODO: event modelin icerisindeki startdate ve enddate stringlerini formatlayıp gönder (e.g. OCT 23 2022)
+        // bu arada döneceğin event modellarda olması gereken fieldlar:
+        // event id
+        // Startdate (format edilmiş)
+        // name
+        // img name
+        // venue location (uzun olan)
+        // gerisi burası için gereksiz
         return eventRepository.getAllEvents();
+    }
+
+    public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
+        // TODO: implement filtering
+        // Get all events methoduna benzer ama bu kez filtreleme yapılacak
+        // yeni filterler ekledim FilterModel.java dosyasına, biraz inceleyip ona göre eventleri dönelim.
+        // bu arada döneceğin event modellarda olması gereken fieldlar:
+        // Startdate (format edilmiş)
+        // event id
+        // name
+        // img name
+        // venue location (uzun olan)
+        // gerisi burası için gereksiz
+        return null;
     }
 
     private void savePhoto() {

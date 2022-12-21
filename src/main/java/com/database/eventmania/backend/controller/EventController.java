@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.controller;
 
 import com.database.eventmania.backend.model.EventModel;
+import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.service.TicketedEventService;
 import com.database.eventmania.backend.service.UnticketedEventService;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,7 @@ public class EventController {
         try {
             if (eventModel.getEventPaymentType().equals("PAID")) {
                 ticketedEventService.createTicketedEvent(eventModel, principal.getName());
-            }
-            else {
+            } else {
                 unticketedEventService.createUnticketedEvent(eventModel, principal.getName());
             }
 
@@ -42,5 +42,12 @@ public class EventController {
             e.printStackTrace();
         }
         return "";
+    }
+
+    //get mapping with filter model class
+    @GetMapping()
+    public ModelAndView listEventPage(@ModelAttribute("filterModel") FilterModel filterModel) {
+        ModelAndView mav = new ModelAndView("frontend/event/list_event.html");
+        return mav;
     }
 }

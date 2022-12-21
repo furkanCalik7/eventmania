@@ -312,6 +312,13 @@ public class EventRepository extends BaseRepository {
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
 
+
+        // Cok yanlis bir kod bu
+        // İdleri toplu alıp tek tek eventleri id ile almaya çalışırsak gereksiz yere database istek göndermiş oluyoruz
+        // ve sistem asiri yavaslar
+        // bunun yerine tek bir query ile eventleri alıp onları döndürmeliyiz
+        // TODO: fix this
+
         while (rs.next()) {
             events.add(getEventById(rs.getLong("event_id")));
         }
