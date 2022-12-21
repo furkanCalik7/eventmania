@@ -1,19 +1,36 @@
 package com.database.eventmania.backend.controller;
 
-import com.database.eventmania.backend.Utils;
+import com.database.eventmania.backend.model.EventModel;
+import com.database.eventmania.backend.service.EventService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/")
 public class MainController {
+    private EventService eventService;
+
+    public MainController(EventService eventService) {
+        this.eventService = eventService;
+    }
+
     @GetMapping()
     public ModelAndView homepage() {
         ModelAndView mav = new ModelAndView("frontend/homepage.html");
+        ArrayList<EventModel> eventModels = null;
+        try {
+            eventModels = eventService.getAllEvents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        mav.addObject("events", eventModels);
         return mav;
     }
+
     @RequestMapping(value = "/username", method = RequestMethod.GET)
     @ResponseBody
     public String currentUserName(Principal principal) {

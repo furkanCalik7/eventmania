@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html
 		xmlns:th="https://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
 >
 <head>
 	<meta charset="utf-8"/>
@@ -47,23 +48,32 @@
 
 		<div class="form-group mb-3">
 			<label class="form-label">Event Types</label>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-1" value="CONCERT" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-1" value="CONCERT"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-1">Concert</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-2" value="FESTIVAL" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-2" value="FESTIVAL"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-2">Festival</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-3" value="SPORTS" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-3" value="SPORTS"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-3">Sports</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-4" value="ART" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-4" value="ART"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-4">Art</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-6" value="MUSIC" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-6" value="MUSIC"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-6">Music</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-7" value="CINEMA" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-7" value="CINEMA"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-7">Cinema</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-8" value="SOCIAL_GATHERING" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-8" value="SOCIAL_GATHERING"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-8">Social gathering</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-9" value="TALK_SHOW" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-9" value="TALK_SHOW"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-9">Talk show</label></div>
-			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-5" value="OTHER" class="form-check-input" type="checkbox"/><label
+			<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-5" value="OTHER"
+			                               class="form-check-input" type="checkbox"/><label
 					class="form-check-label" for="formCheck-5">Other</label></div>
 		</div>
 		<hr/>
@@ -185,7 +195,7 @@
 	><input class="form-control"
 		    th:field="*{enddate}"
 		    type="datetime-local"
-			required
+		    required
 	/>
 		<hr/>
 		<h2 class="text-start" style="margin-bottom: 12px; margin-top: 18px">
@@ -206,7 +216,7 @@
 			type="number"
 			style="margin-bottom: 12px"
 	/>
-		<button id="paid-button" class="btn" type="button" style="margin-right: 41px">
+		<button sec:authorize="hasRole('Organization')" id="paid-button" class="btn" type="button" style="margin-right: 41px">
 			Paid
 		</button>
 		<button id="free-button" class="btn" type="button" style="margin-right: 41px">
@@ -225,7 +235,7 @@
 				type="number"
 		/>
 		</div>
-		<div id="sales-channel-input">
+		<div sec:authorize="hasRole('Organization')" id="sales-channel-input">
 			<div class="form-group mb-3">
 				<br>
 				<label class="form-label">Sales channel</label
@@ -251,12 +261,13 @@
 			    type="datetime-local"/>
 		</div>
 		<button
-				class="btn btn-primary"
+				class="btn btn-primary mb-2"
 				type="submit"
 				style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
 		>
 			Save and continue
 		</button>
+
 	</form>
 </div>
 <script

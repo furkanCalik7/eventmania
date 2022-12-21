@@ -11,10 +11,7 @@ import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import com.database.eventmania.backend.model.EventModel;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -23,6 +20,7 @@ import java.util.ArrayList;
 
 @Repository
 public class EventRepository extends BaseRepository {
+    private Savepoint savepoint;
 
     public EventRepository() {
         super.connect();
@@ -37,7 +35,7 @@ public class EventRepository extends BaseRepository {
             stmt.setLong(1, eventId);
             stmt.setString(2, eventType.toString());
             if (stmt.executeUpdate() == 0) {
-                throw new SQLException("Creating event in event_type table failed, no rows affected.");
+                conn.rollback(this.savepoint);
             }
         }
         return true;
@@ -52,7 +50,8 @@ public class EventRepository extends BaseRepository {
                                String postalCode, String state, String city, String country,
                                String addressDescription, Long eventCreatorId) throws SQLException {
         Connection conn = super.getConnection();
-
+        conn.setAutoCommit(false);
+        this.savepoint = conn.setSavepoint();
         String insertQuery = "INSERT INTO Event (" +
                 "event_name, description, start_date, end_date, is_online, image_url, minimum_age, " +
                 "current_state, verification_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -70,7 +69,7 @@ public class EventRepository extends BaseRepository {
         stmt.setString(9, verificationStatus.toString());
 
         if (stmt.executeUpdate() == 0) {
-            throw new SQLException("Creating event failed, no rows affected.");
+            conn.rollback(this.savepoint);
         }
 
         // query a sequence to get the last inserted event id
@@ -94,7 +93,7 @@ public class EventRepository extends BaseRepository {
             stmt.setTimestamp(4, java.sql.Timestamp.valueOf(saleEndTime));
             stmt.setLong(5, eventCreatorId);
             if (stmt.executeUpdate() == 0) {
-                throw new SQLException("Creating event in ticketed_event table failed, no rows affected.");
+                conn.rollback(this.savepoint);
             }
         } else {
             insertQuery = "INSERT INTO UnticketedEvent (event_id, user_id, capacity) VALUES (?,?,?)";
@@ -104,7 +103,7 @@ public class EventRepository extends BaseRepository {
             stmt.setInt(3, capacity);
 
             if (stmt.executeUpdate() == 0) {
-                throw new SQLException("Creating event in unticketed_event table failed, no rows affected.");
+                conn.rollback(this.savepoint);
             }
         }
         // creates event in Location table
@@ -121,11 +120,10 @@ public class EventRepository extends BaseRepository {
         stmt.setString(7, city);
         stmt.setString(8, country);
         stmt.setString(9, addressDescription);
-
         if (stmt.executeUpdate() == 0) {
-            throw new SQLException("Creating event in Location table failed, no rows affected.");
+            conn.rollback(this.savepoint);
         }
-
+        conn.commit();
         return true;
     }
 
