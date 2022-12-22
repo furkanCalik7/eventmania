@@ -374,8 +374,8 @@ CREATE VIEW event_with_type AS
 (
 WITH joined_event_type_location AS (SELECT *
                                     FROM Event
-                                             LEFT OUTER JOIN event_type USING (event_id)
-                                             LEFT OUTER JOIN location USING (event_id))
+                                             JOIN event_type USING (event_id)
+                                             JOIN location USING (event_id))
 SELECT event_id,
        admin_id,
        feedback,
@@ -434,5 +434,4 @@ INSERT INTO Admin (hash_password, email)
 VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayclmz@gmail.com');
 
 INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
-VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman',
-        'male', '123-456-789', '2001-07-21');
+VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman', 'male', '123-456-789', '2001-07-21');

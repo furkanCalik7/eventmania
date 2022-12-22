@@ -17,6 +17,4 @@ public class FilterModel {
     private String startDate;
     private String endDate;
     private String name;
-    private String latitude;
-    private String longitude;
 }
