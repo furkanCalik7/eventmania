@@ -2,10 +2,8 @@ package com.database.eventmania.backend.repository;
 
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import javax.xml.transform.Result;
+import java.sql.*;
 import java.time.LocalDateTime;
 
 @Repository
@@ -34,10 +32,20 @@ public class TicketRepository extends BaseRepository {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(eventId));
             stmt.setInt(2, Math.toIntExact(userId));
-            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            //get current time as timestamp
+            LocalDateTime now = LocalDateTime.now();
+            Timestamp timestamp = Timestamp.valueOf(now);
+
+            stmt.setTimestamp(3, timestamp);
             stmt.setString(4, categoryName);
             stmt.setString(5, purchaseType);
             stmt.executeUpdate();
+
+            String query2 = "INSERT INTO join_event (event_id, user_id) VALUES (?, ?)";
+            PreparedStatement stmt2 = conn.prepareStatement(query2);
+            stmt2.setInt(1, Math.toIntExact(eventId));
+            stmt2.setInt(2, Math.toIntExact(userId));
+            stmt2.executeUpdate();
             return true;
         }
         throw new SQLException("Connection to the database could not be established");
