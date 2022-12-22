@@ -278,7 +278,53 @@ public class EventRepository extends BaseRepository {
     }
 
     public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
-        //TODO: implement filter
-        return null;
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, L.location_name " +
+                "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "WHERE (? is null OR E.event_name LIKE ?) OR (? is null OR E.start_date >= ?) OR (? is null OR E.start_date <= ?) OR " +
+                "(? is null OR L.country LIKE ?) OR (? is null OR L.city LIKE ?) OR (? is null OR L.state LIKE ?) OR (? is null OR L.postal_code LIKE ?) " +
+                "OR (? is null OR ET.type_of_event in ?)";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, ("%"+filterModel.getName() + "%"));
+        stmt.setString(2, ("%"+filterModel.getName() + "%"));
+        //TODO check this
+        stmt.setTimestamp(3, Timestamp.valueOf(filterModel.getStartDate()));
+        stmt.setTimestamp(4, Timestamp.valueOf(filterModel.getStartDate()));
+
+        stmt.setTimestamp(5, Timestamp.valueOf(filterModel.getEndDate()));
+        stmt.setTimestamp(6, Timestamp.valueOf(filterModel.getEndDate()));
+        stmt.setString(7, ("%"+filterModel.getName() + "%"));
+        stmt.setString(8, ("%"+filterModel.getName() + "%"));
+        stmt.setString(9, ("%"+filterModel.getName() + "%"));
+        stmt.setString(10, ("%"+filterModel.getName() + "%"));
+        stmt.setString(11, ("%"+filterModel.getName() + "%"));
+        stmt.setString(12, ("%"+filterModel.getName() + "%"));
+        stmt.setString(13, ("%"+filterModel.getName() + "%"));
+        stmt.setString(14, ("%"+filterModel.getName() + "%"));
+        stmt.setArray(15, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
+        stmt.setArray(16, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
+
+        ResultSet rs = stmt.executeQuery();
+        ArrayList<EventModel> events = new ArrayList<>();
+        while (rs.next()) {
+            EventModel event = new EventModel();
+            FormatStyle dateStyle = FormatStyle.MEDIUM;
+            FormatStyle timeStyle = FormatStyle.SHORT;
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+            event.setEventId(rs.getLong("event_id"));
+            event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
+            event.setTitle(rs.getString("event_name"));
+            event.setImageUrl(rs.getString("image_url"));
+            if (rs.getBoolean("is_online"))
+                event.setLocationName("ONLINE");
+            else
+                event.setLocationName(rs.getString("location_name"));
+            events.add(event);
+        }
+        return events;
     }
 }
