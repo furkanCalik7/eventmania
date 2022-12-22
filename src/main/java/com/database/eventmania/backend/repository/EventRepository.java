@@ -41,14 +41,14 @@ public class EventRepository extends BaseRepository {
         }
     }
 
-    public boolean createEvent(boolean isTicketed,
-                               VerificationStatus verificationStatus, String eventName, String eventDescription,
-                               LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                               Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
-                               LocalDateTime saleStartTime, LocalDateTime saleEndTime,
-                               Integer capacity, String locationName, Float latitude, Float longitude,
-                               String postalCode, String state, String city, String country,
-                               String addressDescription, Long eventCreatorId) throws SQLException {
+    public Long createEvent(boolean isTicketed,
+                            VerificationStatus verificationStatus, String eventName, String eventDescription,
+                            LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
+                            Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
+                            LocalDateTime saleStartTime, LocalDateTime saleEndTime,
+                            Integer capacity, String locationName, Float latitude, Float longitude,
+                            String postalCode, String state, String city, String country,
+                            String addressDescription, Long eventCreatorId) throws SQLException {
         Connection conn = super.getConnection();
         conn.setAutoCommit(false);
         this.savepoint = conn.setSavepoint();
@@ -123,7 +123,7 @@ public class EventRepository extends BaseRepository {
             }
         }
         conn.commit();
-        return true;
+        return eventId;
     }
 
 
@@ -226,7 +226,6 @@ public class EventRepository extends BaseRepository {
                 dto.addObject("event", event);
             }
 
-            //TODO: street check
             Location location = new Location(
                     rs.getLong("event_id"),
                     rs.getFloat("latitude"),

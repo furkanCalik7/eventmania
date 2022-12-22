@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 @Repository
 public class CategoryRepository extends BaseRepository {
-    public CategoryRepository(){
+    public CategoryRepository() {
         super.connect();
     }
 
@@ -17,7 +17,7 @@ public class CategoryRepository extends BaseRepository {
                                String categoryDescription, Integer capacity,
                                Integer price) throws SQLException {
         Connection conn = super.getConnection();
-        if (conn != null){
+        if (conn != null) {
             String query = "INSERT INTO Category (ticketed_event_id, category_name, category_description, capacity, price) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(eventId));
@@ -27,9 +27,14 @@ public class CategoryRepository extends BaseRepository {
             stmt.setDouble(5, price);
             stmt.executeUpdate();
             return true;
+        } else {
+            throw new SQLException("Connection to the database could not be established");
         }
-        else{throw new SQLException("Connection to the database could not be established");}
 
     }
 
+    public void getCategoriesByEventId(Long valueOf) {
+        Connection conn = super.getConnection();
+        // TODO: yapılacak
+    }
 }

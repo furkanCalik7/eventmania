@@ -60,12 +60,15 @@ function fillInAddress() {
 google.maps.event.addDomListener(window, 'load', initAutocomplete);
 $("#online-event-span").hide();
 $("#is-online-input").val("VENUE");
+$("#venue-input").attr("required", true);
 $("#venue-button").addClass("btn-info");
 $("#online-button").click(function () {
     $("#online-button").addClass("btn-info");
     $("#venue-button").removeClass("btn-info");
     $("#online-event-span").show();
     $("#location_input").hide();
+    // make venue input not required
+    $("#venue-input").attr("required", false);
     $("#location-details-page").hide();
     $("#is-online-input").val("ONLINE");
 });
@@ -75,6 +78,7 @@ $("#venue-button").click(function () {
     $("#online-event-span").hide();
     $("#online-button").removeClass("btn-info");
     $("#location_input").show();
+    $("#venue-input").attr("required", true);
     $("#location-details-page").show();
     $("#is-online-input").val("VENUE");
 });

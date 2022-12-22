@@ -22,7 +22,7 @@ public class TicketedEventRepository extends BaseRepository {
         this.eventRepository = eventRepository;
     }
 
-    public boolean createTicketedEvent(
+    public Long createTicketedEvent(
             VerificationStatus verificationStatus, String eventName, String eventDescription,
             LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
             Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
