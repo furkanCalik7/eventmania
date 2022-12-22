@@ -12,19 +12,9 @@ import java.sql.SQLException;
 @RestController
 @RequestMapping(path = "admin")
 public class AdminController {
-    @GetMapping("login")
-    public ModelAndView loginPage() {
-        ModelAndView mav = new ModelAndView("admin/login.html");
-        LoginModel loginModel = new LoginModel();
-        mav.addObject("login", loginModel);
-        // TODO: Change later
-        mav.addObject("access_token", "test");
+    @GetMapping("dashboard")
+    public ModelAndView dashboard() {
+        ModelAndView mav = new ModelAndView("admin/dashboard.html");
         return mav;
-    }
-
-    @PostMapping()
-    public String login(@RequestParam(value = "access") String accessToken, @ModelAttribute("loginModal") LoginModel loginModel) {
-        // TODO: ADD LOGIN METHOD HERE
-        return "";
     }
 }

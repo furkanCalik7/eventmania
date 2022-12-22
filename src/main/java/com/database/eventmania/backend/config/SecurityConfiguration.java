@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -33,7 +34,11 @@ public class SecurityConfiguration {
         return auth;
     }
 
-    // TODO: FIX LOGIN PAGE
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+        return new MySimpleUrlAuthenticationSuccessHandler();
+    }
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http, DaoAuthenticationProvider authenticationProvider) throws Exception {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
@@ -44,7 +49,7 @@ public class SecurityConfiguration {
                 .formLogin()
                 .loginPage("/login")
                 .successForwardUrl("/")
-                .defaultSuccessUrl("/", true)
+                .successHandler(myAuthenticationSuccessHandler())
                 .permitAll()
                 .and()
                 .authenticationProvider(authenticationProvider)
