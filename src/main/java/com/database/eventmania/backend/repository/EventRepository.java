@@ -9,6 +9,7 @@ import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import com.database.eventmania.backend.model.EventModel;
+import com.database.eventmania.backend.model.FilterModel;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -274,5 +275,10 @@ public class EventRepository extends BaseRepository {
             events.add(event);
         }
         return events;
+    }
+
+    public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
+        //TODO: implement filter
+        return null;
     }
 }

@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS Ticket
     ticket_id         SERIAL PRIMARY KEY NOT NULL,
     ticketed_event_id INT                NOT NULL,
     user_id           INT                NOT NULL,
-    transaction_date  TIMESTAMP(2)       NOT NULL,
+    transaction_date  TIMESTAMP(2),
     category_name     VARCHAR(20)        NOT NULL,
     purchase_type     VARCHAR(20)        NOT NULL,
     FOREIGN KEY (ticketed_event_id) REFERENCES Event (event_id)
