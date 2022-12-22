@@ -25,7 +25,7 @@ public class UnticketedEventService {
     }
 
     public boolean createUnticketedEvent(EventModel eventModel, String email) throws IOException, SQLException {
-        boolean isOnline = eventModel.getLocationType().equals("online");
+        boolean isOnline = eventModel.getLocationType().toLowerCase().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
         LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
         ArrayList<EventType> eventTypes = new ArrayList<>();
@@ -33,7 +33,7 @@ public class UnticketedEventService {
             eventTypes.add(EventType.valueOf(eventType));
         }
         float latitude = 0, longitude = 0;
-        if (!isOnline) {
+        if ( !isOnline ) {
             latitude = Float.parseFloat(eventModel.getLatitude());
             longitude = Float.parseFloat(eventModel.getLongitude());
         }
