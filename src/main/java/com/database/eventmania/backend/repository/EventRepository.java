@@ -26,7 +26,7 @@ public class EventRepository extends BaseRepository {
         super.connect();
     }
 
-    public boolean createEventsInEventType(Long eventId, ArrayList<EventType> eventTypes) throws SQLException {
+    public void createEventsInEventType(Long eventId, ArrayList<EventType> eventTypes) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
@@ -38,7 +38,6 @@ public class EventRepository extends BaseRepository {
                 conn.rollback(this.savepoint);
             }
         }
-        return true;
     }
 
     public boolean createEvent(boolean isTicketed,
@@ -77,7 +76,7 @@ public class EventRepository extends BaseRepository {
         stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
         rs.next();
-        Long eventId = rs.getLong(1);
+        long eventId = rs.getLong(1);
 
         // create event in event_type table
         createEventsInEventType(eventId, eventTypes);
@@ -92,9 +91,6 @@ public class EventRepository extends BaseRepository {
             stmt.setTimestamp(3, java.sql.Timestamp.valueOf(saleStartTime));
             stmt.setTimestamp(4, java.sql.Timestamp.valueOf(saleEndTime));
             stmt.setLong(5, eventCreatorId);
-            if (stmt.executeUpdate() == 0) {
-                conn.rollback(this.savepoint);
-            }
         } else {
             insertQuery = "INSERT INTO UnticketedEvent (event_id, user_id, capacity) VALUES (?,?,?)";
             stmt = conn.prepareStatement(insertQuery);
@@ -102,26 +98,28 @@ public class EventRepository extends BaseRepository {
             stmt.setLong(2, eventCreatorId);
             stmt.setInt(3, capacity);
 
+        }
+        if (stmt.executeUpdate() == 0) {
+            conn.rollback(this.savepoint);
+        }
+        // creates event in Location table
+        if (!isOnline) {
+            insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
+                    "postal_code, state, city, country, address_description) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(insertQuery);
+            stmt.setLong(1, eventId);
+            stmt.setString(2, locationName);
+            stmt.setDouble(3, latitude);
+            stmt.setDouble(4, longitude);
+            stmt.setString(5, postalCode);
+            stmt.setString(6, state);
+            stmt.setString(7, city);
+            stmt.setString(8, country);
+            stmt.setString(9, addressDescription);
             if (stmt.executeUpdate() == 0) {
                 conn.rollback(this.savepoint);
             }
-        }
-        // creates event in Location table
-        insertQuery = "INSERT INTO Location (event_id, location_name, latitude, longitude," +
-                "postal_code, state, city, country, address_description) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        stmt = conn.prepareStatement(insertQuery);
-        stmt.setLong(1, eventId);
-        stmt.setString(2, locationName);
-        stmt.setDouble(3, latitude);
-        stmt.setDouble(4, longitude);
-        stmt.setString(5, postalCode);
-        stmt.setString(6, state);
-        stmt.setString(7, city);
-        stmt.setString(8, country);
-        stmt.setString(9, addressDescription);
-        if (stmt.executeUpdate() == 0) {
-            conn.rollback(this.savepoint);
         }
         conn.commit();
         return true;

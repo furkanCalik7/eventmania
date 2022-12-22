@@ -32,7 +32,6 @@ public class UnticketedEventService {
         for (String eventType : eventModel.getEventTypes()) {
             eventTypes.add(EventType.valueOf(eventType));
         }
-        SalesChannel salesChannel = SalesChannel.valueOf(eventModel.getSalesChannel());
         float latitude = 0, longitude = 0;
         if (!isOnline) {
             latitude = Float.parseFloat(eventModel.getLatitude());
