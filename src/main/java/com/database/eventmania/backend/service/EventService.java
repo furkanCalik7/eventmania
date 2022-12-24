@@ -3,7 +3,6 @@ package com.database.eventmania.backend.service;
 import com.database.eventmania.backend.DTO.EventDTO;
 import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
-import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service
 public class EventService {
@@ -65,7 +65,7 @@ public class EventService {
         return eventRepository.getEventById(eventId);
     }
 
-    public ArrayList<EventModel> getAllEvents() throws SQLException {
+    public HashMap<String, ArrayList<EventModel>> getAllEvents() throws SQLException {
         return eventRepository.getAllEvents();
     }
 

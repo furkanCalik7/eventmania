@@ -67,7 +67,4 @@ public class CardRepository extends BaseRepository{
         }
         return false;
     }
-
-
-
 }

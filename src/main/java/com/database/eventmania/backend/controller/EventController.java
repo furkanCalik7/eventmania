@@ -65,6 +65,19 @@ public class EventController {
         return mav;
     }
 
+    @GetMapping("{eventId}/information")
+    public ModelAndView getEventInformation(@PathVariable("eventId") String eventId) throws SQLException {
+        ModelAndView mav = new ModelAndView("frontend/event/eventInformation.html");
+        EventDTO eventModel = null;
+        try {
+            eventModel = eventService.getEventById(Long.valueOf(eventId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mav.addObject("event", eventModel.getMap().get("event"));
+        return mav;
+    }
+
     @GetMapping("/{eventId}/tickets")
     public ModelAndView ticketPage(@PathVariable(value = "eventId") final String eventId) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/event_tickets.html");

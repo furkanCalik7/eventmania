@@ -1,188 +1,320 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
 >
-<head>
-	<meta charset="utf-8"/>
-	<meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
-	<title>Eventmania</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script type="text/javascript" th:src="@{/js/test.js}"></script>
-	<link type="text/css" rel="stylesheet" th:href="@{/css/homepage.css}">
-	<link type="text/css" rel="stylesheet" th:href="@{/css/filter.css}">
-</head>
-<body>
-<div th:replace="fragments/header :: header">...</div>
-<img style="max-width: 100%" th:src="@{/img/homepage.jpg}"/>
-<div class="blog-home2 py-5">
-	<div class="container">
-		<div class="row justify-content-center">
-			<div>
-				<div class="col-md-12 justify-content-center text-center">
-					<h3 class="my-3">Upcoming Events</h3>
-				</div>
-				<br/>
-				<a class="btn btn-primary mb-2" id="show_filter_button">
-					Show filters
-				</a>
-				<br>
-				<div class="collapse" id="collapseExample">
-					<form th:object="${filterModel}">
-						<div class="card card-body">
-							<div class="form-group mb-3">
-								<label class="form-label">Event Types</label>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-1" value="CONCERT"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-1">Concert</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-2"
-								                               value="FESTIVAL"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-2">Festival</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-3" value="SPORTS"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-3">Sports</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-4" value="ART"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-4">Art</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-6" value="MUSIC"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-6">Music</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-7" value="CINEMA"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-7">Cinema</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-8"
-								                               value="SOCIAL_GATHERING"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-8">Social gathering</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-9"
-								                               value="TALK_SHOW"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-9">Talk show</label></div>
-								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-5" value="OTHER"
-								                               class="form-check-input" type="checkbox"/><label
-										class="form-check-label" for="formCheck-5">Other</label></div>
-							</div>
-							<br>
-							<fieldset class="d-lg-flex d-xxl-flex gap-3 flex-row align-items-xxl-center">
-								<div><label class="form-label">Payment type</label>
-									<select class="form-select">
-										<optgroup th:field="*{ticketType}" label="Event cost type">
-											<option value="BOTH" selected>Both</option>
-											<option value="PAID">Paid</option>
-											<option value="FREE">Free</option>
-										</optgroup>
-									</select></div>
-								<div><label class="form-label">Start date is after</label>
-									<input
-											th:field="*{startDate}"
-											id="startdate_filter"
-											class="form-control"
-											type="datetime-local"
-											style="margin-bottom: 13px"
-									/></div>
-								<div><label class="form-label">End date is before</label>
-									<input
-											th:field="*{endDate}"
-											id="enddate_filter"
-											class="form-control"
-											type="datetime-local"
-											style="margin-bottom: 13px"
-									/>
-								</div>
-							</fieldset>
-							<div class="container mt-2">
-								<span>Search</span>
-								<input
-										th:field="*{name}"
-										id="search_input"
-										class="form-control" name="name" type="search"/>
-							</div>
-							<br>
-							<div class="row justify-content-end text-center">
-								<button id="filter-button" class="col-1 btn btn-primary" type="Submit">Filter</button>
-							</div>
-						</div>
-					</form>
-					<br>
-				</div>
-			</div>
-			<div id="events">
-				<div class="row mt-4">
-					<div class="col-md-4 on-hover" th:each="event: ${events}">
-						<div class="card border-0 mb-4"><a href="#"><img alt="wrappixel kit"
-						                                                 class="card-img-top"
-						                                                 th:src="@{/img/} + ${event.imageUrl}"/></a>
-							<div class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute">
-								<span class="d-block" th:text="${event.startdate}"></span></div>
-							<h5 class="font-weight-medium mt-3"><a class="text-decoration-none link"
-							                                       th:text="${event.title}"
-							                                       href="#"></a></h5>
-							<h6 class="font-weight-medium mt-3">Sports, concert</h6>
-							<p class="mt-3" th:text="${event.locationName}"></p><a
-									class="text-decoration-none linking text-themecolor mt-2" href="#">Learn More</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<footer class="text-center">
-		<div class="container text-muted py-4 py-lg-5">
-			<ul class="list-inline">
-				<li class="list-inline-item me-4"><a class="link-secondary" href="#">Web design</a></li>
-				<li class="list-inline-item me-4"><a class="link-secondary" href="#">Development</a></li>
-				<li class="list-inline-item"><a class="link-secondary" href="#">Hosting</a></li>
-			</ul>
-		</div>
-	</footer>
-	<footer></footer>
-	<div class="modal fade" id="modal-1" role="dialog" tabindex="-1">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Event Join Form</h4>
-					<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-				</div>
-				<div class="modal-body">
-					<div class="container">
-						<h5>New Seminar on Newest Food Recipe from World&#39;s Best</h5>
-					</div>
-					<form><select class="form-select">
-						<optgroup label="This is a group">
-							<option selected value="12">Catagory 1 - 100 tl</option>
-							<option value>Catagory 2 - 50 tl</option>
-						</optgroup>
-					</select></form>
-					<fieldset>
-						<legend style="margin-top: 17px;"><label class="form-label"
-						                                         style="margin-right: 0px;margin-left: 47px;">Row</label><select
-								style="margin-right: 0px;margin-left: 7px;">
-							<optgroup label="This is a group">
-								<option value="14">A</option>
-								<option value>B</option>
-								<option value>C</option>
-								<option value></option>
-							</optgroup>
-						</select><label class="form-label" style="margin-left: 103px;">Column</label><select
-								style="margin-left: 9px;">
-							<optgroup label="This is a group">
-								<option value>2</option>
-								<option value>3</option>
-							</optgroup>
-						</select></legend>
-					</fieldset>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-light" data-bs-dismiss="modal" type="button">Close</button>
-					<button class="btn btn-primary" type="button">Buy</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<script th:src="@{/js/jquery-3.6.2.min.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript" th:src="@{/js/homepage.js}"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <title>Eventmania</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/test.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/homepage.css}" />
+    <link type="text/css" rel="stylesheet" th:href="@{/css/filter.css}" />
+  </head>
+  <body>
+    <div th:replace="fragments/header :: header">...</div>
+    <img style="max-width: 100%" th:src="@{/img/homepage.jpg}" />
+    <div class="blog-home2 py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div>
+            <div class="col-md-12 justify-content-center text-center">
+              <h3 class="my-3">Upcoming Events</h3>
+            </div>
+            <br />
+            <a class="btn btn-primary mb-2" id="show_filter_button">
+              Show filters
+            </a>
+            <br />
+            <div class="collapse" id="collapseExample">
+              <form th:object="${filterModel}">
+                <div class="card card-body">
+                  <div class="form-group mb-3">
+                    <label class="form-label">Event Types</label>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-1"
+                        value="CONCERT"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-1"
+                        >Concert</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-2"
+                        value="FESTIVAL"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-2"
+                        >Festival</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-3"
+                        value="SPORTS"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-3"
+                        >Sports</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-4"
+                        value="ART"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-4"
+                        >Art</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-6"
+                        value="MUSIC"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-6"
+                        >Music</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-7"
+                        value="CINEMA"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-7"
+                        >Cinema</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-8"
+                        value="SOCIAL_GATHERING"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-8"
+                        >Social gathering</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-9"
+                        value="TALK_SHOW"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-9"
+                        >Talk show</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        th:field="*{eventTypes}"
+                        id="formCheck-5"
+                        value="OTHER"
+                        class="form-check-input"
+                        type="checkbox"
+                      /><label class="form-check-label" for="formCheck-5"
+                        >Other</label
+                      >
+                    </div>
+                  </div>
+                  <br />
+                  <fieldset
+                    class="d-lg-flex d-xxl-flex gap-3 flex-row align-items-xxl-center"
+                  >
+                    <div>
+                      <label class="form-label">Payment type</label>
+                      <select class="form-select">
+                        <optgroup
+                          th:field="*{ticketType}"
+                          label="Event cost type"
+                        >
+                          <option value="BOTH" selected>Both</option>
+                          <option value="PAID">Paid</option>
+                          <option value="FREE">Free</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="form-label">Start date is after</label>
+                      <input
+                        th:field="*{startDate}"
+                        id="startdate_filter"
+                        class="form-control"
+                        type="datetime-local"
+                        style="margin-bottom: 13px"
+                      />
+                    </div>
+                    <div>
+                      <label class="form-label">End date is before</label>
+                      <input
+                        th:field="*{endDate}"
+                        id="enddate_filter"
+                        class="form-control"
+                        type="datetime-local"
+                        style="margin-bottom: 13px"
+                      />
+                    </div>
+                  </fieldset>
+                  <div class="container mt-2">
+                    <span>Search</span>
+                    <input
+                      th:field="*{name}"
+                      id="search_input"
+                      class="form-control"
+                      name="name"
+                      type="search"
+                    />
+                  </div>
+                  <br />
+                  <div class="row justify-content-end text-center">
+                    <button
+                      id="filter-button"
+                      class="col-1 btn btn-primary"
+                      type="Submit"
+                    >
+                      Filter
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <br />
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-4 on-hover" th:each="event: ${events}">
+              <div class="card border-0 mb-4">
+                <a href="#"
+                  ><img
+                    alt="wrappixel kit"
+                    class="card-img-top"
+                    th:src="@{/img/} + ${event.imageUrl}"
+                /></a>
+                <p id="event_id" th:text="${event.eventId}" hidden></p>
+                <div
+                  class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute"
+                >
+                  <span class="d-block" th:text="${event.startdate}"></span>
+                </div>
+                <h5 class="font-weight-medium mt-3">
+                  <a
+                    class="text-decoration-none link"
+                    th:text="${event.title}"
+                    th:href="@{event/} + ${event.eventId} + @{/information}"
+                  ></a>
+                </h5>
+                <p class="mt-3" th:text="${event.locationName}"></p>
+                <a
+                  class="text-decoration-none linking text-themecolor mt-2"
+                  th:href="@{event/} + ${event.eventId} + @{/information}"
+                  >Learn More</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="text-center">
+        <div class="container text-muted py-4 py-lg-5">
+          <ul class="list-inline">
+            <li class="list-inline-item me-4">
+              <a class="link-secondary" href="#">Web design</a>
+            </li>
+            <li class="list-inline-item me-4">
+              <a class="link-secondary" href="#">Development</a>
+            </li>
+            <li class="list-inline-item">
+              <a class="link-secondary" href="#">Hosting</a>
+            </li>
+          </ul>
+        </div>
+      </footer>
+      <footer></footer>
+      <div class="modal fade" id="modal-1" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Event Join Form</h4>
+              <button
+                aria-label="Close"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                type="button"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <h5>New Seminar on Newest Food Recipe from World&#39;s Best</h5>
+              </div>
+              <form>
+                <select class="form-select">
+                  <optgroup label="This is a group">
+                    <option selected value="12">Catagory 1 - 100 tl</option>
+                    <option value>Catagory 2 - 50 tl</option>
+                  </optgroup>
+                </select>
+              </form>
+              <fieldset>
+                <legend style="margin-top: 17px">
+                  <label
+                    class="form-label"
+                    style="margin-right: 0px; margin-left: 47px"
+                    >Row</label
+                  ><select style="margin-right: 0px; margin-left: 7px">
+                    <optgroup label="This is a group">
+                      <option value="14">A</option>
+                      <option value>B</option>
+                      <option value>C</option>
+                      <option value></option>
+                    </optgroup></select
+                  ><label class="form-label" style="margin-left: 103px"
+                    >Column</label
+                  ><select style="margin-left: 9px">
+                    <optgroup label="This is a group">
+                      <option value>2</option>
+                      <option value>3</option>
+                    </optgroup>
+                  </select>
+                </legend>
+              </fieldset>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-light"
+                data-bs-dismiss="modal"
+                type="button"
+              >
+                Close
+              </button>
+              <button class="btn btn-primary" type="button">Buy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script th:src="@{/js/jquery-3.6.2.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/homepage.js}"></script>
+  </body>
 </html>
