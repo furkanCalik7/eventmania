@@ -301,8 +301,8 @@ public class EventRepository extends BaseRepository {
         }
         stmt.setTimestamp(13, (filterModel.getStartDate() == null ? Timestamp.valueOf(filterModel.getStartDate()) : null ));
         stmt.setTimestamp(14, (filterModel.getStartDate() == null ? Timestamp.valueOf(filterModel.getEndDate()) : null ));
-        stmt.setArray(15, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
-        stmt.setArray(16, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
+        stmt.setArray(15, (filterModel.getEventTypes() == null ? conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()) : null));
+        stmt.setArray(16, (filterModel.getEventTypes() == null ? conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()) : null));
 
         ResultSet rs = stmt.executeQuery();
         ArrayList<EventModel> events = new ArrayList<>();
