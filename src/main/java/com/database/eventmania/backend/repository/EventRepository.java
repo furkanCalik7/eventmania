@@ -250,17 +250,45 @@ public class EventRepository extends BaseRepository {
         throw new SQLException("Event with id " + eventId + " does not exist");
     }
 
-    public ArrayList<EventModel> getAllEvents() throws SQLException {
+    public HashMap<String, ArrayList<EventModel>> getAllEvents() throws SQLException {
         Connection conn = super.getConnection();
+
         if (conn == null)
             throw new SQLException("Connection to the database failed");
-        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, L.location_name " +
+
+        HashMap<String, ArrayList<EventModel>> eventMap = new HashMap<>();
+        eventMap.put("past", new ArrayList<>());
+        eventMap.put("future", new ArrayList<>());
+
+        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url, " +
+                "E.is_online, L.location_name, ET.type_of_event " +
                 "FROM Event E " +
-                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id ";
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id";
+
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
+
         ArrayList<EventModel> events = new ArrayList<>();
+
         while (rs.next()) {
+            if(events.stream().anyMatch(event -> {
+                try {
+                    return event.getEventId().equals(rs.getLong("event_id"));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            })){
+                events.stream().filter(event -> {
+                    try {
+                        return event.getEventId().equals(rs.getLong("event_id"));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
+                continue;
+            }
+
             EventModel event = new EventModel();
             FormatStyle dateStyle = FormatStyle.MEDIUM;
             FormatStyle timeStyle = FormatStyle.SHORT;
@@ -269,14 +297,25 @@ public class EventRepository extends BaseRepository {
             event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
             event.setTitle(rs.getString("event_name"));
             event.setImageUrl(rs.getString("image_url"));
+
+            event.setEventTypes(new ArrayList<>());
+            event.getEventTypes().add(rs.getString("type_of_event"));
+
             if (rs.getBoolean("is_online"))
                 event.setLocationName("Online");
             else
                 event.setLocationName(rs.getString("location_name"));
-            events.add(event);
+
+            if (rs.getString("current_state").equals("ONGOING") ||
+                    rs.getString("current_state").equals("UPCOMING"))
+                eventMap.get("future").add(event);
+            else if (rs.getString("current_state").equals("FINISHED"))
+                eventMap.get("past").add(event);
         }
-        return events;
+
+        return eventMap;
     }
+
 
     public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
         Connection conn = super.getConnection();
@@ -348,6 +387,6 @@ public class EventRepository extends BaseRepository {
             }
         }
 
-        return filteredEvents;
+        return events;
     }
 }
