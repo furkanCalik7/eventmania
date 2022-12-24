@@ -76,6 +76,9 @@ public class EventController {
             e.printStackTrace();
         }
         mav.addObject("event", eventModel.getMap().get("event"));
+        return mav;
+    }
+
     @GetMapping("/{eventId}/tickets")
     public ModelAndView ticketPage(@PathVariable(value = "eventId") final String eventId) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/event_tickets.html");
