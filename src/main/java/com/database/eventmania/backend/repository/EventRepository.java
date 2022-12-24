@@ -237,7 +237,7 @@ public class EventRepository extends BaseRepository {
                     rs.getString("postal_code"),
                     rs.getString("state"),
                     rs.getString("city"),
-                    rs.getString("street"));
+                    "");
 
             // event, location, ticketed_event, unticketed_event
             dto.addObject("location", location);

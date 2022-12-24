@@ -1,14 +1,18 @@
 var form = document.getElementById('filter-button');
 
+$("#show_filter_button").click(function () {
+        console.log("text");
+        $("#collapseExample").toggle();
+    }
+)
+
 form.addEventListener('click', function (e) {
     e.preventDefault();
-    // get the checkbox values and put them an array
     var checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
     var values = [];
     checkboxes.forEach((checkbox) => {
         values.push(checkbox.value);
     });
-
     // post request to /filter with ajax and get the response
     $.ajax({
         type: "POST",
@@ -20,7 +24,8 @@ form.addEventListener('click', function (e) {
             "name": $("#search_input").val()
         },
         success: function (response) {
-
+            console.log(response);
+            $("#events").replaceWith(response);
         }
     })
 });
