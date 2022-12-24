@@ -1,7 +1,9 @@
 package com.database.eventmania.backend.DTO;
 
-import java.util.HashMap;
+import lombok.Getter;
 
+import java.util.HashMap;
+@Getter
 public class EventDTO {
     HashMap<String, Object> map;
 
