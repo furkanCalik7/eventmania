@@ -285,31 +285,22 @@ public class EventRepository extends BaseRepository {
         "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
         "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
         "WHERE " +
-                "? is null OR E.event_name LIKE ? AND " +
-                "? is null OR L.country LIKE ? AND " +
+                "(? is null OR UPPER(E.event_name) LIKE UPPER(?) OR " +
+                "? is null OR UPPER(L.country) LIKE UPPER(?) OR " +
+                "? is null OR UPPER(L.city) LIKE UPPER(?) OR " +
+                "? is null OR UPPER(L.state) LIKE UPPER(?) OR " +
+                "? is null OR UPPER(L.postal_code) LIKE UPPER(?) OR " +
+                "? is null OR UPPER(L.location_name) LIKE UPPER(?) )  AND "+
                 "? is null OR E.start_date >= ? AND " +
                 "? is null OR E.start_date <= ? AND " +
-                "? is null OR L.city LIKE ? AND " +
-                "? is null OR L.state LIKE ? AND " +
-                "? is null OR L.postal_code LIKE ? AND " +
                 "(? is null OR ET.type_of_event IN (NULLIF(?, ET.type_of_event)))";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1, ("%"+filterModel.getName() + "%"));
-        stmt.setString(2, ("%"+filterModel.getName() + "%"));
-        //TODO check this
-        stmt.setTimestamp(3, Timestamp.valueOf(filterModel.getStartDate()));
-        stmt.setTimestamp(4, Timestamp.valueOf(filterModel.getStartDate()));
 
-        stmt.setTimestamp(5, Timestamp.valueOf(filterModel.getEndDate()));
-        stmt.setTimestamp(6, Timestamp.valueOf(filterModel.getEndDate()));
-        stmt.setString(7, ("%"+filterModel.getName() + "%"));
-        stmt.setString(8, ("%"+filterModel.getName() + "%"));
-        stmt.setString(9, ("%"+filterModel.getName() + "%"));
-        stmt.setString(10, ("%"+filterModel.getName() + "%"));
-        stmt.setString(11, ("%"+filterModel.getName() + "%"));
-        stmt.setString(12, ("%"+filterModel.getName() + "%"));
-        stmt.setString(13, ("%"+filterModel.getName() + "%"));
-        stmt.setString(14, ("%"+filterModel.getName() + "%"));
+        PreparedStatement stmt = conn.prepareStatement(query);
+        for(int x = 1; x < 13; x++){
+            stmt.setString(x, filterModel.getName());
+        }
+        stmt.setTimestamp(13, Timestamp.valueOf(filterModel.getStartDate()));
+        stmt.setTimestamp(14, Timestamp.valueOf(filterModel.getStartDate()));
         stmt.setArray(15, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
         stmt.setArray(16, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
 
