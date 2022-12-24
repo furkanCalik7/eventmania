@@ -111,5 +111,6 @@ public abstract class BaseRepository {
                 rs.getInt("balance")
         );
     }
+
 }
 

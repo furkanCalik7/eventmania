@@ -16,9 +16,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Repository
 public class EventRepository extends BaseRepository {
@@ -227,6 +226,7 @@ public class EventRepository extends BaseRepository {
                 dto.addObject("event", event);
             }
 
+            //TODO: street check
             Location location = new Location(
                     rs.getLong("event_id"),
                     rs.getFloat("latitude"),
@@ -251,15 +251,38 @@ public class EventRepository extends BaseRepository {
 
     public ArrayList<EventModel> getAllEvents() throws SQLException {
         Connection conn = super.getConnection();
+
         if (conn == null)
             throw new SQLException("Connection to the database failed");
-        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, L.location_name " +
+
+        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url, " +
+                        "E.is_online, L.location_name, ET.type_of_event " +
                 "FROM Event E " +
-                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id ";
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id";
+
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
+
         ArrayList<EventModel> events = new ArrayList<>();
+
         while (rs.next()) {
+            if(events.stream().anyMatch(event -> {
+                try {
+                    return event.getEventId().equals(rs.getLong("event_id"));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            })){
+                events.stream().filter(event -> {
+                    try {
+                        return event.getEventId().equals(rs.getLong("event_id"));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
+                continue;
+            }
             EventModel event = new EventModel();
             FormatStyle dateStyle = FormatStyle.MEDIUM;
             FormatStyle timeStyle = FormatStyle.SHORT;
@@ -268,12 +291,18 @@ public class EventRepository extends BaseRepository {
             event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
             event.setTitle(rs.getString("event_name"));
             event.setImageUrl(rs.getString("image_url"));
+
+            event.setEventTypes(new ArrayList<>());
+            event.getEventTypes().add(rs.getString("type_of_event"));
+
             if (rs.getBoolean("is_online"))
                 event.setLocationName("Online");
             else
                 event.setLocationName(rs.getString("location_name"));
+
             events.add(event);
         }
+
         return events;
     }
 
