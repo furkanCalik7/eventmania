@@ -299,8 +299,8 @@ public class EventRepository extends BaseRepository {
         for(int x = 1; x < 13; x++){
             stmt.setString(x, filterModel.getName());
         }
-        stmt.setTimestamp(13, Timestamp.valueOf(filterModel.getStartDate()));
-        stmt.setTimestamp(14, Timestamp.valueOf(filterModel.getStartDate()));
+        stmt.setTimestamp(13, (filterModel.getStartDate() == null ? Timestamp.valueOf(filterModel.getStartDate()) : null ));
+        stmt.setTimestamp(14, (filterModel.getStartDate() == null ? Timestamp.valueOf(filterModel.getEndDate()) : null ));
         stmt.setArray(15, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
         stmt.setArray(16, conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()));
 
