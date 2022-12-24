@@ -56,7 +56,7 @@ public abstract class BaseRepository {
                 rs.getString("last_name"),
                 gender,
                 rs.getString("phone_number"),
-                rs.getDate("dob").toLocalDate()
+                rs.getDate("date_of_birth").toLocalDate()
         );
     }
 
