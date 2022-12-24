@@ -7,13 +7,11 @@ import com.database.eventmania.backend.service.CategoryService;
 import com.database.eventmania.backend.service.EventService;
 import com.database.eventmania.backend.service.TicketedEventService;
 import com.database.eventmania.backend.service.UnticketedEventService;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("event")
@@ -56,11 +54,11 @@ public class EventController {
     }
 
     //get mapping with filter model class
-    @GetMapping("filter")
+    @PostMapping("filter")
     public ModelAndView listEventPage(@ModelAttribute("filterModel") FilterModel filterModel) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/list_event.html");
         try {
-            eventService.getAllEvents();
+            eventService.getFilteredEvents(filterModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
