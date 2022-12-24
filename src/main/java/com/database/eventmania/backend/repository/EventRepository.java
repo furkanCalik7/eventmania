@@ -281,12 +281,18 @@ public class EventRepository extends BaseRepository {
         if (conn == null) {
             throw new SQLException("Connection to the database failed");
         }
-        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, L.location_name " +
-                "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
-                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
-                "WHERE (? is null OR E.event_name LIKE ?) OR (? is null OR E.start_date >= ?) OR (? is null OR E.start_date <= ?) OR " +
-                "(? is null OR L.country LIKE ?) OR (? is null OR L.city LIKE ?) OR (? is null OR L.state LIKE ?) OR (? is null OR L.postal_code LIKE ?) " +
-                "OR (? is null OR ET.type_of_event in ?)";
+        String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, ET.type_of_event, L.location_name " +
+        "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
+        "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+        "WHERE " +
+                "? is null OR E.event_name LIKE ? AND " +
+                "? is null OR L.country LIKE ? AND " +
+                "? is null OR E.start_date >= ? AND " +
+                "? is null OR E.start_date <= ? AND " +
+                "? is null OR L.city LIKE ? AND " +
+                "? is null OR L.state LIKE ? AND " +
+                "? is null OR L.postal_code LIKE ? AND " +
+                "(? is null OR ET.type_of_event IN (NULLIF(?, ET.type_of_event)))";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, ("%"+filterModel.getName() + "%"));
         stmt.setString(2, ("%"+filterModel.getName() + "%"));
