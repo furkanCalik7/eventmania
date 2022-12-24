@@ -1,10 +1,12 @@
 package com.database.eventmania.backend.repository;
 
+import com.database.eventmania.backend.entity.Category;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
@@ -33,13 +35,22 @@ public class CategoryRepository extends BaseRepository {
 
     }
 
-    public void getCategoriesByEventId(Long valueOf) throws SQLException {
+    public Category getCategoriesByEventId(Long valueOf) throws SQLException {
         Connection conn = super.getConnection();
         if (conn != null) {
             String query = "SELECT * FROM Category WHERE ticketed_event_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(valueOf));
-            stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            //return category
+            Category category = new Category();
+            while(rs.next()){
+                category.setCategoryName(rs.getString("category_name"));
+                category.setCategoryDescription(rs.getString("category_description"));
+                category.setCapacity(rs.getInt("capacity"));
+                category.setPrice((int)(rs.getDouble("price")));
+            }
+            return category;
         } else {
             throw new SQLException("Connection to the database could not be established");
         }

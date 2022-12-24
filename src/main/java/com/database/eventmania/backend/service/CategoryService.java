@@ -1,5 +1,6 @@
 package com.database.eventmania.backend.service;
 
+import com.database.eventmania.backend.entity.Category;
 import com.database.eventmania.backend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class CategoryService {
     }
 
 
-    public void getCategoriesByEventId(String eventId) throws SQLException {
-        categoryRepository.getCategoriesByEventId(Long.valueOf(eventId));
+    public Category getCategoriesByEventId(String eventId) throws SQLException {
+        return categoryRepository.getCategoriesByEventId(Long.valueOf(eventId));
     }
 }
