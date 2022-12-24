@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -24,10 +25,10 @@ public class TicketedEvent extends Event {
     public TicketedEvent(Long eventId, Long adminId, String feedback, LocalDateTime verificationDate,
                          VerificationStatus verificationStatus, String eventName, String eventDescription,
                          LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                         Integer minimumAge, EventState currentState, EventType eventType, SalesChannel salesChannel,
+                         Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes, SalesChannel salesChannel,
                          LocalDateTime saleStartTime, LocalDateTime saleEndTime, Long organizationId) {
         super(eventId, adminId, feedback, verificationDate, verificationStatus, eventName, eventDescription, startDate,
-                endDate, isOnline, imageUrl, minimumAge, currentState, eventType, true);
+                endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, true);
         this.salesChannel = salesChannel;
         this.saleStartTime = saleStartTime;
         this.saleEndTime = saleEndTime;

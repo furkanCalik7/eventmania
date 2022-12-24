@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class Event {
     private String imageUrl;
     private Integer minimumAge;
     private EventState currentState;
-    private EventType eventType;
+    private ArrayList<EventType> eventTypes;
     private boolean isTicketed;
 
 }

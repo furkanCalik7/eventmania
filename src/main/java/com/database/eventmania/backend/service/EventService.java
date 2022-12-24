@@ -1,6 +1,5 @@
 package com.database.eventmania.backend.service;
 
-import com.database.eventmania.backend.DTO.EventDTO;
 import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
@@ -61,7 +60,7 @@ public class EventService {
         return eventRepository.deleteEvent(eventId);
     }
 
-    public EventDTO getEventById(Long eventId) throws SQLException {
+    public EventModel getEventById(Long eventId) throws SQLException {
         return eventRepository.getEventById(eventId);
     }
 

@@ -28,11 +28,11 @@
                       alt="Admin"
                       width="500"
               />
-              <small class="col-9 text-start" th:text="${event.startDate}"></small>
+              <small class="col-9 text-start" th:text="${event.startdate}"></small>
               <div
                       class="mt-3 col-9 d-flex flex-row align-items-center justify-content-between"
               >
-                <h4 th:text="${event.eventName}"></h4>
+                <h4 th:text="${event.title}"></h4>
                 <a
                         class="btn btn-success ms-3 text-nowrap"
                         target="__blank"
@@ -51,28 +51,30 @@
               <div class="col-sm-3">
                 <h6 class="mb-0">Event Type</h6>
               </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.eventType}"></div>
+              <div th:each="type: ${event.eventTypes}">
+              <div class="col-sm-9 text-secondary" th:text="${type}"></div>
+              </div>
             </div>
             <hr />
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0">Description</h6>
               </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.description}"></div>
+              <div class="col-sm-9 text-secondary" th:text="${event.eventDescription}"></div>
             </div>
             <hr />
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0">Start Date</h6>
               </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.startDate}"></div>
+              <div class="col-sm-9 text-secondary" th:text="${event.startdate}"></div>
             </div>
             <hr />
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0">End Date</h6>
               </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.endDate}">
+              <div class="col-sm-9 text-secondary" th:text="${event.enddate}">
               </div>
             </div>
             <hr />

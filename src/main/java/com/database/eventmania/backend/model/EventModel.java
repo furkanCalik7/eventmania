@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.ArrayList;
 
 @Getter
@@ -40,5 +39,9 @@ public class EventModel {
 
     //if the event is online, the locationName is "online"
     private String locationName;
+    private boolean isTicketed;
+    private Long organizationId;
+
+    private Long userId;
 }
 

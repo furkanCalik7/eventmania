@@ -1,6 +1,5 @@
 package com.database.eventmania.backend.controller;
 
-import com.database.eventmania.backend.DTO.EventDTO;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.service.CategoryService;
@@ -68,21 +67,22 @@ public class EventController {
     @GetMapping("{eventId}/information")
     public ModelAndView getEventInformation(@PathVariable("eventId") String eventId) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/eventInformation.html");
-        EventDTO eventModel = null;
+        EventModel eventModel = null;
         try {
             eventModel = eventService.getEventById(Long.valueOf(eventId));
+            System.out.println(eventModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mav.addObject("event", eventModel.getMap().get("event"));
+        mav.addObject("event", eventModel);
         return mav;
     }
 
     @GetMapping("/{eventId}/tickets")
     public ModelAndView ticketPage(@PathVariable(value = "eventId") final String eventId) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/event_tickets.html");
-        EventDTO eventDTO = eventService.getEventById(Long.parseLong(eventId));
-        mav.addObject("event", eventDTO.getMap().get("event"));
+        EventModel eventModel = eventService.getEventById(Long.parseLong(eventId));
+        mav.addObject("event", eventModel);
 //        ArrayList<CategoryModel> categories = .getCategoriesByEventId(eventId);
         return mav;
     }

@@ -29,7 +29,7 @@ public class MainController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mav.addObject("events", eventModels);
+        mav.addObject("events", eventModels.get("future"));
         mav.addObject("filterModel", new FilterModel());
         return mav;
     }

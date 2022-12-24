@@ -1,9 +1,5 @@
 package com.database.eventmania.backend.repository;
 
-import com.database.eventmania.backend.DTO.EventDTO;
-import com.database.eventmania.backend.entity.Location;
-import com.database.eventmania.backend.entity.TicketedEvent;
-import com.database.eventmania.backend.entity.UnticketedEvent;
 import com.database.eventmania.backend.entity.enums.EventState;
 import com.database.eventmania.backend.entity.enums.EventType;
 import com.database.eventmania.backend.entity.enums.SalesChannel;
@@ -12,7 +8,6 @@ import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -145,14 +140,12 @@ public class EventRepository extends BaseRepository {
     }
 
 
-    public EventDTO getEventById(Long eventId) throws SQLException {
+    public EventModel getEventById(Long eventId) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null) {
             throw new SQLException("Connection to the database failed");
         }
-
-        EventDTO dto = new EventDTO();
 
         String query = "SELECT * FROM event_with_type WHERE event_id = ?";
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -160,94 +153,68 @@ public class EventRepository extends BaseRepository {
 
         ResultSet rs = stmt.executeQuery();
 
-        if (rs.next()) {
-            if (Objects.equals(rs.getString("ticketed_type"), "ticketed")) {
-                // find the event in the ticketed_event table with the given event_id
-                query = "SELECT * " +
-                        "FROM TicketedEvent JOIN event_with_type USING(event_id) " +
-                        "WHERE event_id = ?";
+        boolean first = true;
+        EventModel event = new EventModel();
 
-                stmt = conn.prepareStatement(query);
-                stmt.setLong(1, eventId);
-                ResultSet eventRs = stmt.executeQuery();
-                eventRs.next();
-
-                TicketedEvent event = new TicketedEvent(
-                        eventRs.getLong("event_id"),
-                        eventRs.getLong("admin_id"),
-                        eventRs.getString("feedback"),
-                        eventRs.getTimestamp("verification_date").toLocalDateTime(),
-                        VerificationStatus.valueOf(eventRs.getString("verification_status")),
-                        eventRs.getString("event_name"),
-                        eventRs.getString("description"),
-                        eventRs.getTimestamp("start_date").toLocalDateTime(),
-                        eventRs.getTimestamp("end_date").toLocalDateTime(),
-                        eventRs.getBoolean("is_online"),
-                        eventRs.getString("image_url"),
-                        eventRs.getInt("minimum_age"),
-                        EventState.valueOf(eventRs.getString("current_state")),
-                        EventType.valueOf(eventRs.getString("type_of_event")),
-                        SalesChannel.valueOf(eventRs.getString("sales_channel")),
-                        eventRs.getTimestamp("sale_start_time").toLocalDateTime(),
-                        eventRs.getTimestamp("sale_end_time").toLocalDateTime(),
-                        eventRs.getLong("organization_id")
-                );
-
-                dto.addObject("event", event);
-
-            } else if (Objects.equals(rs.getString("ticketed_type"), "unticketed")) {
-                // find the event in the unticketed_event table with the given event_id
-                query = "SELECT * " +
-                        "FROM UnticketedEvent JOIN event_with_type USING(event_id) " +
-                        "WHERE event_id = ?";
-
-                stmt = conn.prepareStatement(query);
-                stmt.setLong(1, eventId);
-                ResultSet eventRs = stmt.executeQuery();
-                eventRs.next();
-
-                UnticketedEvent event = new UnticketedEvent(
-                        eventRs.getLong("event_id"),
-                        eventRs.getLong("admin_id"),
-                        eventRs.getString("feedback"),
-                        eventRs.getTimestamp("verification_date").toLocalDateTime(),
-                        VerificationStatus.valueOf(eventRs.getString("verification_status")),
-                        eventRs.getString("event_name"),
-                        eventRs.getString("description"),
-                        eventRs.getTimestamp("start_date").toLocalDateTime(),
-                        eventRs.getTimestamp("end_date").toLocalDateTime(),
-                        eventRs.getBoolean("is_online"),
-                        eventRs.getString("image_url"),
-                        eventRs.getInt("minimum_age"),
-                        EventState.valueOf(eventRs.getString("current_state")),
-                        EventType.valueOf(eventRs.getString("type_of_event")),
-                        eventRs.getLong("user_id"),
-                        eventRs.getInt("capacity")
-                );
-
-                dto.addObject("event", event);
+        while (rs.next()) {
+            if (!first) {
+                event.getEventTypes().add(rs.getString("type_of_event"));
+                continue;
             }
 
-            Location location = new Location(
-                    rs.getLong("event_id"),
-                    rs.getFloat("latitude"),
-                    rs.getFloat("longitude"),
-                    rs.getString("location_name"),
-                    rs.getString("address_description"),
-                    rs.getString("country"),
-                    rs.getString("postal_code"),
-                    rs.getString("state"),
-                    rs.getString("city"),
-                    "");
+            LocalDateTime verificationDate = rs.getTimestamp("verification_date") != null
+                    ? rs.getTimestamp("verification_date").toLocalDateTime() : null;
 
-            // event, location, ticketed_event, unticketed_event
-            dto.addObject("location", location);
-            dto.addObject("ticketed_type", rs.getString("ticketed_type"));
 
-            return dto;
+            if (Objects.equals(rs.getString("ticketed_type").toLowerCase(), "ticketed")) {
+                query = "SELECT * FROM ticketedevent WHERE event_id = ?";
+                stmt = conn.prepareStatement(query);
+                stmt.setLong(1, eventId);
+                ResultSet rs2 = stmt.executeQuery();
+                rs2.next();
+                event.setSalesChannel(rs2.getString("sales_channel"));
+                event.setSalesStartTime(String.valueOf(rs2.getTimestamp("sale_start_time").toLocalDateTime()));
+                event.setSalesEndTime(String.valueOf(rs2.getTimestamp("sale_end_time").toLocalDateTime()));
+                event.setOrganizationId(rs2.getLong("organization_id"));
+                event.setTicketed(true);
+                event.setEventPaymentType(rs2.getString("sales_channel"));
+            } else if (Objects.equals(rs.getString("ticketed_type").toLowerCase(), "unticketed")) {
+                event.setTicketed(false);
+                query = "SELECT * FROM unticketedevent WHERE event_id = ?";
+                stmt = conn.prepareStatement(query);
+                stmt.setLong(1, eventId);
+                ResultSet rs2 = stmt.executeQuery();
+                rs2.next();
+
+                event.setCapacity(String.valueOf(rs2.getInt("capacity")));
+                event.setUserId(rs2.getLong("user_id"));
+            }
+
+            event.setEventId(rs.getLong("event_id"));
+            event.setTitle(rs.getString("event_name"));
+            event.setVenueLocation(rs.getString("location_name"));
+            event.setAddress(rs.getString("address_description"));
+            event.setState(rs.getString("state"));
+            event.setCity(rs.getString("city"));
+            event.setCountry(rs.getString("country"));
+            event.setPostalCode(rs.getString("postal_code"));
+            event.setLatitude(String.valueOf(rs.getDouble("latitude")));
+            event.setLongitude(String.valueOf(rs.getDouble("longitude")));
+            event.setStartdate(String.valueOf(rs.getTimestamp("start_date").toLocalDateTime()));
+            event.setEnddate(String.valueOf(rs.getTimestamp("end_date").toLocalDateTime()));
+            event.setMinimumAge(String.valueOf(rs.getInt("minimum_age")));
+
+            event.setLocationType(rs.getString("is_online"));
+            event.setEventDescription(rs.getString("description"));
+            event.setImageUrl(rs.getString("image_url"));
+            event.setLocationName(rs.getString("location_name"));
+
+            event.setEventTypes(new ArrayList<>());
+            event.getEventTypes().add(rs.getString("type_of_event"));
+
+            first = false;
         }
-
-        throw new SQLException("Event with id " + eventId + " does not exist");
+        return event;
     }
 
     public HashMap<String, ArrayList<EventModel>> getAllEvents() throws SQLException {
@@ -261,7 +228,7 @@ public class EventRepository extends BaseRepository {
         eventMap.put("future", new ArrayList<>());
 
         String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url, " +
-                "E.is_online, L.location_name, ET.type_of_event " +
+                        "E.is_online, L.location_name, ET.type_of_event, E.current_state " +
                 "FROM Event E " +
                 "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
                 "LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id";
@@ -311,11 +278,12 @@ public class EventRepository extends BaseRepository {
                 eventMap.get("future").add(event);
             else if (rs.getString("current_state").equals("FINISHED"))
                 eventMap.get("past").add(event);
+
+            events.add(event);
         }
 
         return eventMap;
     }
-
 
     public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
         Connection conn = super.getConnection();
