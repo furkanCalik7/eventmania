@@ -2,6 +2,7 @@ package com.database.eventmania.backend.service;
 
 import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.entity.enums.Gender;
+import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,5 +48,9 @@ public class UserService {
 
     public boolean deleteUserById(Long userId) throws SQLException {
         return userRepository.deleteUserById(userId);
+    }
+
+    public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
+        return userRepository.listJoinedEvents(userEmail);
     }
 }
