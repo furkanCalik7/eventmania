@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.controller;
 
 import com.database.eventmania.backend.model.EventModel;
+import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.service.EventService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,6 +29,7 @@ public class MainController {
             e.printStackTrace();
         }
         mav.addObject("events", eventModels);
+        mav.addObject("filterModel", new FilterModel());
         return mav;
     }
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class FilterModel {
     private ArrayList<String> eventTypes;
-    private String paymentType;
+    private String ticketType;
     private String startDate;
     private String endDate;
     private String name;

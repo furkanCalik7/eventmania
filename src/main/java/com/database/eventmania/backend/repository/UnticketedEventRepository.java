@@ -16,17 +16,19 @@ import java.util.ArrayList;
 @Repository
 public class UnticketedEventRepository extends BaseRepository {
     private final EventRepository eventRepository;
+
     @Autowired
     public UnticketedEventRepository(EventRepository eventRepository) {
         super.connect();
         this.eventRepository = eventRepository;
     }
-    public boolean createUnticketedEvent(VerificationStatus verificationStatus, String eventName, String eventDescription,
-                                         LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
-                                         Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes,
-                                         Integer capacity, String locationName, Float latitude, Float longitude,
-                                         String postalCode, String state, String city, String country,
-                                         String addressDescription, String email) throws SQLException {
+
+    public Long createUnticketedEvent(VerificationStatus verificationStatus, String eventName, String eventDescription,
+                                      LocalDateTime startDate, LocalDateTime endDate, Boolean isOnline, String imageUrl,
+                                      Integer minimumAge, EventState currentState, ArrayList<EventType> eventTypes,
+                                      Integer capacity, String locationName, Float latitude, Float longitude,
+                                      String postalCode, String state, String city, String country,
+                                      String addressDescription, String email) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
@@ -40,7 +42,7 @@ public class UnticketedEventRepository extends BaseRepository {
 
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
-        return eventRepository.createEvent(false,  verificationStatus, eventName,
+        return eventRepository.createEvent(false, verificationStatus, eventName,
                 eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, null,
                 null, null, capacity, locationName, latitude, longitude, postalCode, state, city,
                 country, addressDescription, userId);

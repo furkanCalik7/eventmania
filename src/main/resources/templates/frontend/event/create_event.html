@@ -215,8 +215,9 @@
 			th:field="*{minimumAge}"
 			type="number"
 			style="margin-bottom: 12px"
+			required
 	/>
-		<button sec:authorize="hasRole('Organization')" id="paid-button" class="btn" type="button" style="margin-right: 41px">
+		<button sec:authorize="hasAnyAuthority('Organization')" id="paid-button" class="btn" type="button" style="margin-right: 41px">
 			Paid
 		</button>
 		<button id="free-button" class="btn" type="button" style="margin-right: 41px">
@@ -235,7 +236,7 @@
 				type="number"
 		/>
 		</div>
-		<div sec:authorize="hasRole('Organization')" id="sales-channel-input">
+		<div sec:authorize="hasAnyAuthority('Organization')" id="sales-channel-input">
 			<div class="form-group mb-3">
 				<br>
 				<label class="form-label">Sales channel</label

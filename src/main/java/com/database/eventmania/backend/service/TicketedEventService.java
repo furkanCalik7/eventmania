@@ -24,7 +24,7 @@ public class TicketedEventService {
         this.ticketedEventRepository = ticketedEventRepository;
     }
 
-    public boolean createTicketedEvent(EventModel eventModel, String email) throws SQLException, IOException {
+    public Long createTicketedEvent(EventModel eventModel, String email) throws SQLException, IOException {
         boolean isOnline = eventModel.getLocationType().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
         LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
