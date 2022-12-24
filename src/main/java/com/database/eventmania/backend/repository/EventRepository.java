@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 @Repository
@@ -159,7 +160,7 @@ public class EventRepository extends BaseRepository {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            if (Objects.equals(rs.getString("ticketed_type"), "ticketed")) {
+            if (Objects.equals(rs.getString("ticketed_type").toLowerCase(), "ticketed")) {
                 // find the event in the ticketed_event table with the given event_id
                 query = "SELECT * " +
                         "FROM TicketedEvent JOIN event_with_type USING(event_id) " +
@@ -193,7 +194,7 @@ public class EventRepository extends BaseRepository {
 
                 dto.addObject("event", event);
 
-            } else if (Objects.equals(rs.getString("ticketed_type"), "unticketed")) {
+            } else if (Objects.equals(rs.getString("ticketed_type").toLowerCase(), "unticketed")) {
                 // find the event in the unticketed_event table with the given event_id
                 query = "SELECT * " +
                         "FROM UnticketedEvent JOIN event_with_type USING(event_id) " +
@@ -249,11 +250,15 @@ public class EventRepository extends BaseRepository {
         throw new SQLException("Event with id " + eventId + " does not exist");
     }
 
-    public ArrayList<EventModel> getAllEvents() throws SQLException {
+    public HashMap<String, ArrayList<EventModel>> getAllEvents() throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null)
             throw new SQLException("Connection to the database failed");
+
+        HashMap<String, ArrayList<EventModel>> eventMap = new HashMap<>();
+        eventMap.put("past", new ArrayList<>());
+        eventMap.put("future", new ArrayList<>());
 
         String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url, " +
                         "E.is_online, L.location_name, ET.type_of_event " +
@@ -283,6 +288,7 @@ public class EventRepository extends BaseRepository {
                 }).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
                 continue;
             }
+
             EventModel event = new EventModel();
             FormatStyle dateStyle = FormatStyle.MEDIUM;
             FormatStyle timeStyle = FormatStyle.SHORT;
@@ -300,10 +306,14 @@ public class EventRepository extends BaseRepository {
             else
                 event.setLocationName(rs.getString("location_name"));
 
-            events.add(event);
+            if (rs.getString("current_state").equals("ONGOING") ||
+                    rs.getString("current_state").equals("UPCOMING"))
+                eventMap.get("future").add(event);
+            else if (rs.getString("current_state").equals("FINISHED"))
+                eventMap.get("past").add(event);
         }
 
-        return events;
+        return eventMap;
     }
 
     public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {

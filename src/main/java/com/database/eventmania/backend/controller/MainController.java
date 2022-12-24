@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/")
@@ -22,7 +23,7 @@ public class MainController {
     @GetMapping()
     public ModelAndView homepage() {
         ModelAndView mav = new ModelAndView("frontend/homepage.html");
-        ArrayList<EventModel> eventModels = null;
+        HashMap<String, ArrayList<EventModel>> eventModels = null;
         try {
             eventModels = eventService.getAllEvents();
         } catch (SQLException e) {

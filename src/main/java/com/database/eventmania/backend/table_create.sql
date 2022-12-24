@@ -372,11 +372,34 @@ FROM Admin);
 
 CREATE VIEW event_with_type AS
 (
-WITH joined_event_type_location AS (SELECT *
-                                    FROM Event
-                                             JOIN event_type USING (event_id)
-                                             JOIN location USING (event_id))
-SELECT event_id,
+WITH joined_event_type_location AS (SELECT E.event_id,
+                                           admin_id,
+                                           feedback,
+                                           verification_date,
+                                           verification_status,
+                                           event_name,
+                                           description,
+                                           start_date,
+                                           end_date,
+                                           is_online,
+                                           image_url,
+                                           minimum_age,
+                                           current_state,
+                                           location_name,
+                                           latitude,
+                                           longitude,
+                                           postal_code,
+                                           state,
+                                           city,
+                                           country,
+                                           address_description,
+                                           type_of_event
+                                    FROM Event E
+                                  NATURAL JOIN event_type ET
+                                        LEFT OUTER JOIN location L ON E.event_id = L.event_id
+                                    )
+                                 -- LEFT OUTER JOIN location L ON E.event_id = L.event_id)
+SELECT joined_event_type_location.event_id,
        admin_id,
        feedback,
        verification_date,
@@ -397,12 +420,12 @@ SELECT event_id,
        city,
        country,
        address_description,
-       type_of_event,
+        type_of_event,
        'Ticketed' AS ticketed_type
 FROM joined_event_type_location
-         JOIN TicketedEvent USING (event_id)
+         NATURAL JOIN TicketedEvent
 UNION
-SELECT event_id,
+SELECT joined_event_type_location.event_id,
        admin_id,
        feedback,
        verification_date,
@@ -426,9 +449,7 @@ SELECT event_id,
        type_of_event,
        'Unticketed' AS ticketed_type
 FROM joined_event_type_location
-         JOIN UnticketedEvent USING (event_id)
-    );
-
+         NATURAL JOIN UnticketedEvent);
 /*123 sifre*/
 INSERT INTO Admin (hash_password, email)
 VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayclmz@gmail.com');
