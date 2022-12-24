@@ -58,8 +58,7 @@ public class EventController {
     public ModelAndView listEventPage(@ModelAttribute("filterModel") FilterModel filterModel) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/list_event.html");
         try {
-//            eventService.getFilteredEvents(filterModel)
-            mav.addObject("events", eventService.getAllEvents().remove(0));
+            mav.addObject("events", eventService.getFilteredEvents(filterModel));
         } catch (Exception e) {
             e.printStackTrace();
         }

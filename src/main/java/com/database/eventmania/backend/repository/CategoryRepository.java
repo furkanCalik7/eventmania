@@ -33,8 +33,15 @@ public class CategoryRepository extends BaseRepository {
 
     }
 
-    public void getCategoriesByEventId(Long valueOf) {
+    public void getCategoriesByEventId(Long valueOf) throws SQLException {
         Connection conn = super.getConnection();
-        // TODO: yapılacak
+        if (conn != null) {
+            String query = "SELECT * FROM Category WHERE ticketed_event_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, Math.toIntExact(valueOf));
+            stmt.executeQuery();
+        } else {
+            throw new SQLException("Connection to the database could not be established");
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Repository
 public class EventRepository extends BaseRepository {
@@ -283,48 +285,42 @@ public class EventRepository extends BaseRepository {
             throw new SQLException("Connection to the database failed");
         }
         String query = "SELECT E.event_id, E.start_date, E.event_name, E.image_url,  E.is_online, ET.type_of_event, L.location_name " +
-        "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
-        "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
-        "WHERE " +
+                "FROM Event E LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "WHERE " +
                 "(? is null OR UPPER(E.event_name) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.country) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.city) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.state) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.postal_code) LIKE UPPER(?) OR " +
-                "? is null OR UPPER(L.location_name) LIKE UPPER(?) )  AND "+
+                "? is null OR UPPER(L.location_name) LIKE UPPER(?) )  AND " +
                 "?::timestamp is null OR E.start_date >= ? AND " +
-                "?::timestamp is null OR E.end_date <= ? AND " +
-                "(?::varchar[] is null OR ET.type_of_event = ANY (COALESCE(?::varchar[], ET.type_of_event::varchar[])))";
-
+                "?::timestamp is null OR E.end_date <= ?";
 
         PreparedStatement stmt = conn.prepareStatement(query);
-        for(int x = 1; x < 13; x++){
+        for (int x = 1; x < 13; x++) {
             stmt.setString(x, "%" + filterModel.getName() + "%");
         }
         //check if filterModel.getStartDate() equals "" and set parameter 13 to null if it is true. Else set it to the value of filterModel.getStartDate()
-        if(filterModel.getStartDate().equals("")){
+        if (filterModel.getStartDate().equals("")) {
             stmt.setTimestamp(13, null);
             stmt.setTimestamp(14, null);
 
-        }else{
-            stmt.setTimestamp(13, Timestamp.valueOf(filterModel.getStartDate().split("T")[0]+ " " + filterModel.getStartDate().split("T")[1] + ":00"));
-            stmt.setTimestamp(14, Timestamp.valueOf(filterModel.getStartDate().split("T")[0]+ " " + filterModel.getStartDate().split("T")[1] + ":00"));
+        } else {
+            stmt.setTimestamp(13, Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00"));
+            stmt.setTimestamp(14, Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00"));
         }
 
-//        stmt.setTimestamp(13, (!filterModel.getStartDate().equals("") ? Timestamp.valueOf(filterModel.getStartDate()) : null ));
-        //stmt.setTimestamp(14, (!filterModel.getStartDate().equals("") ? Timestamp.valueOf(filterModel.getStartDate()) : null ));
-        stmt.setTimestamp(15, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getStartDate().split("T")[0]+ " " + filterModel.getStartDate().split("T")[1] + ":00") : null ));
-        stmt.setTimestamp(16, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getEndDate().split("T")[0]+ " " + filterModel.getEndDate().split("T")[1] + ":00") : null ));
-        stmt.setArray(17, (filterModel.getEventTypes() != null ? conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()) : null));
-        stmt.setArray(18, (filterModel.getEventTypes() != null ? conn.createArrayOf("varchar", filterModel.getEventTypes().toArray()) : null));
-        System.out.println(stmt.toString());
+        stmt.setTimestamp(15, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00") : null));
+        stmt.setTimestamp(16, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getEndDate().split("T")[0] + " " + filterModel.getEndDate().split("T")[1] + ":00") : null));
+
         ResultSet rs = stmt.executeQuery();
 
         ArrayList<EventModel> events = new ArrayList<>();
 
         while (rs.next()) {
             long id = rs.getLong("event_id");
-            if(events.stream().anyMatch(event -> event.getEventId() == id)){
+            if (events.stream().anyMatch(event -> event.getEventId() == id)) {
                 events.stream().filter(event -> event.getEventId() == id).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
                 continue;
             }
@@ -344,7 +340,15 @@ public class EventRepository extends BaseRepository {
             event.getEventTypes().add(rs.getString("type_of_event"));
             events.add(event);
         }
+        ArrayList<EventModel> filteredEvents = new ArrayList<>();
+        for (String type : filterModel.getEventTypes()) {
+            for (EventModel eventModel : events) {
+                if (eventModel.getEventTypes().contains(type)) {
+                    filteredEvents.add(eventModel);
+                }
+            }
+        }
 
-        return events;
+        return filteredEvents;
     }
 }

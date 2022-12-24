@@ -20,7 +20,7 @@ public class CategoryService {
     }
 
 
-    public void getCategoriesByEventId(String eventId) {
+    public void getCategoriesByEventId(String eventId) throws SQLException {
         categoryRepository.getCategoriesByEventId(Long.valueOf(eventId));
     }
 }
