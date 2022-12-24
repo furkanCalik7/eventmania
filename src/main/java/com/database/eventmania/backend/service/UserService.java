@@ -29,6 +29,9 @@ public class UserService {
     public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
         return userRepository.getUserByEmailAndPassword(email, password);
     }
+    public BasicUser getUserByEmail(String email) throws  SQLException {
+        return userRepository.getUserByEmail(email);
+    }
 
     public boolean saveUser(String email, String password,
                             String firstName, String lastName, String gender,
