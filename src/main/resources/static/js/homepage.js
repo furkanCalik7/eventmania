@@ -17,7 +17,7 @@ form.addEventListener('click', function (e) {
             "eventTypes": values,
             "startDate": $("#startdate_filter").val(),
             "endDate": $("#enddate_filter").val(),
-            "name": $("#search_filter").val()
+            "name": $("#search_input").val()
         },
         success: function (response) {
 
