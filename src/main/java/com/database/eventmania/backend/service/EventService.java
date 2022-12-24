@@ -70,17 +70,7 @@ public class EventService {
     }
 
     public ArrayList<EventModel> getFilteredEvents(FilterModel filterModel) throws SQLException {
-        // TODO: implement filtering
-        // Get all events methoduna benzer ama bu kez filtreleme yapılacak
-        // yeni filterler ekledim FilterModel.java dosyasına, biraz inceleyip ona göre eventleri dönelim.
-        // bu arada döneceğin event modellarda olması gereken fieldlar:
-        // Startdate (format edilmiş)
-        // event id
-        // name
-        // img name
-        // venue location (uzun olan)
-        // gerisi burası için gereksiz
-        return null;
+        return eventRepository.getFilteredEvents(filterModel);
     }
 
     private void savePhoto() {

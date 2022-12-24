@@ -23,79 +23,107 @@
 					<h3 class="my-3">Upcoming Events</h3>
 				</div>
 				<br/>
-				<a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
-				   aria-expanded="false" aria-controls="collapseExample">
+				<a class="btn btn-primary mb-2" id="show_filter_button">
 					Show filters
 				</a>
 				<br>
 				<div class="collapse" id="collapseExample">
-					<div class="card card-body">
-						<label class="form-label">Event types</label>
-						<div class="selectgroup selectgroup-pills"><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value" checked/><span
-								class="selectgroup-button">Sports</span></label><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Concert</span></label><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Art</span></label><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Music</span></label><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Cinema</span></label><label class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Social Gathering</span></label><label
-								class="selectgroup-item"><input
-								class="selectgroup-input" type="checkbox" name="value"/><span
-								class="selectgroup-button">Talk Show</span></label></div>
-						<br>
-						<fieldset class="d-lg-flex d-xxl-flex gap-3 flex-row align-items-xxl-center">
-							<div><label class="form-label">Payment type</label>
-								<select class="form-select">
-									<optgroup label="Event cost type">
-										<option value="12" selected>Both</option>
-										<option value="13">Paid</option>
-										<option value="14">Free</option>
-									</optgroup>
-								</select></div>
-							<div><label class="form-label">Start date is after</label>
-								<input
-										class="form-control"
-										type="datetime-local"
-										style="margin-bottom: 13px"
-								/></div>
-							<div><label class="form-label">End date is before</label>
-								<input
-										class="form-control"
-										type="datetime-local"
-										style="margin-bottom: 13px"
-								/>
+					<form th:object="${filterModel}">
+						<div class="card card-body">
+							<div class="form-group mb-3">
+								<label class="form-label">Event Types</label>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-1" value="CONCERT"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-1">Concert</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-2"
+								                               value="FESTIVAL"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-2">Festival</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-3" value="SPORTS"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-3">Sports</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-4" value="ART"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-4">Art</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-6" value="MUSIC"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-6">Music</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-7" value="CINEMA"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-7">Cinema</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-8"
+								                               value="SOCIAL_GATHERING"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-8">Social gathering</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-9"
+								                               value="TALK_SHOW"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-9">Talk show</label></div>
+								<div class="form-check"><input th:field="*{eventTypes}" id="formCheck-5" value="OTHER"
+								                               class="form-check-input" type="checkbox"/><label
+										class="form-check-label" for="formCheck-5">Other</label></div>
 							</div>
-						</fieldset>
-						<div class="container mt-2">
-							<span >Search</span>
-							<input class="form-control" name="name" type="search"/>
+							<br>
+							<fieldset class="d-lg-flex d-xxl-flex gap-3 flex-row align-items-xxl-center">
+								<div><label class="form-label">Payment type</label>
+									<select class="form-select">
+										<optgroup th:field="*{ticketType}" label="Event cost type">
+											<option value="BOTH" selected>Both</option>
+											<option value="PAID">Paid</option>
+											<option value="FREE">Free</option>
+										</optgroup>
+									</select></div>
+								<div><label class="form-label">Start date is after</label>
+									<input
+											th:field="*{startDate}"
+											id="startdate_filter"
+											class="form-control"
+											type="datetime-local"
+											style="margin-bottom: 13px"
+									/></div>
+								<div><label class="form-label">End date is before</label>
+									<input
+											th:field="*{endDate}"
+											id="enddate_filter"
+											class="form-control"
+											type="datetime-local"
+											style="margin-bottom: 13px"
+									/>
+								</div>
+							</fieldset>
+							<div class="container mt-2">
+								<span>Search</span>
+								<input
+										th:field="*{name}"
+										id="search_input"
+										class="form-control" name="name" type="search"/>
+							</div>
+							<br>
+							<div class="row justify-content-end text-center">
+								<button id="filter-button" class="col-1 btn btn-primary" type="Submit">Filter</button>
+							</div>
 						</div>
-						<br>
-						<div class="row justify-content-end text-center">
-							<button class="col-1 btn btn-primary" type="button">Filter</button>
-						</div>
-					</div>
+					</form>
 					<br>
 				</div>
 			</div>
-			<div class="row mt-4">
-				<div class="col-md-4 on-hover" th:each="event: ${events}">
-					<div class="card border-0 mb-4"><a href="#"><img alt="wrappixel kit"
-					                                                 class="card-img-top"
-					                                                 th:src="@{/img/} + ${event.imageUrl}"/></a>
-						<div class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute">
-							<span class="d-block" th:text="${event.startdate}"></span></div>
-						<h5 class="font-weight-medium mt-3"><a class="text-decoration-none link" th:text="${event.title}" href="#"></a></h5>
-						<p class="mt-3" th:text="${event.locationName}"></p><a
-								class="text-decoration-none linking text-themecolor mt-2" href="#">Learn More</a>
+			<div id="events">
+				<div class="row mt-4">
+					<div class="col-md-4 on-hover" th:each="event: ${events}">
+						<div class="card border-0 mb-4"><a href="#"><img alt="wrappixel kit"
+						                                                 class="card-img-top"
+						                                                 th:src="@{/img/} + ${event.imageUrl}"/></a>
+							<div class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute">
+								<span class="d-block" th:text="${event.startdate}"></span></div>
+							<h5 class="font-weight-medium mt-3"><a class="text-decoration-none link"
+							                                       th:text="${event.title}"
+							                                       href="#"></a></h5>
+							<h6 class="font-weight-medium mt-3">Sports, concert</h6>
+							<p class="mt-3" th:text="${event.locationName}"></p><a
+									class="text-decoration-none linking text-themecolor mt-2" href="#">Learn More</a>
+						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -152,5 +180,9 @@
 			</div>
 		</div>
 	</div>
+</div>
+<script th:src="@{/js/jquery-3.6.2.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" th:src="@{/js/homepage.js}"></script>
 </body>
 </html>

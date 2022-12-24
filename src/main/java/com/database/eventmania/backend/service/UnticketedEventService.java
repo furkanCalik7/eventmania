@@ -24,8 +24,8 @@ public class UnticketedEventService {
         this.unticketedEventRepository = unticketedEventRepository;
     }
 
-    public boolean createUnticketedEvent(EventModel eventModel, String email) throws IOException, SQLException {
-        boolean isOnline = eventModel.getLocationType().equals("online");
+    public Long createUnticketedEvent(EventModel eventModel, String email) throws IOException, SQLException {
+        boolean isOnline = eventModel.getLocationType().toLowerCase().equals("online");
         LocalDateTime startDate = LocalDateTime.parse(eventModel.getStartdate());
         LocalDateTime endDate = LocalDateTime.parse(eventModel.getEnddate());
         ArrayList<EventType> eventTypes = new ArrayList<>();

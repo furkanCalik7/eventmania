@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS Ticket
     ticket_id         SERIAL PRIMARY KEY NOT NULL,
     ticketed_event_id INT                NOT NULL,
     user_id           INT                NOT NULL,
-    transaction_date  TIMESTAMP(2)       NOT NULL,
+    transaction_date  TIMESTAMP(2),
     category_name     VARCHAR(20)        NOT NULL,
     purchase_type     VARCHAR(20)        NOT NULL,
     FOREIGN KEY (ticketed_event_id) REFERENCES Event (event_id)
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS Ticket
 CREATE TABLE IF NOT EXISTS Location
 (
     event_id            INT          NOT NULL,
-    location_name       VARCHAR(500)  NOT NULL,
+    location_name       VARCHAR(500) NOT NULL,
     latitude            FLOAT8       NOT NULL,
     longitude           FLOAT8       NOT NULL,
     postal_code         VARCHAR(20)  NOT NULL,
@@ -435,3 +435,4 @@ VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayc
 
 INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
 VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman', 'male', '123-456-789', '2001-07-21');
+

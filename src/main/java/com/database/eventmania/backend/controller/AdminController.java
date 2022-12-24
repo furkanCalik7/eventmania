@@ -17,8 +17,6 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin/login.html");
         LoginModel loginModel = new LoginModel();
         mav.addObject("login", loginModel);
-        // TODO: Change later
-        mav.addObject("access_token", "test");
         return mav;
     }
 
