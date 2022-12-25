@@ -14,8 +14,7 @@ import java.util.ArrayList;
 
 @Repository
 public class UserRepository extends BaseRepository {
-    private FormatStyle dateStyle = FormatStyle.MEDIUM;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle);
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     public UserRepository() {
         super.connect();
