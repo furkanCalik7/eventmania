@@ -19,7 +19,7 @@ public class BasicUser extends Account {
     private String lastName;
     private Gender gender;
     private String phoneNumber;
-    @Transient
+    
     private Integer age;
     private LocalDate dob;
 
@@ -34,10 +34,5 @@ public class BasicUser extends Account {
         this.phoneNumber = phoneNumber;
         this.dob = dob;
     }
-
-    public Integer getAge() {
-        return Period.between(this.dob, LocalDate.now()).getYears();
-    }
-
 }
 

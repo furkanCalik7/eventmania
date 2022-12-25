@@ -76,7 +76,6 @@ public class EventController {
         EventModel eventModel = null;
         try {
             eventModel = eventService.getEventById(Long.valueOf(eventId));
-            System.out.println(eventModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,4 +104,20 @@ public class EventController {
         }
         return new ModelAndView("redirect:/event/" + eventId + "/tickets", modelMap);
     }
+
+    @PostMapping("/{eventId}/publish")
+    public ModelAndView publishEvent(@PathVariable("eventId") String eventId, ModelMap modelMap, CategoryModel categoryModel) {
+        try {
+            // TODO: Fix the frontend here
+            eventService.publishTicketedEvent(eventId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/event/" + eventId + "/tickets", modelMap);
+    }
+
+//    @PostMapping("{eventId}/join")
+//    public ModelAndView joinEvent(@PathVariable("eventId") String eventId, Principal principal) {
+//        return asdf;
+//    }
 }

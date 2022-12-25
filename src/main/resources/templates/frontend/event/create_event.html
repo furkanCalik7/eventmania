@@ -217,26 +217,32 @@
 			style="margin-bottom: 12px"
 			required
 	/>
-		<button sec:authorize="hasAnyAuthority('Organization')" id="paid-button" class="btn" type="button" style="margin-right: 41px">
+		<button sec:authorize="hasAnyAuthority('Organization')" id="paid-button" class="btn" type="button"
+		        style="margin-right: 41px">
 			Paid
 		</button>
-		<button id="free-button" class="btn" type="button" style="margin-right: 41px">
+		<button id="free-button" sec:authorize="hasAnyAuthority('BasicUser')" class="btn" type="button"
+		        style="margin-right: 41px">
 			Free
 		</button>
-		<input type="hidden" id="event-payment-input" th:field="*{eventPaymentType}">
-		<div
-				id="capacity-input"
-				class="border-2 visible form-group mb-3 collapse show"
-				style="margin-top: 12px"
-		>
-			<label class="form-label">Capacity</label
-			><input
-				class="form-control"
-				th:field="*{capacity}"
-				type="number"
-		/>
+
+		<div sec:authorize="hasAnyAuthority('BasicUser')">
+			<input type="hidden" id="event-payment-input" value="FREE" th:field="*{eventPaymentType}">
+			<div
+					id="capacity-input"
+					class="border-2 visible form-group mb-3 collapse show"
+					style="margin-top: 12px"
+			>
+				<label class="form-label">Capacity</label
+				><input
+					class="form-control"
+					th:field="*{capacity}"
+					type="number"
+			/>
+			</div>
 		</div>
 		<div sec:authorize="hasAnyAuthority('Organization')" id="sales-channel-input">
+			<input type="hidden" id="event-payment-input" value="PAID" th:field="*{eventPaymentType}">
 			<div class="form-group mb-3">
 				<br>
 				<label class="form-label">Sales channel</label
@@ -263,17 +269,17 @@
 		</div>
 
 		<button sec:authorize="hasAnyAuthority('BasicUser')"
-				class="btn btn-primary mb-2"
-				type="submit"
-				style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
+		        class="btn btn-primary mb-2"
+		        type="submit"
+		        style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
 		>
 			Save and publish
 		</button>
 
 		<button sec:authorize="hasAnyAuthority('Organization')"
-				class="btn btn-primary mb-2"
-				type="submit"
-				style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
+		        class="btn btn-primary mb-2"
+		        type="submit"
+		        style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
 		>
 			Save and continue
 		</button>

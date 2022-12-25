@@ -93,7 +93,6 @@ $("#free-button").click(function () {
     $("#event-payment-input").val("FREE");
     $("#sales-channel-input").hide();
 });
-$("#event-payment-input").val("FREE");
 
 $("#paid-button").click(function () {
     $("#paid-button").addClass("btn-info");

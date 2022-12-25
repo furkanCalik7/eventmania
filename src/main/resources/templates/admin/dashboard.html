@@ -38,7 +38,72 @@
 			</li>
 		</ul>
 	</div>
-	<div class="container">test</div>
+	<div class="container">
+		<div style="margin: 0;padding: 60px;">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
+				                                            href="#tab-1">Most active users</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab"
+				                                            href="#tab-5">Most popular events</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
+				                                            href="#tab-2">Report 3</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="tab-1" class="tab-pane" role="tabpanel">
+
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+							<tr>
+								<th>User ID</th>
+								<th>Email</th>
+								<th>First name</th>
+								<th>Last name</th>
+								<th>Phone number</th>
+								<th>Joined event count</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="user: ${report1}">
+								<td th:text="*{user.accountId}"></td>
+								<td th:text="*{user.email}"></td>
+								<td th:text="*{user.firstName}"></td>
+								<td th:text="*{user.lastName}"></td>
+								<td th:text="*{user.phoneNumber}"></td>
+								<td th:text="*{user.age}"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div id="tab-5" class="tab-pane active" role="tabpanel">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+							<tr>
+								<th>Event ID</th>
+								<th>Event name</th>
+								<th>Start date</th>
+								<th>End date</th>
+								<th>Attendee count</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="event: ${report2}">
+								<td th:text="*{event.eventId}"></td>
+								<td th:text="*{event.title}"></td>
+								<td th:text="*{event.startdate}"></td>
+								<td th:text="*{event.enddate}"></td>
+								<td th:text="*{event.attendeeCount}"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>
