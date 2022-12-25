@@ -37,16 +37,22 @@ public class UserController {
         return mav;
     }
 
-//    @GetMapping("events")
-//    public ModelAndView eventsPage(Principal principal) {
-//        ModelAndView mav = new ModelAndView("frontend/user_profile/my_events.html");
-//        ArrayList<EventModel> eventArrayList = null;
-//        try {
-//            user = userService.listJoinedEvents(principal.getName());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        mav.addObject("user", user);
-//        return mav;
-//    }
+    @GetMapping("events")
+    public ModelAndView eventsPage(Principal principal) {
+        ModelAndView mav = new ModelAndView("frontend/user_profile/my_events.html");
+        ArrayList<EventModel> organized = null;
+        ArrayList<EventModel> joined = null;
+        ArrayList<EventModel> future = null;
+        try {
+            joined = userService.listJoinedEvents(principal.getName());
+            future = userService.listFutureEvents(principal.getName());
+            organized = userService.getOrganizedEvents(principal.getName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        mav.addObject("joined", joined);
+        mav.addObject("future", future);
+        mav.addObject("organized", organized);
+        return mav;
+    }
 }

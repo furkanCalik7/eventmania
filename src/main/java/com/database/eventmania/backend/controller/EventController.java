@@ -4,10 +4,10 @@ import com.database.eventmania.backend.entity.Category;
 import com.database.eventmania.backend.model.CategoryModel;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
-import com.database.eventmania.backend.service.CategoryService;
-import com.database.eventmania.backend.service.EventService;
-import com.database.eventmania.backend.service.TicketedEventService;
-import com.database.eventmania.backend.service.UnticketedEventService;
+import com.database.eventmania.backend.service.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,12 +24,14 @@ public class EventController {
     private UnticketedEventService unticketedEventService;
     private EventService eventService;
     private CategoryService categoryService;
+    private UserService userService;
 
-    public EventController(TicketedEventService ticketedEventService, UnticketedEventService unticketedEventService, EventService eventService, CategoryService categoryService) {
+    public EventController(TicketedEventService ticketedEventService, UnticketedEventService unticketedEventService, EventService eventService, CategoryService categoryService, UserService userService) {
         this.ticketedEventService = ticketedEventService;
         this.unticketedEventService = unticketedEventService;
         this.eventService = eventService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @GetMapping("create")
@@ -71,14 +73,16 @@ public class EventController {
     }
 
     @GetMapping("{eventId}/information")
-    public ModelAndView getEventInformation(@PathVariable("eventId") String eventId) throws SQLException {
+    public ModelAndView getEventInformation(@PathVariable("eventId") String eventId, Principal principal) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/eventInformation.html");
+        boolean joined = userService.isUserInEvent(eventId, principal.getName());
         EventModel eventModel = null;
         try {
             eventModel = eventService.getEventById(Long.valueOf(eventId));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mav.addObject("joined", joined);
         mav.addObject("event", eventModel);
         return mav;
     }
@@ -105,6 +109,24 @@ public class EventController {
         return new ModelAndView("redirect:/event/" + eventId + "/tickets", modelMap);
     }
 
+    @GetMapping("/{eventId}/category")
+    public ModelAndView categoryPage(@PathVariable(value = "eventId") final String eventId) throws SQLException {
+        ModelAndView mav = new ModelAndView("frontend/event/buy_ticket_model.html");
+        EventModel eventModel = eventService.getEventById(Long.parseLong(eventId));
+        ArrayList<CategoryModel> categoryModels = categoryService.getCategoriesByEventIdWithCapacityCheck(eventId);
+
+        ArrayList<CategoryModel2> categoryNames = new ArrayList<>();
+        for (CategoryModel categoryModel : categoryModels) {
+            CategoryModel2 categoryModel2 = new CategoryModel2();
+            categoryModel2.setId(categoryModel.getName());
+            categoryModel2.setName(categoryModel.getName() + " - " + categoryModel.getPrice() + " TL - Remaining Capacity: " + categoryModel.getRemainingCapacity());
+            categoryNames.add(categoryModel2);
+        }
+        mav.addObject("event", eventModel);
+        mav.addObject("categories", categoryNames);
+        return mav;
+    }
+
     @PostMapping("/{eventId}/publish")
     public ModelAndView publishEvent(@PathVariable("eventId") String eventId, ModelMap modelMap, CategoryModel categoryModel) {
         try {
@@ -116,8 +138,21 @@ public class EventController {
         return new ModelAndView("redirect:/event/" + eventId + "/tickets", modelMap);
     }
 
-//    @PostMapping("{eventId}/join")
-//    public ModelAndView joinEvent(@PathVariable("eventId") String eventId, Principal principal) {
-//        return asdf;
-//    }
+    @PostMapping("{eventId}/join")
+    public ModelAndView joinEvent(@PathVariable("eventId") String eventId, Principal principal) {
+        try {
+            userService.joinUnticketedEvent(principal.getName(), eventId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/event/" + eventId + "/information");
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public class CategoryModel2 {
+        private String name;
+        private String id;
+    }
 }
