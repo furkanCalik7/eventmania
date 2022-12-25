@@ -160,9 +160,14 @@ public class UserRepository extends BaseRepository {
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
-            event.setVenueLocation(rs.getString("location_name"));
-            event.setAddress(rs.getString("address_description"));
-            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
+            if(rs.getString("location_name") != null) {
+                event.setVenueLocation(rs.getString("location_name"));
+                event.setAddress(rs.getString("address_description"));
+            }
+            else{
+                event.setVenueLocation("Online");
+                event.setAddress("Online");
+            }                     event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
             event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
             event.setEventDescription(rs.getString("description"));
             events.add(event);
@@ -209,8 +214,14 @@ public class UserRepository extends BaseRepository {
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
-            event.setVenueLocation(rs.getString("location_name"));
-            event.setAddress(rs.getString("address_description"));
+            if(rs.getString("location_name") != null) {
+                event.setVenueLocation(rs.getString("location_name"));
+                event.setAddress(rs.getString("address_description"));
+            }
+            else{
+                event.setVenueLocation("Online");
+                event.setAddress("Online");
+            }
             event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
             event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
             event.setEventDescription(rs.getString("description"));
