@@ -55,7 +55,7 @@ public class EventController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 
     //get mapping with filter model class
