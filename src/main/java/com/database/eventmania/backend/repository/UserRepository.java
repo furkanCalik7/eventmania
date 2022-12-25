@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 @Repository
 public class UserRepository extends BaseRepository {
+    private FormatStyle dateStyle = FormatStyle.MEDIUM;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle);
+
     public UserRepository() {
         super.connect();
     }
@@ -155,6 +158,10 @@ public class UserRepository extends BaseRepository {
         rs = stmt.executeQuery();
 
         ArrayList<EventModel> events = new ArrayList<>();
+        FormatStyle dateStyle = FormatStyle.MEDIUM;
+        FormatStyle timeStyle = FormatStyle.SHORT;
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+
         while (rs.next()) {
             EventModel event = new EventModel();
 
@@ -167,8 +174,9 @@ public class UserRepository extends BaseRepository {
             else{
                 event.setVenueLocation("Online");
                 event.setAddress("Online");
-            }                     event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
-            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
+            }
+            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate().format(formatter)));
+            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate().format(formatter)));
             event.setEventDescription(rs.getString("description"));
             events.add(event);
         }
@@ -222,8 +230,8 @@ public class UserRepository extends BaseRepository {
                 event.setVenueLocation("Online");
                 event.setAddress("Online");
             }
-            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
-            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
+            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate().format(formatter)));
+            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate().format(formatter)));
             event.setEventDescription(rs.getString("description"));
             events.add(event);
         }
@@ -258,9 +266,6 @@ public class UserRepository extends BaseRepository {
         stmt = conn.prepareStatement(query);
         stmt.setLong(1, userId);
         rs = stmt.executeQuery();
-        FormatStyle dateStyle = FormatStyle.MEDIUM;
-        FormatStyle timeStyle = FormatStyle.SHORT;
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
 
         ArrayList<EventModel> events = new ArrayList<>();
         while (rs.next()) {
