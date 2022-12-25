@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Repository
@@ -120,6 +121,7 @@ public class UserRepository extends BaseRepository {
         return false;
     }
 
+    //TODO: Past/Future/Organized Event functions
     public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -139,14 +141,18 @@ public class UserRepository extends BaseRepository {
         else
             userId = rs.getLong("user_id");
 
-
-        query = "SELECT * " +
+        query = "SELECT DISTINCT E.event_id, E.event_name, E.start_date, E.end_date, E.description, L.location_name, L.address_description " +
                 "FROM Event E " +
                 "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
                 "LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
-                "WHERE event_id = (SELECT * FROM join_event WHERE user_id = ?)";
+                "WHERE (E.event_id = ANY (SELECT JE.event_id FROM join_event JE WHERE user_id = ?)) AND E.end_date < ?";
         stmt = conn.prepareStatement(query);
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp currentTimestamp = Timestamp.valueOf(now);
+
+
         stmt.setLong(1, userId);
+        stmt.setTimestamp(2, currentTimestamp);
         rs = stmt.executeQuery();
 
         ArrayList<EventModel> events = new ArrayList<>();
@@ -159,9 +165,7 @@ public class UserRepository extends BaseRepository {
             event.setAddress(rs.getString("address_description"));
             event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
             event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
-            event.setEventDescription(rs.getString("event_description"));
-            event.setLocationType(rs.getString("location_type"));
-
+            event.setEventDescription(rs.getString("description"));
             events.add(event);
         }
 
