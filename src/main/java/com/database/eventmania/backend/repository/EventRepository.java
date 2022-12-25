@@ -6,6 +6,7 @@ import com.database.eventmania.backend.entity.enums.SalesChannel;
 import com.database.eventmania.backend.entity.enums.VerificationStatus;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Array;
@@ -367,4 +368,17 @@ public class EventRepository extends BaseRepository {
         }
 
     }
+    @Scheduled(fixedRate = 1000*60*60)
+    public void updateEventStates() throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "UPDATE Event SET current_state = 'ONGOING' WHERE start_date <= now() AND end_date >= now();\n" +
+                "UPDATE Event SET current_state = 'FINISHED' WHERE end_date < now();\n" +
+                "UPDATE Event SET current_state = 'UPCOMING' WHERE start_date > now();";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.execute();
+    }
+
 }

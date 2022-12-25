@@ -7,8 +7,11 @@ import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -76,7 +79,7 @@ public class EventService {
         return eventRepository.getFilteredEvents(filterModel);
     }
 
-    private void savePhoto() {
 
-    }
+
+
 }
