@@ -190,6 +190,9 @@ public class EventRepository extends BaseRepository {
                 event.setCapacity(String.valueOf(rs2.getInt("capacity")));
                 event.setUserId(rs2.getLong("user_id"));
             }
+            FormatStyle dateStyle = FormatStyle.MEDIUM;
+            FormatStyle timeStyle = FormatStyle.SHORT;
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
@@ -201,8 +204,8 @@ public class EventRepository extends BaseRepository {
             event.setPostalCode(rs.getString("postal_code"));
             event.setLatitude(String.valueOf(rs.getDouble("latitude")));
             event.setLongitude(String.valueOf(rs.getDouble("longitude")));
-            event.setStartdate(String.valueOf(rs.getTimestamp("start_date").toLocalDateTime()));
-            event.setEnddate(String.valueOf(rs.getTimestamp("end_date").toLocalDateTime()));
+            event.setStartdate(String.valueOf(rs.getTimestamp("start_date").toLocalDateTime().format(formatter)));
+            event.setEnddate(String.valueOf(rs.getTimestamp("end_date").toLocalDateTime().format(formatter)));
             event.setMinimumAge(String.valueOf(rs.getInt("minimum_age")));
 
             event.setLocationType(rs.getString("is_online"));

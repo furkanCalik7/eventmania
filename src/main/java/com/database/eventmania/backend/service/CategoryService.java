@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Service
 public class CategoryService {
@@ -21,7 +22,7 @@ public class CategoryService {
     }
 
 
-    public Category getCategoriesByEventId(String eventId) throws SQLException {
+    public ArrayList<Category> getCategoriesByEventId(String eventId) throws SQLException {
         return categoryRepository.getCategoriesByEventId(Long.valueOf(eventId));
     }
 }

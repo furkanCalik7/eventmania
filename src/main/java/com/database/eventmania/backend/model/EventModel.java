@@ -45,5 +45,6 @@ public class EventModel {
     private Long organizationId;
 
     private Long userId;
+    private Integer attendeeCount;
 }
 
