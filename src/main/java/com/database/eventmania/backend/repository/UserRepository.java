@@ -123,6 +123,7 @@ public class UserRepository extends BaseRepository {
         return false;
     }
 
+
     public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -141,6 +142,7 @@ public class UserRepository extends BaseRepository {
             throw new SQLException("User not found");
         else
             userId = rs.getLong("user_id");
+
 
         query = "SELECT DISTINCT E.event_id, E.event_name, E.start_date, E.end_date, E.description, L.location_name, L.address_description " +
                 "FROM Event E " +
@@ -385,6 +387,23 @@ public class UserRepository extends BaseRepository {
         stmt.setLong(1, eventId);
         stmt.setLong(2, userId);
         stmt.executeUpdate();
+        //if the event is ticketed, delete from ticket
+        query = "SELECT ticketed_type FROM event_with_type WHERE event_id = ?";
+        PreparedStatement stmt2 = conn.prepareStatement(query);
+        stmt2.setLong(1, eventId);
+        ResultSet rs2 = stmt2.executeQuery();
+        if(rs2.next()){
+            String ticketedType = rs2.getString("ticketed_type");
+            if(ticketedType.equals("Ticketed")){
+                query = "DELETE FROM ticket WHERE ticketed_event_id = ? AND user_id = ?";
+                PreparedStatement stmt3 = conn.prepareStatement(query);
+                stmt3.setLong(1, eventId);
+                stmt3.setLong(2, userId);
+                stmt3.executeUpdate();
+            }
+        }
         return true;
     }
+
+
 }

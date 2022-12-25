@@ -57,6 +57,7 @@ public class RatingRepository extends BaseRepository {
         return false;
     }
 
+    //Update Example UpdateExample UpdateExample2
     public boolean updateRating(Integer eventId, Integer ratingId, Integer point, String topic, String ratingComment) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){

@@ -82,8 +82,6 @@ public class TicketRepository extends BaseRepository {
                     }
                 }
             }
-            //If event_id, user_id not in join_event, insert
-
             String query2 = "INSERT INTO join_event (event_id, user_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
             PreparedStatement stmt2 = conn.prepareStatement(query2);
             stmt2.setInt(1, Math.toIntExact(eventId));
