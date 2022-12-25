@@ -1,6 +1,7 @@
 package com.database.eventmania.backend.controller;
 
 import com.database.eventmania.backend.model.BasicUserRegisterModel;
+import com.database.eventmania.backend.model.OrganizationRegisterModel;
 import com.database.eventmania.backend.service.OrganizationService;
 import com.database.eventmania.backend.service.UserService;
 import org.springframework.boot.Banner;
@@ -30,6 +31,14 @@ public class RegisterController {
         return mav;
     }
 
+    @GetMapping("organization")
+    public ModelAndView registerOrgPage() {
+        ModelAndView mav = new ModelAndView("org_register.html");
+        OrganizationRegisterModel registerModel = new OrganizationRegisterModel();
+        mav.addObject("registerModel", registerModel);
+        return mav;
+    }
+
     // TODO: register organization
     @PostMapping()
     public ModelAndView registerBasicUser(@ModelAttribute("registerModel") BasicUserRegisterModel registerModel, ModelMap modelMap) {
@@ -50,11 +59,22 @@ public class RegisterController {
         }
         return new ModelAndView("redirect:/register/user", modelMap);
     }
-//    @PostMapping()
-//    public String registerOrganization(@ModelAttribute("registerModel") OrganizationRegisterModel registerModel) throws SQLException {
-//        // organizationService.saveOrganization(
-//
-//        //         );
-//        return "";
-//    }
+
+    @PostMapping("organization")
+    public ModelAndView registerOrganization(@ModelAttribute("registerModel") OrganizationRegisterModel registerModel, ModelMap modelMap) {
+        try {
+            organizationService.saveOrganization(
+                    registerModel.getEmail(),
+                    registerModel.getPassword(),
+                    registerModel.getOrganizationName(),
+                    registerModel.getDescription(),
+                    registerModel.getPhoneNumber()
+            );
+            modelMap.addAttribute("result", "success");
+        } catch (SQLException e) {
+            if (e.getSQLState() == "23505") modelMap.addAttribute("result", "alreadyExists");
+            else modelMap.addAttribute("result", "error");
+        }
+        return new ModelAndView("redirect:/register/organization", modelMap);
+    }
 }

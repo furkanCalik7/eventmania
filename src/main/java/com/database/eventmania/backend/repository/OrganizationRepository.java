@@ -54,7 +54,7 @@ public class OrganizationRepository extends BaseRepository {
                                     String organizationName, String description, String phoneNumber) throws SQLException {
         Connection conn = super.getConnection();
         if (conn != null) {
-            String query = "INSERT INTO Organization (hashedPassword, email, organization_name, description, phone_number) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Organization (hash_password, email, organization_name, description, phone_number) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             stmt.setString(1, hashedPassword);
