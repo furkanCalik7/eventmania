@@ -46,7 +46,7 @@
 	</div>
 
 	<div class="container d-lg-flex flex-column">
-		<div class="ps-6">
+		<div class="ml-6">
 			<button class="btn btn-primary d-lg-flex justify-content-lg-start align-items-lg-center" type="button"
 			        data-bs-target="#modal-1" data-bs-toggle="modal">Create category
 			</button>
@@ -80,6 +80,13 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="d-flex justify-content-end align-items-end">
+			<form method="post" th:action="@{/event/} + ${event.eventId} + @{/publish}">
+				<button id='publish-event-button' class="btn btn-primary px-8" type="submit"
+				>Publish event
+				</button>
+			</form>
 		</div>
 	</div>
 </div>

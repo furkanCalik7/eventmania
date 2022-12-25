@@ -1,103 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta
-          content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-          name="viewport"
-  />
-  <title>Eventmania</title>
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-  />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" th:src="@{/js/test.js}"></script>
-  <link type="text/css" rel="stylesheet" th:href="@{/css/userProfile.css}" />
+	<meta charset="utf-8"/>
+	<meta
+			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+			name="viewport"
+	/>
+	<title>Eventmania</title>
+	<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+	/>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<link type="text/css" rel="stylesheet" th:href="@{/css/userProfile.css}"/>
 </head>
 <body>
+<div th:replace="fragments/header :: header">...</div>
 <div class="container">
-  <div class="main-body">
-    <div class="row gutters-sm">
-      <div class="mb-3 d-flex flex-column align-items-center text-center">
-        <div class="card w-50">
-          <div class="card-body">
-            <div class="d-flex flex-column align-items-center text-start">
-              <img
-                      src="https://www.shutterstock.com/image-photo/view-ankara-castle-general-old-600w-311528960.jpg"
-                      alt="Admin"
-                      width="500"
-              />
-              <small class="col-9 text-start" th:text="${event.startdate}"></small>
-              <div
-                      class="mt-3 col-9 d-flex flex-row align-items-center justify-content-between"
-              >
-                <h4 th:text="${event.title}"></h4>
-                <a
-                        class="btn btn-success ms-3 text-nowrap"
-                        target="__blank"
-                        href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills"
-                >Join Event</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-column align-items-center text-center">
-        <div class="card mb-3 w-50">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Event Type</h6>
-              </div>
-              <div th:each="type: ${event.eventTypes}">
-              <div class="col-sm-9 text-secondary" th:text="${type}"></div>
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Description</h6>
-              </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.eventDescription}"></div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Start Date</h6>
-              </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.startdate}"></div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">End Date</h6>
-              </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.enddate}">
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Location</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">05360362311</div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Age Restriction</h6>
-              </div>
-              <div class="col-sm-9 text-secondary" th:text="${event.minimumAge}"></div>
-            </div>
-            <hr />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="main-body">
+		<div class="row gutters-sm">
+			<div class="mb-3 d-flex flex-column align-items-center text-center">
+				<div class="card w-50">
+					<div class="card-body">
+						<div class="d-flex flex-column align-items-center text-start">
+							<img
+									th:src="@{/img/} + ${event.imageUrl}"
+									alt="Admin"
+									width="500"
+							/>
+							<small class="col-9 text-start" th:text="${event.startdate}"></small>
+							<div
+									class="mt-3 col-9 d-flex flex-row align-items-center justify-content-between"
+							>
+
+								<h4 th:text="${event.title}"></h4>
+								<a
+										th:if="${event.isTicketed}"
+										class="btn btn-success ms-3 text-nowrap"
+										data-bs-target="#model-1"
+										data-bs-toggle="modal"
+								>Buy ticket</a
+								>
+								<form method="post" th:action="@{/event/} + ${event.eventId} + @{/join} "
+								      th:unless="${event.isTicketed}">
+									<a type="submit" class="btn btn-success ms-3 text-nowrap"
+									>Join event</a
+									>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="d-flex flex-column align-items-center text-center">
+				<div class="card mb-3 w-50">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Event Type</h6>
+							</div>
+							<div th:each="type: ${event.eventTypes}">
+								<div class="col-sm-9 text-secondary" th:text="${type}"></div>
+							</div>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Description</h6>
+							</div>
+							<div class="col-sm-9 text-secondary" th:text="${event.eventDescription}"></div>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Start Date</h6>
+							</div>
+							<div class="col-sm-9 text-secondary" th:text="${event.startdate}"></div>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">End Date</h6>
+							</div>
+							<div class="col-sm-9 text-secondary" th:text="${event.enddate}">
+							</div>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Location</h6>
+							</div>
+							<div class="col-sm-9 text-secondary" th:text="${event.venueLocation}"></div>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">Age Restriction</h6>
+							</div>
+							<div class="col-sm-9 text-secondary" th:text="${event.minimumAge}"></div>
+						</div>
+						<hr/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+<div id="modal-1" class="modal fade" role="dialog" tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Ticket buy form</h4>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="container">
+					<h5>New Seminar on Newest Food Recipe from World&#39;s Best</h5>
+				</div>
+				<form><select class="form-select">
+					<optgroup label="This is a group">
+						<option value="12" selected>Catagory 1 - 100 tl</option>
+						<option value>Catagory 2 - 50 tl</option>
+					</optgroup>
+				</select></form>
+				<fieldset></fieldset>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+				<button class="btn btn-primary" type="button">Buy</button>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>
