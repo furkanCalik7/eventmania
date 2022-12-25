@@ -28,45 +28,26 @@
 			events</a></li>
 	</ul>
 	<div class="tab-content">
-		<div id="tab-1" class="tab-pane" role="tabpanel">
-			<div data-reflow-type="product-search" data-reflow-placeholder="Search Events" style="margin-top: 5px;">
-				<div class="reflow-product-search">
-					<div class="ref-input-wrapper"><input class="ref-search" type="text" inputmode="search"
-					                                      placeholder="Search Events"/><span class="ref-cancel-search"
-					                                                                         style="display: none;"></span>
-					</div>
-					<div class="ref-button" type="submit" style="display: none;">Search</div>
-				</div>
-			</div>
+		<div id="tab-1" class="tab-pane active" role="tabpanel">
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
 					<tr>
-						<th>Name</th>
+						<th>Event name</th>
 						<th>Description</th>
+						<th>Address</th>
 						<th>Start Date</th>
 						<th>End Date</th>
-						<th>Online</th>
-						<th>Withdraw</th>
+						<th></th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr>
-						<td>Mayfest</td>
-						<td>Mayfest-desc</td>
-						<td>13.11.2022</td>
-						<td>14.11.2022</td>
-						<td>No</td>
-						<td>
-							<button class="btn btn-danger" type="button">Withdraw</button>
-						</td>
-					</tr>
-					<tr>
-						<td>Fazıl Say Concert</td>
-						<td>Fazıl Say Concert - desc</td>
-						<td>14.11.2022</td>
-						<td>15.11.2022</td>
-						<td>Yes</td>
+					<tr th:each="event: ${future}">
+						<td th:text="${event.title}"></td>
+						<td th:text="${event.eventDescription}"></td>
+						<td th:text="${event.venueLocation}"></td>
+						<td th:text="${event.startdate}"></td>
+						<td th:text="${event.enddate}"></td>
 						<td>
 							<button class="btn btn-danger" type="button">Withdraw</button>
 						</td>
@@ -75,61 +56,59 @@
 				</table>
 			</div>
 		</div>
-		<div id="tab-5" class="tab-pane active" role="tabpanel">
-			<div data-reflow-type="product-search" data-reflow-placeholder="Search Events" style="margin-top: 5px;">
-				<div class="reflow-product-search">
-					<div class="ref-input-wrapper"><input class="ref-search" type="text" inputmode="search"
-					                                      placeholder="Search Events"/><span class="ref-cancel-search"
-					                                                                         style="display: none;"></span>
-					</div>
-					<div class="ref-button" type="submit" style="display: none;">Search</div>
-				</div>
-			</div>
+		<div id="tab-5" class="tab-pane " role="tabpanel">
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
 					<tr>
-						<th>Name</th>
+						<th>Event name</th>
 						<th>Description</th>
+						<th>Address</th>
 						<th>Start Date</th>
 						<th>End Date</th>
-						<th>Online</th>
-						<th>Rate</th>
+						<th></th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr>
-						<td>Mayfest</td>
-						<td>Mayfest-desc</td>
-						<td>13.11.2022</td>
-						<td>14.11.2022</td>
-						<td>No</td>
+					<tr th:each="event: ${Joined}">
+						<td th:text="${event.title}"></td>
+						<td th:text="${event.eventDescription}"></td>
+						<td th:text="${event.venueLocation}"></td>
+						<td th:text="${event.startdate}"></td>
+						<td th:text="${event.enddate}"></td>
 						<td>
-							<button class="btn btn-success" type="button">Rate</button>
-						</td>
-					</tr>
-					<tr>
-						<td>Fazıl Say Concert</td>
-						<td>Fazıl Say Concert - desc</td>
-						<td>14.11.2022</td>
-						<td>15.11.2022</td>
-						<td>Yes</td>
-						<td>
-							<button class="btn btn-success disabled" type="button" disabled>Rated</button>
+							<button class="btn btn-danger" type="button">Withdraw</button>
 						</td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<div id="tab-2" class="tab-pane" role="tabpanel">
-			<p>Content for tab 2.</p>
-		</div>
-		<div id="tab-3" class="tab-pane" role="tabpanel">
-			<p>Content for tab 3.</p>
-		</div>
-		<div id="tab-4" class="tab-pane" role="tabpanel">
-			<p>Tab content.</p>
+
+		<div id="tab-2" class="tab-pane " role="tabpanel">
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+					<tr>
+						<th>Event name</th>
+						<th>Description</th>
+						<th>Address</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="event: ${organized}">
+						<td th:text="${event.title}"></td>
+						<td th:text="${event.eventDescription}"></td>
+						<td th:text="${event.venueLocation}"></td>
+						<td th:text="${event.startdate}"></td>
+						<td th:text="${event.enddate}"></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
