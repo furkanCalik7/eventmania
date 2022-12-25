@@ -16,7 +16,6 @@ public class UserRepository extends BaseRepository {
         super.connect();
     }
 
-    // TODO: connect to database and test the code
     public BasicUser getUserById(Long userId) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -86,7 +85,6 @@ public class UserRepository extends BaseRepository {
             stmt.setString(5, gender.name());
             stmt.setString(6, phoneNumber);
             stmt.setDate(7, Date.valueOf(dob));
-            // TODO: user executeUpdate rahter executeQuery since its throwing "result is returned"
             stmt.executeUpdate();
             return true;
         }
@@ -121,7 +119,6 @@ public class UserRepository extends BaseRepository {
         return false;
     }
 
-    //TODO: Future/Organized Event functions
     public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -220,6 +217,8 @@ public class UserRepository extends BaseRepository {
 
         return events;
     }
+
+    //TODO: add a method to get all the events that the user has created
 
     //Join unticketed event
     public boolean joinUnticketedEvent(Long eventId, String email) throws SQLException {

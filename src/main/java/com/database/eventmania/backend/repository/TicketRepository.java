@@ -26,11 +26,17 @@ public class TicketRepository extends BaseRepository {
         throw new SQLException("Connection to the database could not be established");
     }
 
-    //TODO: change userId to email
-    public boolean buyTicket(Long eventId, Long userId, String categoryName, String purchaseType) throws SQLException {
+    public boolean buyTicket(Long eventId, String email, String categoryName, String purchaseType) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null) {
-            String query = "INSERT INTO Ticket (ticketed_event_id, user_id, transaction_date, category_name, purchase_type) VALUES (?, ?, ?, ?, ?)";
+            String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            Long userId = rs.getLong("organization_id");
+
+            query = "INSERT INTO Ticket (ticketed_event_id, user_id, transaction_date, category_name, purchase_type) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(eventId));
             stmt.setInt(2, Math.toIntExact(userId));
