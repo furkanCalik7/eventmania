@@ -36,6 +36,17 @@ public class TicketRepository extends BaseRepository {
             rs.next();
             Long userId = rs.getLong("organization_id");
 
+            //Date check is implemented here
+            query = "SELECT current_state FROM event WHERE event_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, Math.toIntExact(eventId));
+            rs = statement.executeQuery();
+            rs.next();
+            String currentState = rs.getString("current_state");
+            if(currentState.toUpperCase().equals("ONGOING") || currentState.toUpperCase().equals("FINISHED")){
+                throw new SQLException("Event is either finished or ongoing");
+            }
+
             query = "INSERT INTO Ticket (ticketed_event_id, user_id, transaction_date, category_name, purchase_type) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(eventId));
