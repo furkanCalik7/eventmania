@@ -321,16 +321,24 @@ public class UserRepository extends BaseRepository {
         return true;
     }
 
-    public boolean isUserInEvent(Long eventId) throws SQLException {
+    public boolean isUserInEvent(Long eventId, String email) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null) {
             throw new SQLException("Connection to the database failed");
         }
-        String query = "SELECT user_id FROM join_event WHERE event_id = ?";
+        String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        Long userId = rs.getLong("organization_id");
+
+        query = "SELECT user_id FROM join_event WHERE event_id = ? AND user_id = ?";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setLong(1, eventId);
-        ResultSet rs = stmt.executeQuery();
-        if(rs.next()){
+        stmt.setLong(2, userId);
+        ResultSet rs2 = stmt.executeQuery();
+        if(rs2.next()){
             return true;
         }
         return false;
