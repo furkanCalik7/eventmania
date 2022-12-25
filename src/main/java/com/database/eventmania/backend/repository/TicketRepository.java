@@ -8,12 +8,13 @@ import java.time.LocalDateTime;
 
 @Repository
 public class TicketRepository extends BaseRepository {
-    public TicketRepository(){
+    public TicketRepository() {
         super.connect();
     }
+
     public boolean createTicket(Long eventId, Long userId, String categoryName, String purchaseType) throws SQLException {
         Connection conn = super.getConnection();
-        if(conn != null) {
+        if (conn != null) {
             String query = "INSERT INTO Ticket (ticketed_event_id, user_id, transaction_date, category_name, purchase_type) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Math.toIntExact(eventId));
@@ -28,7 +29,7 @@ public class TicketRepository extends BaseRepository {
 
     public boolean buyTicket(Long eventId, String email, String categoryName, String purchaseType) throws SQLException {
         Connection conn = super.getConnection();
-        if(conn != null) {
+        if (conn != null) {
             String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
@@ -43,7 +44,7 @@ public class TicketRepository extends BaseRepository {
             rs = statement.executeQuery();
             rs.next();
             String currentState = rs.getString("current_state");
-            if(currentState.toUpperCase().equals("ONGOING") || currentState.toUpperCase().equals("FINISHED")){
+            if (currentState.toUpperCase().equals("ONGOING") || currentState.toUpperCase().equals("FINISHED")) {
                 throw new SQLException("Event is either finished or ongoing");
             }
 
@@ -65,17 +66,17 @@ public class TicketRepository extends BaseRepository {
             PreparedStatement ageStmt = conn.prepareStatement(ageQuery);
             ageStmt.setInt(1, Math.toIntExact(eventId));
             ResultSet ageResult = ageStmt.executeQuery();
-            if(ageResult.next()){
+            if (ageResult.next()) {
                 int minimumAge = ageResult.getInt("minimum_age");
                 String userAgeQuery = "SELECT date_of_birth FROM basicuser WHERE user_id = ?";
                 PreparedStatement userAgeStmt = conn.prepareStatement(userAgeQuery);
                 userAgeStmt.setInt(1, Math.toIntExact(userId));
                 ResultSet userAgeResult = userAgeStmt.executeQuery();
-                if(userAgeResult.next()){
-                    Date birthDate = userAgeResult.getDate("birth_date");
-                    if(birthDate != null){
+                if (userAgeResult.next()) {
+                    Date birthDate = userAgeResult.getDate("date_of_birth");
+                    if (birthDate != null) {
                         int userAge = now.getYear() - birthDate.toLocalDate().getYear();
-                        if(userAge < minimumAge){
+                        if (userAge < minimumAge) {
                             return false;
                         }
                     }

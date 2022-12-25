@@ -10,17 +10,20 @@
 					<div class="container">
 						<h5 th:text="${event.title}"></h5>
 					</div>
-					<form><select class="form-select">
-						<optgroup label="Ticket categories">
-							<option th:each="ticketCategory : ${categories}" th:value="${ticketCategory.id}"
-							        th:text="${ticketCategory.name}"></option>
-						</optgroup>
-					</select></form>
+					<form id="form" method="get" th:object="${form}"
+					      th:action="@{/event/} + ${event.eventId} + @{/buy}">
+						<select th:field="*{id}"
+						        class="form-select">
+							<optgroup label="Ticket categories">
+								<option th:each="ticketCategory : ${categories}" th:value="${ticketCategory.id}"
+								        th:text="${ticketCategory.name}"></option>
+							</optgroup>
+						</select></form>
 					<fieldset></fieldset>
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
-					<button class="btn btn-primary" type="button">Buy</button>
+					<button class="btn btn-primary" form="form" type="submit">Buy</button>
 				</div>
 			</div>
 		</div>

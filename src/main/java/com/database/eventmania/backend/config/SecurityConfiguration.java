@@ -42,7 +42,9 @@ public class SecurityConfiguration {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http, DaoAuthenticationProvider authenticationProvider) throws Exception {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
-                .requestMatchers("/user*").authenticated()
+                // TODO: fix the event problem here
+                .requestMatchers("/event/*").authenticated()
+                .requestMatchers("/user/*").authenticated()
                 .requestMatchers("/event/create").authenticated()
                 .requestMatchers("/register").permitAll()
                 .requestMatchers("/**").permitAll()

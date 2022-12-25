@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Nullable;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,13 +26,15 @@ public class EventController {
     private EventService eventService;
     private CategoryService categoryService;
     private UserService userService;
+    private TicketService ticketService;
 
-    public EventController(TicketedEventService ticketedEventService, UnticketedEventService unticketedEventService, EventService eventService, CategoryService categoryService, UserService userService) {
+    public EventController(TicketedEventService ticketedEventService, UnticketedEventService unticketedEventService, EventService eventService, CategoryService categoryService, UserService userService, TicketService ticketService) {
         this.ticketedEventService = ticketedEventService;
         this.unticketedEventService = unticketedEventService;
         this.eventService = eventService;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.ticketService = ticketService;
     }
 
     @GetMapping("create")
@@ -75,7 +78,10 @@ public class EventController {
     @GetMapping("{eventId}/information")
     public ModelAndView getEventInformation(@PathVariable("eventId") String eventId, Principal principal) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/eventInformation.html");
-        boolean joined = userService.isUserInEvent(eventId, principal.getName());
+        boolean joined = false;
+        if (principal != null) {
+            joined = userService.isUserInEvent(eventId, principal.getName());
+        }
         EventModel eventModel = null;
         try {
             eventModel = eventService.getEventById(Long.valueOf(eventId));
@@ -114,7 +120,7 @@ public class EventController {
         ModelAndView mav = new ModelAndView("frontend/event/buy_ticket_model.html");
         EventModel eventModel = eventService.getEventById(Long.parseLong(eventId));
         ArrayList<CategoryModel> categoryModels = categoryService.getCategoriesByEventIdWithCapacityCheck(eventId);
-
+        CategoryModel2 categoryModel3 = new CategoryModel2();
         ArrayList<CategoryModel2> categoryNames = new ArrayList<>();
         for (CategoryModel categoryModel : categoryModels) {
             CategoryModel2 categoryModel2 = new CategoryModel2();
@@ -122,6 +128,7 @@ public class EventController {
             categoryModel2.setName(categoryModel.getName() + " - " + categoryModel.getPrice() + " TL - Remaining Capacity: " + categoryModel.getRemainingCapacity());
             categoryNames.add(categoryModel2);
         }
+        mav.addObject("form", categoryModel3);
         mav.addObject("event", eventModel);
         mav.addObject("categories", categoryNames);
         return mav;
@@ -146,6 +153,32 @@ public class EventController {
             e.printStackTrace();
         }
         return new ModelAndView("redirect:/event/" + eventId + "/information");
+    }
+
+    @GetMapping("{eventId}/{categoryId}/buy")
+    public ModelAndView buyTicketPage(@PathVariable("eventId") String eventId, @PathVariable("categoryId") String categoryId, Principal principal) {
+        ModelAndView mav = new ModelAndView("frontend/payment.html");
+        try {
+            ticketService.buyTicket(eventId, principal.getName(), categoryId, "ONLINE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mav;
+    }
+
+    @GetMapping("{eventId}/buy")
+    public ModelAndView ticketBuyModal(@PathVariable("eventId") String eventId, CategoryModel2 form) {
+        return new ModelAndView("redirect:/event/" + eventId + "/" + form.getId() + "/buy");
+    }
+
+    @PostMapping("{eventId}/{categoryId}/buy")
+    public ModelAndView buyTicket(@PathVariable("eventId") String eventId, @PathVariable("categoryId") String categoryId, Principal principal) {
+        try {
+            ticketService.buyTicket(eventId, principal.getName(), categoryId, "ONLINE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/user/events");
     }
 
     @Getter
