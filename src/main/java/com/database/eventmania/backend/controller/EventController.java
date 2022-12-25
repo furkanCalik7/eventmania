@@ -1,16 +1,20 @@
 package com.database.eventmania.backend.controller;
 
+import com.database.eventmania.backend.entity.Category;
+import com.database.eventmania.backend.model.CategoryModel;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.service.CategoryService;
 import com.database.eventmania.backend.service.EventService;
 import com.database.eventmania.backend.service.TicketedEventService;
 import com.database.eventmania.backend.service.UnticketedEventService;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("event")
@@ -42,14 +46,16 @@ public class EventController {
         try {
             if (eventModel.getEventPaymentType().equals("PAID")) {
                 eventId = ticketedEventService.createTicketedEvent(eventModel, principal.getName());
+                return new ModelAndView("redirect:/event/" + eventId + "/tickets");
             } else {
-                eventId = unticketedEventService.createUnticketedEvent(eventModel, principal.getName());
+                unticketedEventService.createUnticketedEvent(eventModel, principal.getName());
+                return new ModelAndView("redirect:/user/events");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ModelAndView("redirect:/event/" + eventId + "/tickets");
+
     }
 
     //get mapping with filter model class
@@ -83,7 +89,20 @@ public class EventController {
         ModelAndView mav = new ModelAndView("frontend/event/event_tickets.html");
         EventModel eventModel = eventService.getEventById(Long.parseLong(eventId));
         mav.addObject("event", eventModel);
-//        ArrayList<CategoryModel> categories = .getCategoriesByEventId(eventId);
+        ArrayList<Category> categories = categoryService.getCategoriesByEventId(eventId);
+        mav.addObject("categories", categories);
+        CategoryModel categoryModel = new CategoryModel();
+        mav.addObject("model", categoryModel);
         return mav;
+    }
+
+    @PostMapping("/{eventId}/create/category")
+    public ModelAndView createCategory(@PathVariable("eventId") String eventId, ModelMap modelMap, CategoryModel categoryModel) {
+        try {
+            categoryService.addCategory(eventId, categoryModel.getName(), categoryModel.getDesc(), categoryModel.getCapacity(), categoryModel.getPrice());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/event/" + eventId + "/tickets", modelMap);
     }
 }
