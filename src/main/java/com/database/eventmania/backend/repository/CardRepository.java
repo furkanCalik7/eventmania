@@ -44,6 +44,7 @@ public class CardRepository extends BaseRepository{
     }
 
 
+    //UpdateExample
     public boolean updateCard(String cardNumber, String cardOwner , String cardTitle, Integer expirationMonth, Integer expirationYear) throws SQLException{
         Connection conn = super.getConnection();
         if(conn != null){

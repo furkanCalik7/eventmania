@@ -123,6 +123,7 @@ public class UserRepository extends BaseRepository {
         return false;
     }
 
+
     public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -404,5 +405,6 @@ public class UserRepository extends BaseRepository {
         }
         return true;
     }
+
 
 }

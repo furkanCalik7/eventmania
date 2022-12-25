@@ -280,7 +280,6 @@ public class EventRepository extends BaseRepository {
                 event.setLocationName(rs.getString("location_name"));
             events.add(event);
         }
-        //TODO LOW: fix ongoing time problem
         for(EventModel eventModel: events){
             if(eventModel.getState().equals("ONGOING") || eventModel.getState().equals("UPCOMING"))
                 eventMap.get("future").add(eventModel);
