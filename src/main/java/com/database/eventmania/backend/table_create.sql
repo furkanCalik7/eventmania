@@ -96,10 +96,10 @@ CREATE TABLE IF NOT EXISTS Organization
     organization_id     INT PRIMARY KEY DEFAULT nextval('global_role_seq') NOT NULL,
     hash_password       VARCHAR(64)                                        NOT NULL,
     email               VARCHAR(255) UNIQUE                                NOT NULL,
-    admin_id            INT                                                NOT NULL,
-    wallet_id           INT                                                NOT NULL,
+    admin_id            INT,
+    wallet_id           INT,
     verification_date   DATE,
-    verification_status VARCHAR(20)                                        NOT NULL,
+    verification_status VARCHAR(20),
     feedback            VARCHAR(140),
     organization_name   VARCHAR(30)                                        NOT NULL,
     description         VARCHAR(140),
@@ -395,10 +395,9 @@ WITH joined_event_type_location AS (SELECT E.event_id,
                                            address_description,
                                            type_of_event
                                     FROM Event E
-                                  NATURAL JOIN event_type ET
-                                        LEFT OUTER JOIN location L ON E.event_id = L.event_id
-                                    )
-                                 -- LEFT OUTER JOIN location L ON E.event_id = L.event_id)
+                                             NATURAL JOIN event_type ET
+                                             LEFT OUTER JOIN location L ON E.event_id = L.event_id)
+     -- LEFT OUTER JOIN location L ON E.event_id = L.event_id)
 SELECT joined_event_type_location.event_id,
        admin_id,
        feedback,
@@ -420,7 +419,7 @@ SELECT joined_event_type_location.event_id,
        city,
        country,
        address_description,
-        type_of_event,
+       type_of_event,
        'Ticketed' AS ticketed_type
 FROM joined_event_type_location
          NATURAL JOIN TicketedEvent
@@ -455,5 +454,6 @@ INSERT INTO Admin (hash_password, email)
 VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayclmz@gmail.com');
 
 INSERT INTO BasicUser (hash_password, email, wallet_id, first_name, last_name, gender, phone_number, date_of_birth)
-VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman', 'male', '123-456-789', '2001-07-21');
+VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'furkan@gmail.com', NULL, 'Furkan', 'karaman',
+        'male', '123-456-789', '2001-07-21');
 
