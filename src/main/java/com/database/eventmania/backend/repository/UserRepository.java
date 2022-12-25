@@ -319,7 +319,7 @@ public class UserRepository extends BaseRepository {
                 if (birthDate != null) {
                     int userAge = now.getYear() - birthDate.toLocalDate().getYear();
                     if (userAge < minimumAge) {
-                        return false;
+                        throw new SQLException("User is too young to join this event");
                     }
                 }
             }
