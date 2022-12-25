@@ -61,4 +61,8 @@ public class UserService {
     public boolean joinUnticketedEvent(String userEmail, String eventId) throws SQLException {
         return userRepository.joinUnticketedEvent( Long.valueOf(eventId), userEmail);
     }
+
+    public ArrayList<EventModel> getOrganizedEvents(String userEmail) throws SQLException {
+        return userRepository.getOrganizedEvents(userEmail);
+    }
 }

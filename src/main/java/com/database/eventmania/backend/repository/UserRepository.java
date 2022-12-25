@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
 @Repository
@@ -218,8 +220,59 @@ public class UserRepository extends BaseRepository {
         return events;
     }
 
-    //TODO: add a method to get all the events that the user has created
+    public ArrayList<EventModel> getOrganizedEvents(String email) throws SQLException{
+        Connection conn = super.getConnection();
 
+        if (conn == null)
+            throw new SQLException("Connection to the database failed");
+
+        Long userId;
+
+        // search for the user in BasicUser table
+        String query = "SELECT user_id FROM BasicUser WHERE email = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+
+        if (!rs.next())
+            throw new SQLException("User not found");
+        else
+            userId = rs.getLong("user_id");
+
+        query = "SELECT DISTINCT E.event_id, E.event_name, E.start_date, E.end_date, E.description, L.location_name, L.address_description " +
+                "FROM Event E " +
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "LEFT OUTER JOIN unticketedevent UE ON UE.event_id = E.event_id " +
+                "WHERE UE.user_id = ?";
+        stmt = conn.prepareStatement(query);
+        stmt.setLong(1, userId);
+        rs = stmt.executeQuery();
+        FormatStyle dateStyle = FormatStyle.MEDIUM;
+        FormatStyle timeStyle = FormatStyle.SHORT;
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+
+        ArrayList<EventModel> events = new ArrayList<>();
+        while (rs.next()) {
+            EventModel event = new EventModel();
+
+            event.setEventId(rs.getLong("event_id"));
+            event.setTitle(rs.getString("event_name"));
+            if(rs.getString("location_name") != null) {
+                event.setVenueLocation(rs.getString("location_name"));
+                event.setAddress(rs.getString("address_description"));
+            }
+            else{
+                event.setVenueLocation("Online");
+                event.setAddress("Online");
+            }
+            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate().format(formatter)));
+            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate().format(formatter)));
+            event.setEventDescription(rs.getString("description"));
+            events.add(event);
+        }
+
+        return events;
+    }
     //Join unticketed event
     public boolean joinUnticketedEvent(Long eventId, String email) throws SQLException {
         Connection conn = super.getConnection();
