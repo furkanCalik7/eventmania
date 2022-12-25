@@ -45,7 +45,8 @@ public class ReportRepository extends BaseRepository {
         return users;
     }
 
-    //Gets the events that have the most attendees.
+    //TODO: may need to limit to 10
+    //Gets the events that have the most attendees, sets the number of attendees as the attendeeCount property of EventModel
     public ArrayList<EventModel> getMostPopularEvents() throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null) {
