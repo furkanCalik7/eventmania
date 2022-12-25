@@ -49,7 +49,10 @@
 						<td th:text="${event.startdate}"></td>
 						<td th:text="${event.enddate}"></td>
 						<td>
-							<button class="btn btn-danger" type="button">Withdraw</button>
+							<form method="post" th:action="@{/user/event/withdraw/} + ${event.eventId}"
+							      th:object="${form}">
+								<button class="btn btn-danger" type="submit">Withdraw</button>
+							</form>
 						</td>
 					</tr>
 					</tbody>

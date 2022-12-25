@@ -162,11 +162,10 @@ public class UserRepository extends BaseRepository {
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
-            if(rs.getString("location_name") != null) {
+            if (rs.getString("location_name") != null) {
                 event.setVenueLocation(rs.getString("location_name"));
                 event.setAddress(rs.getString("address_description"));
-            }
-            else{
+            } else {
                 event.setVenueLocation("Online");
                 event.setAddress("Online");
             }
@@ -179,7 +178,7 @@ public class UserRepository extends BaseRepository {
         return events;
     }
 
-    public ArrayList<EventModel> listFutureEvents(String userEmail) throws SQLException{
+    public ArrayList<EventModel> listFutureEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null)
@@ -217,11 +216,10 @@ public class UserRepository extends BaseRepository {
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
-            if(rs.getString("location_name") != null) {
+            if (rs.getString("location_name") != null) {
                 event.setVenueLocation(rs.getString("location_name"));
                 event.setAddress(rs.getString("address_description"));
-            }
-            else{
+            } else {
                 event.setVenueLocation("Online");
                 event.setAddress("Online");
             }
@@ -234,7 +232,7 @@ public class UserRepository extends BaseRepository {
         return events;
     }
 
-    public ArrayList<EventModel> getOrganizedEvents(String email) throws SQLException{
+    public ArrayList<EventModel> getOrganizedEvents(String email) throws SQLException {
         Connection conn = super.getConnection();
 
         if (conn == null)
@@ -268,11 +266,10 @@ public class UserRepository extends BaseRepository {
 
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));
-            if(rs.getString("location_name") != null) {
+            if (rs.getString("location_name") != null) {
                 event.setVenueLocation(rs.getString("location_name"));
                 event.setAddress(rs.getString("address_description"));
-            }
-            else{
+            } else {
                 event.setVenueLocation("Online");
                 event.setAddress("Online");
             }
@@ -284,6 +281,7 @@ public class UserRepository extends BaseRepository {
 
         return events;
     }
+
     //Join unticketed event
     public boolean joinUnticketedEvent(Long eventId, String email) throws SQLException {
         Connection conn = super.getConnection();
@@ -308,17 +306,17 @@ public class UserRepository extends BaseRepository {
 
         ageStmt.setInt(1, Math.toIntExact(eventId));
         ResultSet ageResult = ageStmt.executeQuery();
-        if(ageResult.next()){
+        if (ageResult.next()) {
             int minimumAge = ageResult.getInt("minimum_age");
             String userAgeQuery = "SELECT date_of_birth FROM basicuser WHERE user_id = ?";
             PreparedStatement userAgeStmt = conn.prepareStatement(userAgeQuery);
             userAgeStmt.setInt(1, Math.toIntExact(userId));
             ResultSet userAgeResult = userAgeStmt.executeQuery();
-            if(userAgeResult.next()){
+            if (userAgeResult.next()) {
                 Date birthDate = userAgeResult.getDate("date_of_birth");
-                if(birthDate != null){
+                if (birthDate != null) {
                     int userAge = now.getYear() - birthDate.toLocalDate().getYear();
-                    if(userAge < minimumAge){
+                    if (userAge < minimumAge) {
                         return false;
                     }
                 }
@@ -349,11 +347,12 @@ public class UserRepository extends BaseRepository {
         stmt.setLong(1, eventId);
         stmt.setLong(2, userId);
         ResultSet rs2 = stmt.executeQuery();
-        if(rs2.next()){
+        if (rs2.next()) {
             return true;
         }
         return false;
     }
+
     public String getEventState(Long eventId) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null) {
@@ -363,7 +362,7 @@ public class UserRepository extends BaseRepository {
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setLong(1, eventId);
         ResultSet rs = stmt.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
             return rs.getString("current_state");
         }
         return null;
@@ -388,5 +387,4 @@ public class UserRepository extends BaseRepository {
         stmt.executeUpdate();
         return true;
     }
-
 }

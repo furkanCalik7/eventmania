@@ -4,11 +4,12 @@ import com.database.eventmania.backend.entity.BasicUser;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.service.EventService;
 import com.database.eventmania.backend.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.file.Path;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class UserController {
         ArrayList<EventModel> organized = null;
         ArrayList<EventModel> joined = null;
         ArrayList<EventModel> future = null;
+        WithdrawModel form = new WithdrawModel();
         try {
             joined = userService.listJoinedEvents(principal.getName());
             future = userService.listFutureEvents(principal.getName());
@@ -50,9 +52,26 @@ public class UserController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        mav.addObject("form", form);
         mav.addObject("joined", joined);
         mav.addObject("future", future);
         mav.addObject("organized", organized);
         return mav;
+    }
+
+    @PostMapping("event/withdraw/{eventId}")
+    public ModelAndView withdraw(@PathVariable("eventId") String eventId, WithdrawModel form, Principal principal) {
+        try {
+            userService.withdrawFromEvent(eventId, principal.getName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("redirect:/user/events");
+    }
+
+    @Getter
+    @Setter
+    public class WithdrawModel {
+        private String eventId;
     }
 }
