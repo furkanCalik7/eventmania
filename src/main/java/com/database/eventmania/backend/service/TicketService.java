@@ -16,6 +16,7 @@ public class TicketService {
     public boolean createTicket(String eventId, String userId, String categoryName, String purchaseType) throws SQLException {
         return ticketRepository.createTicket(Long.parseLong(eventId), Long.parseLong(userId), categoryName, purchaseType);
     }
+    //TODO: Should differentiate between ticketed and unticketed events.
     public boolean buyTicket(String eventId, String userId, String categoryName, String purchaseType) throws SQLException {
         return ticketRepository.buyTicket(Long.parseLong(eventId), Long.parseLong(userId), categoryName, purchaseType);
     }
