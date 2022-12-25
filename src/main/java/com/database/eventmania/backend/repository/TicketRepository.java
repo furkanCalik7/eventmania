@@ -43,6 +43,27 @@ public class TicketRepository extends BaseRepository {
             stmt.setString(5, purchaseType);
             stmt.executeUpdate();
 
+            //check if user can join by checking the minimum age constraint
+            String ageQuery = "SELECT minimum_age FROM Event WHERE event_id = ?";
+            PreparedStatement ageStmt = conn.prepareStatement(ageQuery);
+            ageStmt.setInt(1, Math.toIntExact(eventId));
+            ResultSet ageResult = ageStmt.executeQuery();
+            if(ageResult.next()){
+                int minimumAge = ageResult.getInt("minimum_age");
+                String userAgeQuery = "SELECT date_of_birth FROM basicuser WHERE user_id = ?";
+                PreparedStatement userAgeStmt = conn.prepareStatement(userAgeQuery);
+                userAgeStmt.setInt(1, Math.toIntExact(userId));
+                ResultSet userAgeResult = userAgeStmt.executeQuery();
+                if(userAgeResult.next()){
+                    Date birthDate = userAgeResult.getDate("birth_date");
+                    if(birthDate != null){
+                        int userAge = now.getYear() - birthDate.toLocalDate().getYear();
+                        if(userAge < minimumAge){
+                            return false;
+                        }
+                    }
+                }
+            }
             String query2 = "INSERT INTO join_event (event_id, user_id) VALUES (?, ?)";
             PreparedStatement stmt2 = conn.prepareStatement(query2);
             stmt2.setInt(1, Math.toIntExact(eventId));

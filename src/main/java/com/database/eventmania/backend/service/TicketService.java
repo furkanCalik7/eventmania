@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 @Service
 public class TicketService {
-    //TODO: Implement this class
     public TicketRepository ticketRepository;
     @Autowired
     public TicketService(TicketRepository ticketRepository){
