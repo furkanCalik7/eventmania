@@ -451,6 +451,6 @@ FROM joined_event_type_location
          NATURAL JOIN UnticketedEvent);
 /*123 sifre*/
 INSERT INTO Admin (hash_password, email)
-VALUES ('$2a$10$2VbvGJHqrmbE4p4rNg0Bw.HrtvsR4PiUUb7cVRNqIRv.wgb76Sf9y', 'berkayclmz@gmail.com');
+VALUES ('$2a$10$MPTMyLSfb9jIaC8N1vKh.e8hRDralULHLb9Ax5JwKWLy6FW35XzFy', 'berkayclmz@gmail.com');
 
 
