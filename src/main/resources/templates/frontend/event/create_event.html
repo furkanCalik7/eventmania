@@ -261,7 +261,16 @@
 			    th:field="*{salesEndTime}"
 			    type="datetime-local"/>
 		</div>
-		<button
+
+		<button sec:authorize="hasAnyAuthority('BasicUser')"
+				class="btn btn-primary mb-2"
+				type="submit"
+				style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
+		>
+			Save and publish
+		</button>
+
+		<button sec:authorize="hasAnyAuthority('Organization')"
 				class="btn btn-primary mb-2"
 				type="submit"
 				style="margin-right: 0px; margin-bottom: 0px; margin-top: 22px"
