@@ -70,7 +70,12 @@ public class UserService {
     public boolean isUserInEvent(String eventId, String email) throws SQLException {
         return userRepository.isUserInEvent(Long.valueOf(eventId), email);
     }
-    public String  getEventState(String eventId) throws SQLException {
+
+    public String getEventState(String eventId) throws SQLException {
         return userRepository.getEventState(Long.valueOf(eventId));
+    }
+
+    public boolean withdrawFromEvent(String eventId, String email) throws SQLException {
+        return userRepository.withdrawFromEvent(Long.valueOf(eventId), email);
     }
 }

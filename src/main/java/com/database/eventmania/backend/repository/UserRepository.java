@@ -300,7 +300,7 @@ public class UserRepository extends BaseRepository {
         Long userId = rs.getLong("organization_id");
 
 
-        //check if user can join by checking the minimum age constraint
+        //2.c AGE CHECKAGECONSTRAINT AGE AGE check if user can join by checking the minimum age constraint
         String ageQuery = "SELECT minimum_age FROM Event WHERE event_id = ?";
         PreparedStatement ageStmt = conn.prepareStatement(ageQuery);
         LocalDateTime now = LocalDateTime.now();
@@ -367,6 +367,26 @@ public class UserRepository extends BaseRepository {
             return rs.getString("current_state");
         }
         return null;
+    }
+
+    public boolean withdrawFromEvent(Long eventId, String email) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        Long userId = rs.getLong("organization_id");
+
+        query = "DELETE FROM join_event WHERE event_id = ? AND user_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setLong(1, eventId);
+        stmt.setLong(2, userId);
+        stmt.executeUpdate();
+        return true;
     }
 
 }

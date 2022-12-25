@@ -305,8 +305,8 @@ public class EventRepository extends BaseRepository {
                 "? is null OR UPPER(L.state) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.postal_code) LIKE UPPER(?) OR " +
                 "? is null OR UPPER(L.location_name) LIKE UPPER(?) )  AND " +
-                "?::timestamp is null OR E.start_date >= ? AND " +
-                "?::timestamp is null OR E.end_date <= ?";
+                "(?::timestamp is null OR E.start_date >= ?) AND " +
+                "(?::timestamp is null OR E.end_date <= ?)";
 
         PreparedStatement stmt = conn.prepareStatement(query);
         for (int x = 1; x < 13; x++) {
@@ -316,14 +316,15 @@ public class EventRepository extends BaseRepository {
         if (filterModel.getStartDate().equals("")) {
             stmt.setTimestamp(13, null);
             stmt.setTimestamp(14, null);
+            stmt.setTimestamp(15, null);
+            stmt.setTimestamp(16, null);
 
         } else {
             stmt.setTimestamp(13, Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00"));
             stmt.setTimestamp(14, Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00"));
+            stmt.setTimestamp(15, (!filterModel.getEndDate().equals("") ? (Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00")) : null));
+            stmt.setTimestamp(16, (!filterModel.getEndDate().equals("") ? (Timestamp.valueOf(filterModel.getEndDate().split("T")[0] + " " + filterModel.getEndDate().split("T")[1] + ":00")) : null));
         }
-
-        stmt.setTimestamp(15, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getStartDate().split("T")[0] + " " + filterModel.getStartDate().split("T")[1] + ":00") : null));
-        stmt.setTimestamp(16, (!filterModel.getEndDate().equals("") ? Timestamp.valueOf(filterModel.getEndDate().split("T")[0] + " " + filterModel.getEndDate().split("T")[1] + ":00") : null));
 
         ResultSet rs = stmt.executeQuery();
 
