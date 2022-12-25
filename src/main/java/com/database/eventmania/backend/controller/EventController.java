@@ -76,7 +76,6 @@ public class EventController {
         EventModel eventModel = null;
         try {
             eventModel = eventService.getEventById(Long.valueOf(eventId));
-            System.out.println(eventModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
