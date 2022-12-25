@@ -11,8 +11,10 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class EventModel {
+    public EventModel() {
+        this.eventTypes = new ArrayList<>();
+    }
     private Long eventId;
     private String title;
     private ArrayList<String> eventTypes;

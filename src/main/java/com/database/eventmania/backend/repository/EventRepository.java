@@ -8,6 +8,7 @@ import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -239,20 +240,9 @@ public class EventRepository extends BaseRepository {
         ArrayList<EventModel> events = new ArrayList<>();
 
         while (rs.next()) {
-            if(events.stream().anyMatch(event -> {
-                try {
-                    return event.getEventId().equals(rs.getLong("event_id"));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            })){
-                events.stream().filter(event -> {
-                    try {
-                        return event.getEventId().equals(rs.getLong("event_id"));
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
+            long id = rs.getLong("event_id");
+            if (events.stream().anyMatch(event -> event.getEventId() == id)) {
+                events.stream().filter(event -> event.getEventId() == id).findFirst().get().getEventTypes().add(rs.getString("type_of_event"));
                 continue;
             }
 
@@ -264,7 +254,7 @@ public class EventRepository extends BaseRepository {
             event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
             event.setTitle(rs.getString("event_name"));
             event.setImageUrl(rs.getString("image_url"));
-
+            event.setState(rs.getString("current_state"));
             event.setEventTypes(new ArrayList<>());
             event.getEventTypes().add(rs.getString("type_of_event"));
 
@@ -272,16 +262,14 @@ public class EventRepository extends BaseRepository {
                 event.setLocationName("Online");
             else
                 event.setLocationName(rs.getString("location_name"));
-
-            if (rs.getString("current_state").equals("ONGOING") ||
-                    rs.getString("current_state").equals("UPCOMING"))
-                eventMap.get("future").add(event);
-            else if (rs.getString("current_state").equals("FINISHED"))
-                eventMap.get("past").add(event);
-
             events.add(event);
         }
-
+        for(EventModel eventModel: events){
+            if(eventModel.getState().equals("ONGOING") || eventModel.getState().equals("UPCOMING"))
+                eventMap.get("future").add(eventModel);
+            else if(eventModel.getState().equals("FINISHED"))
+                eventMap.get("past").add(eventModel);
+        }
         return eventMap;
     }
 
@@ -346,15 +334,21 @@ public class EventRepository extends BaseRepository {
             event.getEventTypes().add(rs.getString("type_of_event"));
             events.add(event);
         }
-        ArrayList<EventModel> filteredEvents = new ArrayList<>();
-        for (String type : filterModel.getEventTypes()) {
-            for (EventModel eventModel : events) {
-                if (eventModel.getEventTypes().contains(type)) {
-                    filteredEvents.add(eventModel);
+        if(filterModel.getEventTypes() != null){
+            ArrayList<EventModel> filteredEvents = new ArrayList<>();
+
+            for (String type : filterModel.getEventTypes()) {
+                for (EventModel eventModel : events) {
+                    if (eventModel.getEventTypes().contains(type)) {
+                        filteredEvents.add(eventModel);
+                    }
                 }
             }
+            return filteredEvents;
+        }
+        else{
+            return events;
         }
 
-        return events;
     }
 }

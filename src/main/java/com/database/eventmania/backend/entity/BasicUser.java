@@ -3,6 +3,7 @@ package com.database.eventmania.backend.entity;
 import com.database.eventmania.backend.entity.enums.Gender;
 import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -11,6 +12,7 @@ import java.time.Period;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class BasicUser extends Account {
     private Long walletId;
     private String firstName;
