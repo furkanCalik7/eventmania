@@ -30,7 +30,8 @@ public class UserService {
     public BasicUser getUserByEmailAndPassword(String email, String password) throws SQLException {
         return userRepository.getUserByEmailAndPassword(email, password);
     }
-    public BasicUser getUserByEmail(String email) throws  SQLException {
+
+    public BasicUser getUserByEmail(String email) throws SQLException {
         return userRepository.getUserByEmail(email);
     }
 
@@ -38,7 +39,7 @@ public class UserService {
                             String firstName, String lastName, String gender,
                             String phoneNumber, String dob) throws SQLException {
         String hashedPassword = bCryptPasswordEncoder.encode(password);
-        Gender genderEnum = Gender.valueOf( gender.toUpperCase() );
+        Gender genderEnum = Gender.valueOf(gender.toUpperCase());
         return userRepository.saveUser(email, hashedPassword, firstName, lastName, genderEnum, phoneNumber, LocalDate.parse(dob));
     }
 
@@ -59,10 +60,14 @@ public class UserService {
     }
 
     public boolean joinUnticketedEvent(String userEmail, String eventId) throws SQLException {
-        return userRepository.joinUnticketedEvent( Long.valueOf(eventId), userEmail);
+        return userRepository.joinUnticketedEvent(Long.valueOf(eventId), userEmail);
     }
 
     public ArrayList<EventModel> getOrganizedEvents(String userEmail) throws SQLException {
         return userRepository.getOrganizedEvents(userEmail);
+    }
+
+    public boolean isUserInEvent(Long eventId) throws SQLException {
+        return userRepository.isUserInEvent(eventId);
     }
 }

@@ -320,4 +320,19 @@ public class UserRepository extends BaseRepository {
         stmt.executeUpdate();
         return true;
     }
+
+    public boolean isUserInEvent(Long eventId) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "SELECT user_id FROM join_event WHERE event_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setLong(1, eventId);
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            return true;
+        }
+        return false;
+    }
 }
