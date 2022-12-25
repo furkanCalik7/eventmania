@@ -14,4 +14,6 @@ public class CategoryModel {
     private String desc;
     private String capacity;
     private String price;
+    private Long eventId;
+    private Integer remainingCapacity;
 }

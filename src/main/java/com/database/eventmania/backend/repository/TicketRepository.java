@@ -26,7 +26,7 @@ public class TicketRepository extends BaseRepository {
         throw new SQLException("Connection to the database could not be established");
     }
 
-    //TODO: check the age constraint or others
+    //TODO: change userId to email
     public boolean buyTicket(Long eventId, Long userId, String categoryName, String purchaseType) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null) {

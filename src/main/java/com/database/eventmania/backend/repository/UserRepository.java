@@ -121,7 +121,7 @@ public class UserRepository extends BaseRepository {
         return false;
     }
 
-    //TODO: Past/Future/Organized Event functions
+    //TODO: Future/Organized Event functions
     public ArrayList<EventModel> listJoinedEvents(String userEmail) throws SQLException {
         Connection conn = super.getConnection();
 
@@ -170,5 +170,102 @@ public class UserRepository extends BaseRepository {
         }
 
         return events;
+    }
+
+    public ArrayList<EventModel> listFutureEvents(String userEmail) throws SQLException{
+        Connection conn = super.getConnection();
+
+        if (conn == null)
+            throw new SQLException("Connection to the database failed");
+
+        Long userId;
+
+        // search for the user in BasicUser table
+        String query = "SELECT user_id FROM BasicUser WHERE email = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, userEmail);
+        ResultSet rs = stmt.executeQuery();
+
+        if (!rs.next())
+            throw new SQLException("User not found");
+        else
+            userId = rs.getLong("user_id");
+
+        query = "SELECT DISTINCT E.event_id, E.event_name, E.start_date, E.end_date, E.description, L.location_name, L.address_description " +
+                "FROM Event E " +
+                "LEFT OUTER JOIN Location L ON E.event_id = L.event_id " +
+                "LEFT OUTER JOIN event_type ET ON E.event_id = ET.event_id " +
+                "WHERE (E.event_id = ANY (SELECT JE.event_id FROM join_event JE WHERE user_id = ?)) AND E.start_date > ?";
+        stmt = conn.prepareStatement(query);
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp currentTimestamp = Timestamp.valueOf(now);
+
+        stmt.setLong(1, userId);
+        stmt.setTimestamp(2, currentTimestamp);
+        rs = stmt.executeQuery();
+
+        ArrayList<EventModel> events = new ArrayList<>();
+        while (rs.next()) {
+            EventModel event = new EventModel();
+
+            event.setEventId(rs.getLong("event_id"));
+            event.setTitle(rs.getString("event_name"));
+            event.setVenueLocation(rs.getString("location_name"));
+            event.setAddress(rs.getString("address_description"));
+            event.setStartdate(String.valueOf(rs.getDate("start_date").toLocalDate()));
+            event.setEnddate(String.valueOf(rs.getDate("end_date").toLocalDate()));
+            event.setEventDescription(rs.getString("description"));
+            events.add(event);
+        }
+
+        return events;
+    }
+
+    //Join unticketed event
+    public boolean joinUnticketedEvent(Long eventId, String email) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+
+        //gets the account's user id
+        String query = "SELECT organization_id FROM account_with_type WHERE email = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        Long userId = rs.getLong("organization_id");
+
+
+        //check if user can join by checking the minimum age constraint
+        String ageQuery = "SELECT minimum_age FROM Event WHERE event_id = ?";
+        PreparedStatement ageStmt = conn.prepareStatement(ageQuery);
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(now);
+
+        ageStmt.setInt(1, Math.toIntExact(eventId));
+        ResultSet ageResult = ageStmt.executeQuery();
+        if(ageResult.next()){
+            int minimumAge = ageResult.getInt("minimum_age");
+            String userAgeQuery = "SELECT date_of_birth FROM basicuser WHERE user_id = ?";
+            PreparedStatement userAgeStmt = conn.prepareStatement(userAgeQuery);
+            userAgeStmt.setInt(1, Math.toIntExact(userId));
+            ResultSet userAgeResult = userAgeStmt.executeQuery();
+            if(userAgeResult.next()){
+                Date birthDate = userAgeResult.getDate("date_of_birth");
+                if(birthDate != null){
+                    int userAge = now.getYear() - birthDate.toLocalDate().getYear();
+                    if(userAge < minimumAge){
+                        return false;
+                    }
+                }
+            }
+        }
+        query = "INSERT INTO join_event (event_id, user_id) VALUES (?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setLong(1, eventId);
+        stmt.setLong(2, userId);
+        stmt.executeUpdate();
+        return true;
     }
 }
