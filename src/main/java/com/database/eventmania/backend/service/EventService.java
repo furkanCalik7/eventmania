@@ -55,6 +55,10 @@ public class EventService {
                 saleStartTime, saleEndTime, userId, capacity, locationName, latitude, longitude, postalCode, state, city,
                 country, addressDescription, eventCreatorId);
     }*/
+    //
+    public boolean publishTicketedEvent(String eventId) throws SQLException {
+        return eventRepository.publishTicketedEvent(Long.valueOf(eventId));
+    }
 
     public boolean deleteEvent(Long eventId) throws SQLException {
         return eventRepository.deleteEvent(eventId);

@@ -25,6 +25,18 @@ public class EventRepository extends BaseRepository {
         super.connect();
     }
 
+
+    public boolean publishTicketedEvent(Long eventId) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null)
+            throw new SQLException("Connection to the database could not be established");
+        String query = "UPDATE event SET current_state = ? WHERE event_id = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, EventState.UPCOMING.toString());
+        statement.setLong(2, eventId);
+        statement.executeUpdate();
+        return true;
+    }
     public void createEventsInEventType(Long eventId, ArrayList<EventType> eventTypes) throws SQLException {
         Connection conn = super.getConnection();
         if (conn == null)
