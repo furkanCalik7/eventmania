@@ -23,4 +23,7 @@ public class ReportService {
     public ArrayList<EventModel> getMostPopularEvents() throws SQLException {
         return reportRepository.getMostPopularEvents();
     }
+    public ArrayList<EventModel> getMostPopularEventsByCategory(String category) throws SQLException {
+        return reportRepository.getMostPopularEventsByCategory(category);
+    }
 }

@@ -35,7 +35,6 @@ public abstract class BaseRepository {
         return this.connection;
     }
 
-    // TODO: should we check if gender is null? (consider adding Gender.null)
     public BasicUser convertQueryResultToUser(ResultSet rs) throws SQLException {
         Gender gender;
         String databaseGender = "male";

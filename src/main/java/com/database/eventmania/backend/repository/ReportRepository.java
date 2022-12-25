@@ -32,7 +32,7 @@ public class ReportRepository extends BaseRepository {
         PreparedStatement statement = conn.prepareStatement(query);
         ResultSet rs = statement.executeQuery();
         ArrayList<BasicUser> users = new ArrayList<>();
-        while(rs.next()){
+        while (rs.next()) {
             BasicUser user = new BasicUser();
             user.setAccountId(rs.getLong("user_id"));
             user.setEmail(rs.getString("email"));
@@ -63,7 +63,36 @@ public class ReportRepository extends BaseRepository {
         FormatStyle dateStyle = FormatStyle.MEDIUM;
         FormatStyle timeStyle = FormatStyle.SHORT;
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
-        while(rs.next()){
+        while (rs.next()) {
+            EventModel event = new EventModel();
+            event.setEventId(rs.getLong("event_id"));
+            event.setTitle(rs.getString("event_name"));
+            event.setStartdate(rs.getTimestamp("start_date").toLocalDateTime().format(formatter));
+            event.setEnddate(rs.getTimestamp("end_date").toLocalDateTime().format(formatter));
+            event.setAttendeeCount(rs.getInt("count"));
+            events.add(event);
+        }
+        return events;
+    }
+
+    public ArrayList<EventModel> getMostPopularEventsByCategory(String category) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection is null");
+        }
+        String query = "SELECT EWT.event_id, EWT.event_name, EWT.start_date, EWT.end_date, count(*) as count " +
+                "FROM  event_with_type EWT NATURAL JOIN join_event JE " +
+                "WHERE EWT.type_of_event = ? " +
+                "GROUP BY EWT.event_id, EWT.event_name, EWT.start_date, EWT.end_date " +
+                "ORDER BY count DESC";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, category);
+        ResultSet rs = statement.executeQuery();
+        ArrayList<EventModel> events = new ArrayList<>();
+        FormatStyle dateStyle = FormatStyle.MEDIUM;
+        FormatStyle timeStyle = FormatStyle.SHORT;
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+        while (rs.next()) {
             EventModel event = new EventModel();
             event.setEventId(rs.getLong("event_id"));
             event.setTitle(rs.getString("event_name"));

@@ -12,8 +12,6 @@ public class CardRepository extends BaseRepository{
         super.connect();
     }
 
-    //TODO: getCardById methodu yazılacak
-
     public boolean createCard(String cardNumber, String cardOwner, String cardTitle, Integer expirationMonth, Integer expirationYear) throws SQLException {
         Connection conn = super.getConnection();
         if(conn != null){
