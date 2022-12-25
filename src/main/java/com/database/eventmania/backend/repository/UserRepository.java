@@ -335,4 +335,19 @@ public class UserRepository extends BaseRepository {
         }
         return false;
     }
+    public String getEventState(Long eventId) throws SQLException {
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "SELECT current_state FROM Event WHERE event_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setLong(1, eventId);
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            return rs.getString("current_state");
+        }
+        return null;
+    }
+
 }

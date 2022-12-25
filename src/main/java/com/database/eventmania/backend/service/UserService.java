@@ -67,7 +67,10 @@ public class UserService {
         return userRepository.getOrganizedEvents(userEmail);
     }
 
-    public boolean isUserInEvent(Long eventId) throws SQLException {
-        return userRepository.isUserInEvent(eventId);
+    public boolean isUserInEvent(String eventId) throws SQLException {
+        return userRepository.isUserInEvent(Long.valueOf(eventId));
+    }
+    public String  getEventState(String eventId) throws SQLException {
+        return userRepository.getEventState(Long.valueOf(eventId));
     }
 }
