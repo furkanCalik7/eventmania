@@ -46,5 +46,6 @@ public class EventModel {
 
     private Long userId;
     private Integer attendeeCount;
+    private Integer ticketCount;
 }
 
