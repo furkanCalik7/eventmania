@@ -158,10 +158,6 @@ public class UserRepository extends BaseRepository {
         rs = stmt.executeQuery();
 
         ArrayList<EventModel> events = new ArrayList<>();
-        FormatStyle dateStyle = FormatStyle.MEDIUM;
-        FormatStyle timeStyle = FormatStyle.SHORT;
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
-
         while (rs.next()) {
             EventModel event = new EventModel();
 
