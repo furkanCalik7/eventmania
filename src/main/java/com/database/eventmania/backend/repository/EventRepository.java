@@ -391,7 +391,7 @@ public class EventRepository extends BaseRepository {
         stmt.setLong(1, eventId);
         ResultSet rs = stmt.executeQuery();
         if(rs.next()){
-            if(rs.getString("current_state").equals("PUBLISHED")){
+            if(rs.getString("current_state").equals("UPCOMING")){
                 return true;
             }
             return false;
