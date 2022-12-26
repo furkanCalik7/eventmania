@@ -96,7 +96,9 @@ public class EventController {
     @GetMapping("/{eventId}/tickets")
     public ModelAndView ticketPage(@PathVariable(value = "eventId") final String eventId) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/event_tickets.html");
+        boolean isPublished = eventService.isEventPublished(eventId);
         EventModel eventModel = eventService.getEventById(Long.parseLong(eventId));
+        mav.addObject("isPublished", isPublished);
         mav.addObject("event", eventModel);
         ArrayList<Category> categories = categoryService.getCategoriesByEventId(eventId);
         mav.addObject("categories", categories);
@@ -158,11 +160,7 @@ public class EventController {
     @GetMapping("{eventId}/{categoryId}/buy")
     public ModelAndView buyTicketPage(@PathVariable("eventId") String eventId, @PathVariable("categoryId") String categoryId, Principal principal) {
         ModelAndView mav = new ModelAndView("frontend/payment.html");
-        try {
-            ticketService.buyTicket(eventId, principal.getName(), categoryId, "ONLINE");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         return mav;
     }
 

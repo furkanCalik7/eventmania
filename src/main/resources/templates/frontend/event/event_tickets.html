@@ -47,9 +47,21 @@
 
 	<div class="container d-lg-flex flex-column">
 		<div class="ml-6">
-			<button class="btn btn-primary d-lg-flex justify-content-lg-start align-items-lg-center" type="button"
-			        data-bs-target="#modal-1" data-bs-toggle="modal">Create category
-			</button>
+			<div th:if="${isPublished}">
+				<button class="btn btn-primary disabled d-lg-flex justify-content-lg-start align-items-lg-center"
+				        type="button"
+				        data-bs-target="#modal-1" data-bs-toggle="modal">Create category
+				</button>
+
+			</div>
+
+			<div th:unless="${isPublished}">
+				<button class="btn btn-primary d-lg-flex justify-content-lg-start align-items-lg-center" type="button"
+				        data-bs-target="#modal-1" data-bs-toggle="modal">Create category
+				</button>
+
+			</div>
+
 		</div>
 		<div style="margin: 0;padding: 60px;">
 			<ul class="nav nav-tabs" role="tablist">
@@ -82,11 +94,22 @@
 			</div>
 		</div>
 		<div class="d-flex justify-content-end align-items-end">
-			<form method="post" th:action="@{/event/} + ${event.eventId} + @{/publish}">
-				<button id='publish-event-button' class="btn btn-primary px-8" type="submit"
-				>Publish event
-				</button>
-			</form>
+			<div th:if="${isPublished}">
+				<form method="post" th:action="@{/event/} + ${event.eventId} + @{/publish}">
+					<button id='publish-event-button' class="btn disabled btn-primary px-8" type="submit"
+					>Event is published
+					</button>
+				</form>
+			</div>
+			<div th:unless="${isPublished}">
+				<form method="post" th:action="@{/event/} + ${event.eventId} + @{/publish}">
+					<button id='publish-event-button' class="btn btn-primary px-8" type="submit"
+					>Publish event
+					</button>
+				</form>
+			</div>
+
+
 		</div>
 	</div>
 </div>
