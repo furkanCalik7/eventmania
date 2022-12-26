@@ -1,5 +1,6 @@
 package com.database.eventmania.backend.controller;
 
+import com.database.eventmania.backend.entity.Event;
 import com.database.eventmania.backend.model.EventModel;
 import com.database.eventmania.backend.model.FilterModel;
 import com.database.eventmania.backend.service.EventService;
@@ -29,7 +30,17 @@ public class MainController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mav.addObject("events", eventModels.get("future"));
+        ArrayList<EventModel> futureEvents = eventModels.get("future");
+
+        for (EventModel eventModal : futureEvents) {
+            String ss = "";
+            eventModal.setEe("");
+            for (String type : eventModal.getEventTypes()) {
+                ss += type + ", ";
+            }
+            eventModal.setEe(ss);
+        }
+        mav.addObject("events", futureEvents);
         mav.addObject("filterModel", new FilterModel());
         return mav;
     }

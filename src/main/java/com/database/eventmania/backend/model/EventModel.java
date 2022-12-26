@@ -15,6 +15,7 @@ public class EventModel {
     public EventModel() {
         this.eventTypes = new ArrayList<>();
     }
+
     private Long eventId;
     private String title;
     private ArrayList<String> eventTypes;
@@ -47,5 +48,6 @@ public class EventModel {
     private Long userId;
     private Integer attendeeCount;
     private Integer ticketCount;
+    private String ee;
 }
 

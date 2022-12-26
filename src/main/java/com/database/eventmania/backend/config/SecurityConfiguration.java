@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http, DaoAuthenticationProvider authenticationProvider) throws Exception {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
                 // TODO: fix the event problem here
-                .requestMatchers("/event/*").authenticated()
+                
                 .requestMatchers("/user/*").authenticated()
                 .requestMatchers("/event/create").authenticated()
                 .requestMatchers("/register").permitAll()

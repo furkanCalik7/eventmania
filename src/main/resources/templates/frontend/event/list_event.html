@@ -1,34 +1,35 @@
 <div id="events">
 
 
-    <div class="row mt-4">
-        <div class="col-md-4 on-hover" th:each="event: ${events}">
-            <div class="card border-0 mb-4">
-                <a href="#"
-                ><img
-                        alt="wrappixel kit"
-                        class="card-img-top"
-                        th:src="@{/img/} + ${event.imageUrl}"
-                /></a>
-                <div
-                        class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute"
-                >
-                    <span class="d-block" th:text="${event.startdate}"></span>
-                </div>
-                <h5 class="font-weight-medium mt-3">
-                    <a
-                            class="text-decoration-none link"
-                            th:text="${event.title}"
-                            th:href="@{event/} + ${event.eventId} + @{/information}"
-                    ></a>
-                </h5>
-                <h6 class="font-weight-medium mt-3">Sports, concert</h6>
-                <p class="mt-3" th:text="${event.locationName}"></p>
-                <a class="text-decoration-none linking text-themecolor mt-2"
-                   th:href="@{event/} + ${event.eventId} + @{/information}"
-                >Learn More</a
-                >
-            </div>
-        </div>
-    </div>
+	<div class="row mt-4">
+		<div class="col-md-4 on-hover" th:each="event: ${events}">
+			<div class="card border-0 mb-4">
+				<a href="#"
+				><img
+						alt="wrappixel kit"
+						class="card-img-top"
+						th:src="@{/img/} + ${event.imageUrl}"
+				/></a>
+				<div
+						class="date-pos bg-info-gradiant p-2 d-inline-block text-center rounded text-white position-absolute"
+				>
+					<span class="d-block" th:text="${event.startdate}"></span>
+				</div>
+				<h5 class="font-weight-medium mt-3">
+					<a
+							class="text-decoration-none link"
+							th:text="${event.title}"
+							th:href="@{event/} + ${event.eventId} + @{/information}"
+					></a>
+				</h5>
+
+				<p class="mt-3" th:text="${event.ee}"></p>
+				<p class="mt-3" th:text="${event.locationName}"></p>
+				<a class="text-decoration-none linking text-themecolor mt-2"
+				   th:href="@{event/} + ${event.eventId} + @{/information}"
+				>Learn More</a
+				>
+			</div>
+		</div>
+	</div>
 </div>

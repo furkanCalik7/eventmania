@@ -141,19 +141,7 @@
 							<fieldset
 									class="d-lg-flex d-xxl-flex gap-3 flex-row align-items-xxl-center"
 							>
-								<div>
-									<label class="form-label">Payment type</label>
-									<select class="form-select">
-										<optgroup
-												th:field="*{ticketType}"
-												label="Event cost type"
-										>
-											<option value="BOTH" selected>Both</option>
-											<option value="PAID">Paid</option>
-											<option value="FREE">Free</option>
-										</optgroup>
-									</select>
-								</div>
+
 								<div>
 									<label class="form-label">Start date is after</label>
 									<input
@@ -223,6 +211,7 @@
 										th:href="@{event/} + ${event.eventId} + @{/information}"
 								></a>
 							</h5>
+							<p class="mt-3" th:text="${event.ee}"></p>
 							<p class="mt-3" th:text="${event.locationName}"></p>
 							<a
 									class="text-decoration-none linking text-themecolor mt-2"

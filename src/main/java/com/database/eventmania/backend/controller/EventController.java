@@ -67,8 +67,17 @@ public class EventController {
     @PostMapping("filter")
     public ModelAndView listEventPage(@ModelAttribute("filterModel") FilterModel filterModel) throws SQLException {
         ModelAndView mav = new ModelAndView("frontend/event/list_event.html");
+        ArrayList<EventModel> events = eventService.getFilteredEvents(filterModel);
+        for (EventModel eventModal : events) {
+            String ss = "";
+            eventModal.setEe("");
+            for (String type : eventModal.getEventTypes()) {
+                ss += type + ", ";
+            }
+            eventModal.setEe(ss);
+        }
         try {
-            mav.addObject("events", eventService.getFilteredEvents(filterModel));
+            mav.addObject("events", events);
         } catch (Exception e) {
             e.printStackTrace();
         }
