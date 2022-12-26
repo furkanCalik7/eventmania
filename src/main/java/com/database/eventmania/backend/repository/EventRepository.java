@@ -75,7 +75,7 @@ public class EventRepository extends BaseRepository {
         stmt.setBoolean(5, isOnline);
         stmt.setString(6, imageUrl);
         stmt.setInt(7, minimumAge);
-        stmt.setString(8, EventState.UNPUBLISHED.toString());
+        stmt.setString(8, currentState.toString());
         // The newly created event is always in the upcoming state when it is created (I think)
         stmt.setString(9, verificationStatus.toString());
 

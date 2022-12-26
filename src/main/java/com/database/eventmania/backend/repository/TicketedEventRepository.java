@@ -40,7 +40,7 @@ public class TicketedEventRepository extends BaseRepository {
         rs.next();
         Long organizationId = rs.getLong("organization_id");
         return eventRepository.createEvent(true, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, salesChannel,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, EventState.UNPUBLISHED, eventTypes, salesChannel,
                 saleStartTime, saleEndTime, null, locationName, latitude, longitude, postalCode, state, city,
                 country, addressDescription, organizationId);
     }

@@ -43,7 +43,7 @@ public class UnticketedEventRepository extends BaseRepository {
         if (conn == null)
             throw new SQLException("Connection to the database could not be established");
         return eventRepository.createEvent(false, verificationStatus, eventName,
-                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, currentState, eventTypes, null,
+                eventDescription, startDate, endDate, isOnline, imageUrl, minimumAge, EventState.UPCOMING, eventTypes, null,
                 null, null, capacity, locationName, latitude, longitude, postalCode, state, city,
                 country, addressDescription, userId);
     }
