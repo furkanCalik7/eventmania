@@ -85,12 +85,11 @@ public class CategoryRepository extends BaseRepository {
             boolean isCategoryFound = false;
             while(rs2.next()){
                 remainingCapacityMap.put(rs2.getString("category_name"), rs2.getInt("boughtTicketCount"));
-                isCategoryFound = true;
             }
             //return category arraylist
             ArrayList<CategoryModel> categories = new ArrayList<>();
             do {
-                if( isCategoryFound && rs.getInt("capacity") - remainingCapacityMap.get(rs.getString("category_name")) <= 0){
+                if( remainingCapacityMap.containsKey(rs.getString("category_name")) && (rs.getInt("capacity") - remainingCapacityMap.get(rs.getString("category_name")) <= 0)){
                     continue;
                 }
                 CategoryModel category = new CategoryModel();
@@ -98,7 +97,7 @@ public class CategoryRepository extends BaseRepository {
                 category.setDesc(rs.getString("category_description"));
                 category.setCapacity(Integer.toString(rs.getInt("capacity")));
                 category.setPrice((Double.toString(rs.getDouble("price"))));
-                if(isCategoryFound){
+                if(remainingCapacityMap.containsKey(rs.getString("category_name"))){
                     category.setRemainingCapacity(rs.getInt("capacity") - remainingCapacityMap.get(rs.getString("category_name")) );
                 }else{
                     category.setRemainingCapacity(rs.getInt("capacity"));
