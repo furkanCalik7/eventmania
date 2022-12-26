@@ -381,4 +381,22 @@ public class EventRepository extends BaseRepository {
         stmt.execute();
     }
 
+    public boolean isEventPublished(Long eventId) throws SQLException{
+        Connection conn = super.getConnection();
+        if (conn == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        String query = "SELECT current_state FROM Event WHERE event_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setLong(1, eventId);
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            if(rs.getString("current_state").equals("PUBLISHED")){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
 }

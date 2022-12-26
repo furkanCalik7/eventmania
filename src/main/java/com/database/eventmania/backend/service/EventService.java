@@ -79,7 +79,9 @@ public class EventService {
         return eventRepository.getFilteredEvents(filterModel);
     }
 
-
+    public boolean isEventPublished(String eventId) throws SQLException {
+        return eventRepository.isEventPublished(Long.valueOf(eventId));
+    }
 
 
 }
